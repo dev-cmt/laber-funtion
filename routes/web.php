@@ -1,0 +1,248 @@
+<?php
+
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PageSeoController;
+use App\Http\Controllers\DeveloperApiController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SaleRequisitionController;
+use App\Http\Controllers\SitemapController;
+
+Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/cc', function () {
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('view:clear');
+    \Illuminate\Support\Facades\Artisan::call('route:clear');
+    // \Illuminate\Support\Facades\Artisan::call('config:cache');
+    return 'Cleared!';
+});
+
+Route::get('/', [HomeController::class, 'welcome'])->name('home');
+Route::get('/page/frodly', [HomeController::class, 'pageFrodly'])->name('page.frodly'); // Not used
+Route::get('/get/frodly', [HomeController::class, 'getFrodly'])->name('get.frodly');
+
+
+
+Route::middleware('auth')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // Products
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/edit/{product}', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/update/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{products}/delete', [ProductController::class, 'destroy'])->name('products.destroy');
+
+    Route::get('/attributes/items', [ProductController::class, 'getItems'])->name('attributes.getItems');
+    Route::get('/products/variants', [ProductController::class, 'getVariantCombinations'])->name('products.getItemsCombo');
+
+    // Store
+    Route::get('/stores', [StoreController::class, 'index'])->name('stores.index');
+    Route::post('/stores', [StoreController::class, 'store'])->name('stores.store');
+    Route::post('/stores/update', [StoreController::class, 'update'])->name('stores.update');
+    Route::delete('/stores/{stores}/delete', [StoreController::class, 'destroy'])->name('stores.destroy');
+    
+    // Categories
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::post('/categories/update', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // Brands
+    Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
+    Route::post('/brands/update', [BrandController::class, 'update'])->name('brands.update');
+    Route::delete('/brands/{brand}/delete', [BrandController::class, 'destroy'])->name('brands.destroy');
+
+    // Tags
+    Route::get('tags', [TagController::class, 'index'])->name('tags.index');
+    Route::post('tags/store', [TagController::class, 'store'])->name('tags.store');
+    Route::post('tags/update', [TagController::class, 'update'])->name('tags.update');
+    Route::delete('tags/{tags}/delete', [TagController::class, 'destroy'])->name('tags.destroy');
+
+    // Attributes
+    Route::get('attributes', [AttributeController::class, 'index'])->name('attributes.index');
+    Route::post('attributes/store', [AttributeController::class, 'store'])->name('attributes.store');
+    Route::post('attributes/update', [AttributeController::class, 'update'])->name('attributes.update');
+    Route::post('attributes/destroy', [AttributeController::class, 'destroy'])->name('attributes.destroy');
+
+    Route::post('attribute-items/store', [AttributeController::class, 'storeItem'])->name('attribute-items.store');
+    Route::post('attribute-items/update', [AttributeController::class, 'updateItem'])->name('attribute-items.update');
+    Route::post('attribute-items/destroy', [AttributeController::class, 'destroyItem'])->name('attribute-items.destroy');
+
+    // Order
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/edit/{orders}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/update/{orders}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{orders}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
+    
+    // Sale Requisition
+    Route::get('/sale-requisitions', [SaleRequisitionController::class, 'index'])->name('sale-requisitions.index');
+    Route::get('/sale-requisitions/create', [SaleRequisitionController::class, 'create'])->name('sale-requisitions.create');
+    Route::post('/sale-requisitions', [SaleRequisitionController::class, 'store'])->name('sale-requisitions.store');
+    Route::get('/sale-requisitions/edit/{orders}', [SaleRequisitionController::class, 'edit'])->name('sale-requisitions.edit');
+    Route::put('/sale-requisitions/update/{orders}', [SaleRequisitionController::class, 'update'])->name('sale-requisitions.update');
+    Route::delete('/sale-requisitions/{orders}/delete', [SaleRequisitionController::class, 'destroy'])->name('sale-requisitions.destroy');
+
+    Route::get('/sale-approve', [SaleRequisitionController::class, 'indexApprove'])->name('sale-approve.index');
+    Route::get('/sale-approve/{id}', [SaleRequisitionController::class, 'saleApproved'])->name('sale-approve.approved');
+    Route::get('/sale-canceled/{id}', [SaleRequisitionController::class, 'saleCanceled'])->name('sale-approve.canceled');
+
+    // Customer Management
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
+    Route::post('/customers/update', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    
+    // Client Management
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::post('/employees/store', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::post('/employees/update', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+    // Blog Routes
+    Route::resource('blogs', BlogController::class);
+});
+
+
+Route::middleware('auth')->group(function () {
+    // Developer API
+    Route::get('/developer-api', [DeveloperApiController::class, 'index'])->name('developer-api.index');
+    Route::post('/developer-api/generate-token', [DeveloperApiController::class, 'generateToken'])->name('developer-api.generate-token');
+
+    /**----------------------------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------------------
+     * BACKEND TEMPLATE
+     * ----------------------------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------------------
+     */
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/change-password', [ProfileController::class, 'editPassword'])->name('password.change');
+    Route::put('/change-password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    // Role Management
+    Route::resource('roles', RoleController::class);
+
+    // User Management
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+    Route::post('/users/update', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('setting.index');
+    Route::post('/settings-update', [SettingController::class, 'update'])->name('setting.update');
+
+    // SEO settings
+    Route::get('/seo-pages',[PageSeoController::class,'index'])->name('settings.seo.index');
+    Route::post('/seo-pages/{page}',[PageSeoController::class,'update'])->name('settings.seo.update');
+});
+
+
+
+
+/**--------------------------------------------------------------------------------------------------------------------
+/**--------------------------------------------------------------------------------------------------------------------
+ * PAGE BUILDER
+ * --------------------------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+// routes/web.php
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\SectionController;
+
+// Route::get('/', function () {
+//     $page = App\Models\Page::where('slug', 'home')->first();
+//     if ($page) {
+//         return app(PageController::class)->show('home');
+//     } return view('welcome');
+// });
+
+// Page routes
+Route::get('/pages/{slug}', [PageController::class, 'show'])->name('pages.show');
+
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // Pages Management
+    Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+    Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
+    Route::get('/pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{page}', [PageController::class, 'update'])->name('pages.update');
+    Route::delete('/pages/{page}', [PageController::class, 'destroy'])->name('pages.destroy');
+    Route::get('/pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
+    Route::post('/pages/{page}/publish', [PageController::class, 'publish'])->name('pages.publish');
+    Route::post('/pages/{page}/unpublish', [PageController::class, 'unpublish'])->name('pages.unpublish');
+
+    // Sections Management
+    Route::post('/sections', [SectionController::class, 'store'])->name('sections.store');
+    Route::get('/sections/{section}/edit', [SectionController::class, 'edit'])->name('sections.edit');
+    Route::put('/sections/{section}', [SectionController::class, 'update'])->name('sections.update');
+    Route::delete('/sections/{section}', [SectionController::class, 'destroy'])->name('sections.destroy');
+    Route::post('/sections/reorder', [SectionController::class, 'reorder'])->name('sections.reorder');
+    Route::post('/sections/{section}/duplicate', [SectionController::class, 'duplicate'])->name('sections.duplicate');
+    Route::post('/sections/{section}/toggle-active', [SectionController::class, 'toggleActive'])->name('sections.toggle-active');
+
+    // Products Management
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+require __DIR__.'/auth.php';
