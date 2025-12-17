@@ -84,7 +84,7 @@ class RolePermissionSeeder extends Seeder
 
         // Customer: only view developer api & dashboard
         $employeePermissions = array_filter($permissions, function($p) {
-            return str_starts_with($p, 'view') && (str_contains($p, 'view sale requisition') || str_contains($p, 'view customers') || str_contains($p, 'view dashboard'));
+            return str_starts_with($p, 'view') && (str_contains($p, 'view sale requisition') || str_contains($p, 'view dashboard'));
         });
         $employeeRole->syncPermissions($employeePermissions);
 
