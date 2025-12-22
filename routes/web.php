@@ -38,11 +38,14 @@ Route::get('/page/frodly', [HomeController::class, 'pageFrodly'])->name('page.fr
 Route::get('/get/frodly', [HomeController::class, 'getFrodly'])->name('get.frodly');
 
 
+// Dashboard
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
+/**__________________________________________________________________________
+ * Inventory
+ * __________________________________________________________________________
+ */
 Route::middleware('auth')->group(function () {
-    // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-
     // Products
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');

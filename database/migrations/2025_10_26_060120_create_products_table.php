@@ -27,13 +27,17 @@ return new class extends Migration
             $table->integer('total_stock')->default(0);
             $table->integer('stock_out')->default(1);
             $table->integer('alert_quantity')->nullable();
-            $table->string('expire')->nullable();
+            $table->foreignId('warranty_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('unit_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('manufacturer')->nullable();
+            $table->timestamp('manufacturer_date')->nullable();
+            $table->timestamp('expire_date')->nullable();
             $table->enum('product_type', ['sale', 'hot', 'regular', 'trending'])->default('regular');
             $table->enum('visibility', ['public', 'private', 'schedule'])->default('public');
             $table->timestamp('published_at')->nullable();
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('has_variant')->default(false);
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(true); // 0 => Incative || 1 => Active (Sale Type - 2 => Online Sale || 3 => POS Sale)
             $table->timestamps();
 
             // Indexes for faster querying
