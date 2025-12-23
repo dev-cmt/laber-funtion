@@ -15,7 +15,9 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
@@ -81,6 +83,19 @@ Route::middleware('auth')->group(function () {
     Route::post('tags/update', [TagController::class, 'update'])->name('tags.update');
     Route::delete('tags/{tags}/delete', [TagController::class, 'destroy'])->name('tags.destroy');
 
+    // Warranties
+    Route::get('/warranties', [UnitController::class, 'index'])->name('warranties.index');
+    Route::post('/warranties', [UnitController::class, 'store'])->name('warranties.store');
+    Route::post('/warranties/update', [UnitController::class, 'update'])->name('warranties.update');
+    Route::delete('/warranties/{warranty}/delete', [UnitController::class, 'destroy'])->name('warranties.destroy');
+            
+    // Units
+    Route::get('/units', [UnitController::class, 'index'])->name('units.index');
+    Route::post('/units', [UnitController::class, 'store'])->name('units.store');
+    Route::post('/units/update', [UnitController::class, 'update'])->name('units.update');
+    Route::delete('/units/{unit}/delete', [UnitController::class, 'destroy'])->name('units.destroy');
+
+
     // Attributes
     Route::get('attributes', [AttributeController::class, 'index'])->name('attributes.index');
     Route::post('attributes/store', [AttributeController::class, 'store'])->name('attributes.store');
@@ -90,6 +105,12 @@ Route::middleware('auth')->group(function () {
     Route::post('attribute-items/store', [AttributeController::class, 'storeItem'])->name('attribute-items.store');
     Route::post('attribute-items/update', [AttributeController::class, 'updateItem'])->name('attribute-items.update');
     Route::post('attribute-items/destroy', [AttributeController::class, 'destroyItem'])->name('attribute-items.destroy');
+
+    // Warranties
+    Route::get('/warranties', [WarrantyController::class, 'index'])->name('warranties.index');
+    Route::post('/warranties', [WarrantyController::class, 'store'])->name('warranties.store');
+    Route::post('/warranties/update', [WarrantyController::class, 'update'])->name('warranties.update');
+    Route::delete('/warranties/{warranty}/delete', [WarrantyController::class, 'destroy'])->name('warranties.destroy');
 
     // Order
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');

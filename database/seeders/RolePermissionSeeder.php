@@ -34,6 +34,8 @@ class RolePermissionSeeder extends Seeder
             'brands',
             'tags',
             'attributes',
+            'units',
+            'warranties',
             'orders',
             'sale requisition',
             'customers',

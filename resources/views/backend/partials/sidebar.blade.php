@@ -103,9 +103,9 @@
                 </li>
                 @endcan
 
-                @can('view settings')
+                @can('view units')
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('units.index') }}" class="side-menu__item {{ Request::is('units*') ? 'active' : '' }}">
                         <i class="bx bxl-unity side-menu__icon"></i>
                         <span class="side-menu__label">Units</span>
                     </a>
@@ -121,9 +121,9 @@
                 </li>
                 @endcan
 
-                @can('view settings')
+                @can('view warranties')
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('warranties.index') }}" class="side-menu__item {{ Request::is('warranties*') ? 'active' : '' }}">
                         <i class="bx bx-alarm-exclamation side-menu__icon"></i>
                         <span class="side-menu__label">Warranties</span>
                     </a>

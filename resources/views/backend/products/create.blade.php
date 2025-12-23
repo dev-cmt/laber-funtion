@@ -1,4 +1,7 @@
 <x-backend-layout title="Tags Management">
+    @push('css')
+        <link rel="stylesheet" href="{{asset('backend/libs/summernote/summernote-lite.min.css')}}"/>
+    @endpush
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <h1 class="page-title fw-semibold fs-18 mb-0">Add New Product</h1>
@@ -33,9 +36,12 @@
 
                         <div class="mb-2">
                             <label for="description" class="form-label">Description</label>
-                            <textarea name="description" id="description" class="form-control summernote" rows="4">{!! old('description') !!}</textarea>
-                            @error('description') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                            <textarea name="description" class="form-control summernote" id="description" rows="2">{!! old('description') !!}</textarea>
+                            @error('description')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
+
                     </div>
                 </div>
 
@@ -50,40 +56,33 @@
                         <div class="row">
                             <div class="col-xl-2">
                                 <nav class="nav nav-tabs flex-column nav-style-4" role="tablist">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-current="page" href="#home-vertical-link" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-current="page" href="#inventory-link" aria-selected="false">
                                         <i class="ri-home-smile-line me-2 align-middle d-inline-block"></i> Inventory
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#services-vertical-link" aria-selected="true">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#discounts-link" aria-selected="true">
                                         <i class="ri-coupon-line me-2 align-middle d-inline-block"></i> Discounts
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#about-vertical-link" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#shipping-link" aria-selected="false">
                                         <i class="ri-ship-line me-2 align-middle d-inline-block"></i> Shipping
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#contacts-vertical-link" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#production-link" aria-selected="false">
+                                        <i class="ri-building-3-line me-2 align-middle d-inline-block"></i> Production
+                                    </a>
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#seo-link" aria-selected="false">
                                         <i class="ri-search-eye-line me-2 align-middle d-inline-block"></i> SEO Info.
                                     </a>
                                 </nav>
                             </div>
                             <div class="col-xl-10">
                                 <div class="tab-content">
-                                    <div class="tab-pane show active text-muted" id="home-vertical-link" role="tabpanel">
+                                    <div class="tab-pane show active text-muted" id="inventory-link" role="tabpanel">
                                         <div class="row">
-                                            <div class="col-md-6 mb-1">
+                                            <div class="col-md-4 mb-1">
                                                 <label class="form-label">SKU Prefix <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control form-control-sm" id="sku_prefix" name="sku_prefix" value="{{ old('sku_prefix','SKU') }}" required>
+                                                <input type="text" class="form-control form-control-sm" id="sku" name="sku" value="{{ old('sku','SKU') }}" required>
                                                 @error('total_stock') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                            <div class="col-md-6 mb-1">
-                                                <label class="form-label">Base Price <span class="text-danger">*</span></label>
-                                                <input type="number" class="form-control form-control-sm" id="sale_price" name="sale_price" value="{{ old('sale_price','0.00') }}" min="0" step="0.01">
-                                                @error('sale_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
-                                            <div class="col-md-6 mb-1">
-                                                <label for="purchase_price" class="form-label">Purchase Price</label>
-                                                <input type="number" class="form-control form-control-sm" id="purchase_price" name="purchase_price" value="{{ old('purchase_price','0.00') }}">
-                                                @error('purchase_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
-                                            <div class="col-md-6 mb-1">
+                                            <div class="col-md-4 mb-1">
                                                 <label for="base_price" class="form-label">Stock Management <span class="text-danger">*</span></label>
                                                 <select name="stock_status" id="stock_status" class="form-select">
                                                     <option value="quantity" {{ old('stock_status')=='quantity'?'selected':'' }}>Quantity</option>
@@ -93,47 +92,55 @@
                                                 </select>
                                                 @error('stock_status') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                            <div class="col-md-6 mb-1">
-                                                <label for="total_stock" class="form-label">Total Stock</label>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="units" class="form-label">Units</label>
+                                                <select class="form-select" name="unit_id">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach($units as $unit)
+                                                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
+                                                            {{ $unit->name }} ({{ $unit->short_name }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('unit_id')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4 mb-1">
+                                                <label class="form-label">Sale Price <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control form-control-sm" id="sale_price" name="sale_price" value="{{ old('sale_price','0.00') }}" min="0" step="0.01">
+                                                @error('sale_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="purchase_price" class="form-label">Regular Price</label>
+                                                <input type="number" class="form-control form-control-sm" id="regular_price" name="regular_price" value="{{ old('regular_price','0.00') }}">
+                                                @error('regular_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="purchase_price" class="form-label">Purchase Price</label>
+                                                <input type="number" class="form-control form-control-sm" id="purchase_price" name="purchase_price" value="{{ old('purchase_price','0.00') }}">
+                                                @error('purchase_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="total_stock" class="form-label">Total Stock <span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control form-control-sm" id="total_stock" name="total_stock" value="{{ old('total_stock', 0) }}">
                                                 @error('total_stock') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                            <div class="col-md-6 mb-1">
-                                                <label for="stock_out" class="form-label">Stock Out <span class="text-danger">*</span></label>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="stock_out" class="form-label">Stock Out</label>
                                                 <input type="number" class="form-control form-control-sm" id="stock_out" name="stock_out" value="{{ old('stock_out', 1) }}">
                                                 @error('stock_out') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                            <div class="col-md-6 mb-1">
+                                            <div class="col-md-4 mb-1">
                                                 <label for="base_price" class="form-label">Alert Quantity</label>
                                                 <input type="number" class="form-control form-control-sm" id="alert_quantity" name="alert_quantity" value="{{ old('alert_quantity', 0) }}">
                                                 @error('alert_quantity') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
-                                            <div class="col-md-6 mb-1">
-                                                <label for="expire" class="form-label">Expire</label>
-                                                <select name="expire" id="expire" class="form-select">
-                                                    <option value="">Select</option>
-                                                    <option value="7 Days" {{ old('expire') == '7 Days' ? 'selected' : '' }}>7 Days</option>
-                                                    <option value="15 Days" {{ old('expire') == '15 Days' ? 'selected' : '' }}>15 Days</option>
-                                                    <option value="1 Month" {{ old('expire') == '1 Month' ? 'selected' : '' }}>1 Month</option>
-                                                    <option value="2 Month" {{ old('expire') == '2 Month' ? 'selected' : '' }}>2 Month</option>
-                                                    <option value="3 Month" {{ old('expire') == '3 Month' ? 'selected' : '' }}>3 Month</option>
-                                                    <option value="6 Month" {{ old('expire') == '6 Month' ? 'selected' : '' }}>6 Month</option>
-                                                    <option value="1 Year" {{ old('expire') == '1 Year' ? 'selected' : '' }}>1 Year</option>
-                                                    <option value="2 Year" {{ old('expire') == '2 Year' ? 'selected' : '' }}>2 Year</option>
-                                                    <option value="3 Year" {{ old('expire') == '3 Year' ? 'selected' : '' }}>3 Year</option>
-                                                    <option value="5 Year" {{ old('expire') == '5 Year' ? 'selected' : '' }}>5 Year</option>
-                                                    <option value="10 Year" {{ old('expire') == '10 Year' ? 'selected' : '' }}>10 Year</option>
-                                                    <option value="Life Time" {{ old('expire') == 'Life Time' ? 'selected' : '' }}>Life Time</option>
-                                                </select>
-                                                @error('expire')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                @enderror
                                             </div>
 
                                         </div>
 
                                     </div>
-                                    <div class="tab-pane text-muted" id="services-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="discounts-link" role="tabpanel">
                                         <div class="row">
                                             <div class="col-md-6 mb-2">
                                                 <label for="discount_type" class="form-label">Discount Type</label>
@@ -156,7 +163,7 @@
                                                 <input type="date" class="form-control" id="end_date" name="end_date" value="{{ old('end_date') }}">
                                             </div>
                                             <!-- Discount Status -->
-                                            <div class="mt-4 border-top pt-3">
+                                            <div class="border-top pt-3">
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" name="discount_status" type="checkbox" id="discountStatusToggle"
                                                     {{ old('discount_status' ? true : false) ? 'checked' : '' }}>
@@ -166,7 +173,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="tab-pane text-muted" id="about-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="shipping-link" role="tabpanel">
                                         <!-- Weight -->
                                         <div class="mb-2">
                                             <div class="d-flex justify-content-between">
@@ -174,7 +181,7 @@
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" name="free_shipping" type="checkbox" id="freeShippingToggle"
                                                     {{ old('free_shipping' ? true : false) ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="freeShippingToggle">Free Shipping</label>
+                                                    <label class="form-check-label text-success" for="freeShippingToggle">Free Shipping</label>
                                                 </div>
                                             </div>
                                             <input type="number" class="form-control" id="weight" name="weight" placeholder="0.00" value="{{ old('weight') }}" step="0.01" min="0">
@@ -248,7 +255,43 @@
                                         </script>
 
                                     </div>
-                                    <div class="tab-pane text-muted" id="contacts-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="production-link" role="tabpanel">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Manufacturer</label>
+                                                <input type="text" class="form-control" name="manufacturer" value="{{ old('manufacturer') }}">
+                                                @error('manufacturer')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Manufactured Date</label>
+                                                <input type="date" class="form-control" name="manufacturer_date" value="{{ old('manufacturer_date') }}">
+                                                @error('manufacturer_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Warranty</label>
+                                                <select class="form-select" name="warranty_id">
+                                                    <option value="">Select Warranty</option>
+                                                    @foreach($warranties as $warranty)
+                                                        <option value="{{ $warranty->id }}" {{ old('warranty_id') == $warranty->id ? 'selected' : '' }}>
+                                                            {{ $warranty->name }} ({{ $warranty->full_duration }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('warranty_id')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Expiry Date</label>
+                                                <input type="date" class="form-control" name="expire_date" value="{{ old('expire_date') }}">
+                                                @error('expire_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tab-pane text-muted" id="seo-link" role="tabpanel">
                                         <div class="mb-1">
                                             <label for="meta_title" class="form-label">Meta Title</label>
                                             <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ old('meta_title') }}">
@@ -259,17 +302,20 @@
                                             <textarea class="form-control" id="meta_description" name="meta_description" rows="2">{{ old('meta_description') }}</textarea>
                                             @error('meta_description') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                         </div>
-                                        <div class="mb-1">
-                                            <label for="meta_keywords" class="form-label">Meta Keywords</label>
-                                            <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords') }}" placeholder="Separate keywords with commas">
-                                            @error('meta_keywords') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                        </div>
-                                        <div class="mb-1">
-                                            <label for="meta_image" class="form-label">Meta Image</label>
-                                            <input type="file" class="form-control" id="meta_image" name="meta_image" placeholder="Meta Image">
-                                            @error('meta_image') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="meta_keywords" class="form-label">Meta Keywords</label>
+                                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords') }}" placeholder="Separate keywords with commas">
+                                                @error('meta_keywords') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="meta_image" class="form-label">Meta Image</label>
+                                                <input type="file" class="form-control" id="meta_image" name="meta_image" placeholder="Meta Image">
+                                                @error('meta_image') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -278,11 +324,17 @@
 
                 <!-- Product Variants -->
                 <div class="card custom-card">
-                    <div class="card-header">
+                    <div class="card-header justify-content-between">
                         <div class="card-title">Product Variants Preview</div>
+                        <div class="custom-toggle-switch d-flex align-items-center">
+                            <input type="hidden" name="has_variant" value="0">
+                            <input id="hasVariantToggle" name="has_variant" type="checkbox" value="1"
+                                {{ old('has_variant') ? 'checked' : '' }}>
+                            <label for="hasVariantToggle" class="label-primary"></label>
+                        </div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" id="variant_card_body" style="{{ old('has_variant') ? '' : 'display:none;' }}">
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Attributes</label>
@@ -300,12 +352,13 @@
                     </div>
                 </div>
 
-                @push('css')
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-                @endpush
-
                 @push('js')
-                <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+                <script>
+                    $('#hasVariantToggle').on('change', function() {
+                        $('#variant_card_body').toggle(this.checked);
+                    });
+                </script>
+
                 <script>
                     $(function() {
                         // Initialize Choices.js for select elements
@@ -350,7 +403,7 @@
                                 url: '{{ route("products.getItemsCombo") }}',
                                 method: 'GET',
                                 data: {
-                                    sku_prefix: $('#sku_prefix').val(),
+                                    sku: $('#sku').val(),
                                     sale_price: $('#sale_price').val(),
                                     purchase_price: $('#purchase_price').val(),
                                     total_stock: $('#total_stock').val(),
@@ -402,7 +455,7 @@
                             });
 
                             // When SKU or Price changes, refresh variant combinations
-                            $(document).on('keyup change', '#sku_prefix, #sale_price, #purchase_price, #total_stock', loadVariantCombinations);
+                            $(document).on('keyup change', '#sku, #sale_price, #purchase_price, #total_stock', loadVariantCombinations);
 
                             // Remove variant row
                             $(document).on('click', '.remove-variant', function() {
@@ -432,7 +485,7 @@
                     </div>
                     <div class="card-body pt-1">
                         <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
-                        <select name="category_id" id="category_id" class="form-select searchable" data-placeholder="Select Category" required>
+                        <select name="category_id" id="category_id" class="form-select select2" required>
                             <option value="">Select Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id')==$category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -522,7 +575,13 @@
     </form>
 
     @push('js')
+    <script src="{{asset('backend/libs/summernote/summernote-lite.min.js')}}"></script>
+
     <script>
+        $('.summernote').summernote({
+            height: 100,
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('select.searchable').forEach(select => {
                 new Choices(select, {

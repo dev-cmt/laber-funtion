@@ -22,12 +22,13 @@ class Product extends Model
     protected $fillable = [
         'name',
         'slug',
-        'sku_prefix',
+        'sku',
         'description',
         'specification',
         'category_id',
         'brand_id',
         'sale_price',
+        'regular_price',
         'purchase_price',
         'main_image',
         'stock_status',
@@ -57,6 +58,7 @@ class Product extends Model
         'has_variant' => 'boolean',
         'status' => 'boolean',
         'sale_price' => 'decimal:2',
+        'regular_price' => 'decimal:2',
         'purchase_price' => 'decimal:2',
     ];
 
@@ -73,6 +75,11 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
@@ -87,6 +94,8 @@ class Product extends Model
     {
         return $this->hasOne(ProductShipping::class);
     }
+
+
     public function seo(): MorphOne
     {
         return $this->morphOne(Seo::class, 'seoable');

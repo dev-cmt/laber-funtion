@@ -13,13 +13,13 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id', 'sku', 'price', 'purchase_cost', 'stock', 'attribute_item_ids'
+        'product_id', 'variant_sku', 'variant_price', 'purchase_cost', 'variant_stock', 'attribute_item_ids'
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'variant_price' => 'decimal:2',
         'purchase_cost' => 'decimal:2',
-        'stock' => 'integer',
+        'variant_stock' => 'integer',
         'attribute_item_ids' => 'array',
     ];
 
@@ -43,22 +43,7 @@ class ProductVariant extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('stock', '>', 0);
-    }
-
-    // Accessors & Mutators
-    public function getImageUrlAttribute()
-    {
-        return $this->image ? asset('storage/' . $this->image) : $this->product->thumbnail_url;
-    }
-
-    public function getVariantNameAttribute()
-    {
-        $attributes = $this->variantItems->map(function ($item) {
-            return $item->attributeItem->name;
-        });
-
-        return $attributes->implode(' / ');
+        return $query->where('variant_stock', '>', 0);
     }
 
     public function getFinalPriceAttribute()

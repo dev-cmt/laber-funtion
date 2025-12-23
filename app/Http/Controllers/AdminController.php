@@ -27,6 +27,7 @@ class AdminController extends Controller
             'products',
             'categories',
             'brands',
+            'units',
             'tags',
             'attributes',
             'orders',

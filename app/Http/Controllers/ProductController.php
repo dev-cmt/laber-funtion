@@ -12,8 +12,10 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Tag;
+use App\Models\Unit;
 use App\Models\Attribute;
 use App\Models\AttributeItem;
+use App\Models\Warranty;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantItem;
 use App\Models\ProductDiscount;
@@ -35,10 +37,12 @@ class ProductController extends Controller
         $categories = Category::orderBy('name')->where('status', 1)->get();
         $brands = Brand::orderBy('name')->where('status', 1)->get();
         $tags = Tag::orderBy('name')->get();
+        $units = Unit::orderBy('name')->where('status', 1)->get();
         $attributes = Attribute::orderBy('name')->where('status', 1)->get();
+        $warranties = Warranty::where('status', 1)->get();
         $shippingClasses = ShippingClass::orderBy('id','asc')->where('status', 1)->get();
 
-        return view('backend.products.create', compact('categories', 'brands', 'tags', 'attributes', 'shippingClasses'));
+        return view('backend.products.create', compact('categories', 'brands', 'tags', 'units', 'attributes', 'warranties','shippingClasses'));
     }
 
     public function store(Request $request)
@@ -50,14 +54,14 @@ class ProductController extends Controller
 
             // 2. Variants
             if (!empty($data['variants'])) {
-                foreach ($data['variants']['sku'] as $i => $sku) {
+                foreach ($data['variants']['variant_sku'] as $i => $variant_sku) {
                     $itemIds = collect($data['attribute_items'] ?? [])->pluck($i)->filter()->values()->all(); // [0, 1, 2...]
 
                     $variant = $product->variants()->create([
-                        'sku' => $sku,
-                        'price' => $data['variants']['price'][$i] ?? 0,
+                        'variant_sku'   => $variant_sku,
+                        'variant_price' => $data['variants']['variant_price'][$i] ?? 0,
                         'purchase_cost' => $data['variants']['purchase_cost'][$i] ?? 0,
-                        'stock' => $data['variants']['stock'][$i] ?? 0,
+                        'variant_stock' => $data['variants']['variant_stock'][$i] ?? 0,
                         'attribute_item_ids' => $itemIds
                     ]);
 
@@ -117,7 +121,9 @@ class ProductController extends Controller
         $categories = Category::orderBy('name')->where('status', 1)->get();
         $brands = Brand::orderBy('name')->where('status', 1)->get();
         $tags = Tag::orderBy('name')->get();
+        $units = Unit::where('status', 1)->get();
         $attributes = Attribute::orderBy('name')->where('status', 1)->get();
+        $warranties = Warranty::where('status', 1)->get();
         $shippingClasses = ShippingClass::where('status', 1)->orderBy('id', 'asc')->get();
 
         $product->load([
@@ -172,7 +178,9 @@ class ProductController extends Controller
             'categories',
             'brands',
             'tags',
+            'units',
             'attributes',
+            'warranties',
             'shippingClasses',
             'selectedAttributeIds',
             'selectedItems',          // FIXED
@@ -192,21 +200,21 @@ class ProductController extends Controller
         // -------------------------
         // 2. UPDATE VARIANTS
         // -------------------------
-        if ($request->has('variants') && isset($request->variants['sku'])) {
+        if ($request->has('variants') && isset($request->variants['variant_sku'])) {
 
-            $incomingSKUs = $request->variants['sku'];
+            $incomingSKUs = $request->variants['variant_sku'];
             $updatedVariantIDs = [];
 
-            foreach ($incomingSKUs as $i => $sku) {
+            foreach ($incomingSKUs as $i => $variant_sku) {
                 $itemIds = collect($request->attribute_items ?? [])->pluck($i)->filter()->values()->all();
 
-                // Update or create variant by SKU
+                // Update or create variant SKU
                 $variant = $product->variants()->updateOrCreate(
-                    ['sku' => $sku],
+                    ['variant_sku' => $variant_sku],
                     [
-                        'price'             => $request->variants['price'][$i] ?? 0,
+                        'variant_price'     => $request->variants['variant_price'][$i] ?? 0,
                         'purchase_cost'     => $request->variants['purchase_cost'][$i] ?? 0,
-                        'stock'             => $request->variants['stock'][$i] ?? 0,
+                        'variant_stock'     => $request->variants['variant_stock'][$i] ?? 0,
                         'attribute_item_ids'=> $itemIds,
                     ]
                 );
@@ -355,7 +363,7 @@ class ProductController extends Controller
 
     public function getVariantCombinations(Request $request)
     {
-        $skuPrefix = $request->input('sku_prefix', 'SKU');
+        $skuPrefix = $request->input('sku', 'SKU');
         $sale_price = $request->input('sale_price', 0);
         $purchase_price = $request->input('purchase_price', 0);
         $total_stock = $request->input('total_stock', 0);
@@ -377,10 +385,10 @@ class ProductController extends Controller
             if ($product) {
                 foreach ($product->variants as $variant) {
                     $existingVariants[] = [
-                        'sku' => $variant->sku,
-                        'price' => $variant->price,
+                        'variant_sku'   => $variant->variant_sku,
+                        'variant_price' => $variant->variant_price,
                         'purchase_cost' => $variant->purchase_cost,
-                        'stock' => $variant->stock,
+                        'variant_stock' => $variant->variant_stock,
                         'items' => collect($variant->variantItems->pluck('attribute_item_id'))->map(fn($id) => (int)$id)->sort()->values()->all()
                     ];
                 }
@@ -402,15 +410,15 @@ class ProductController extends Controller
 
             // Check if this SKU exists in existing variants
             $existing = collect($existingVariants)->first(function ($v) use ($defaultSku) {
-                return $v['sku'] === $defaultSku;
+                return $v['variant_sku'] === $defaultSku;
             });
 
             return [
                 'name' => implode(' | ', $names),
-                'sku' => $existing['sku'] ?? $defaultSku,
-                'price' => $existing['price'] ?? $sale_price,
+                'variant_sku'   => $existing['variant_sku'] ?? $defaultSku,
+                'variant_price' => $existing['variant_price'] ?? $sale_price,
                 'purchase_cost' => $existing['purchase_cost'] ?? ($purchase_price > 0 ? $purchase_price : $sale_price * 0.75),
-                'stock' => $existing['stock'] ?? $total_stock,
+                'variant_stock' => $existing['variant_stock'] ?? $total_stock,
                 'items' => $comboItemIds
             ];
         });

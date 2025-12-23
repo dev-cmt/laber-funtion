@@ -4,8 +4,6 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-
-        <link rel="stylesheet" href="{{ asset('backend/libs/select2/select2.min.css') }}">
         <style>
             .select2-container--open {
                 z-index: 100000 !important;
@@ -217,15 +215,8 @@
 
         <!-- Internal Datatables JS -->
         <script src="{{ asset('backend/js/datatables.js') }}"></script>
-
-        <script src="{{ asset('backend/libs/select2/select2.min.js') }}"></script>
         <script>
             $(document).ready(function() {
-                // Initialize Select2
-                $('select.select2').select2({
-                    width: '100%'
-                });
-
                 // Populate edit modal
                 $(document).on('click', '.edit-user', function() {
                     const id = $(this).data('id');

@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('sku_prefix')->nullable();
+            $table->string('sku')->nullable();
             $table->text('description')->nullable();
             $table->json('specification')->nullable(); // JSON for structured specs
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('brand_id')->nullable()->constrained()->onDelete('set null');
             $table->decimal('sale_price', 10, 2)->nullable();
+            $table->decimal('regular_price', 10, 2)->nullable();
             $table->decimal('purchase_price', 10, 2)->nullable();
-            $table->string('main_image')->nullable();
             $table->enum('stock_status', ['quantity', 'in_stock', 'out_of_stock', 'upcoming'])->default('quantity');
             $table->integer('total_stock')->default(0);
             $table->integer('stock_out')->default(1);
@@ -41,6 +41,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Indexes for faster querying
+            $table->index(['sku']);
             $table->index(['category_id', 'status']);
             $table->index(['product_type', 'status']);
             $table->index(['visibility', 'published_at']);

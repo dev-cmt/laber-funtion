@@ -1,4 +1,7 @@
 <x-backend-layout title="Tags Management">
+    @push('css')
+        <link rel="stylesheet" href="{{asset('backend/libs/summernote/summernote-lite.min.css')}}"/>
+    @endpush
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <h1 class="page-title fw-semibold fs-18 mb-0">Edit Product</h1>
@@ -39,8 +42,7 @@
                         <div class="mb-2">
                             <label for="description" class="form-label">Description</label>
                             <textarea name="description" id="description" class="form-control summernote" rows="4">
-                                {{-- {!! old('description', $product->description ?? '') !!} --}}
-                                {{ old('description', $product->description ?? '')}}
+                                {!! old('description', $product->description ?? '') !!}
                             </textarea>
                             @error('description')
                                 <div class="text-danger mt-1">{{ $message }}</div>
@@ -61,47 +63,36 @@
                         <div class="row">
                             <div class="col-xl-2">
                                 <nav class="nav nav-tabs flex-column nav-style-4" role="tablist">
-                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-current="page" href="#home-vertical-link" aria-selected="false">
+                                    <a class="nav-link active" data-bs-toggle="tab" role="tab" aria-current="page" href="#inventory-link" aria-selected="false">
                                         <i class="ri-home-smile-line me-2 align-middle d-inline-block"></i> Inventory
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#services-vertical-link" aria-selected="true">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#discounts-link" aria-selected="true">
                                         <i class="ri-coupon-line me-2 align-middle d-inline-block"></i> Discounts
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#about-vertical-link" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#shipping-link" aria-selected="false">
                                         <i class="ri-ship-line me-2 align-middle d-inline-block"></i> Shipping
                                     </a>
-                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#contacts-vertical-link" aria-selected="false">
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#production-link" aria-selected="false">
+                                        <i class="ri-building-3-line me-2 align-middle d-inline-block"></i> Production
+                                    </a>
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#seo-link" aria-selected="false">
                                         <i class="ri-search-eye-line me-2 align-middle d-inline-block"></i> SEO Info.
                                     </a>
                                 </nav>
                             </div>
                             <div class="col-xl-10">
                                 <div class="tab-content">
-                                    <div class="tab-pane show active text-muted" id="home-vertical-link" role="tabpanel">
+                                    <div class="tab-pane show active text-muted" id="inventory-link" role="tabpanel">
                                         <!--Inventory-->
                                         <div class="row">
-                                            <div class="col-md-6 mb-1">
+                                            <div class="col-md-4 mb-1">
                                                 <label class="form-label">SKU Prefix <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control form-control-sm" id="sku_prefix" name="sku_prefix"
-                                                    value="{{ old('sku_prefix', $product->sku_prefix ?? 'SKU') }}" required>
-                                                @error('sku_prefix') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                                <input type="text" class="form-control form-control-sm" id="sku" name="sku"
+                                                    value="{{ old('sku', $product->sku ?? 'SKU') }}" required>
+                                                @error('sku') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-
-                                            <div class="col-md-6 mb-1">
-                                                <label class="form-label">Base Price <span class="text-danger">*</span></label>
-                                                <input type="number" class="form-control form-control-sm" id="sale_price" name="sale_price"
-                                                    value="{{ old('sale_price', $product->sale_price ?? '0.00') }}" min="0" step="0.01">
-                                                @error('sale_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
-
-                                            <div class="col-md-6 mb-1">
-                                                <label for="purchase_price" class="form-label">Purchase Price</label>
-                                                <input type="number" class="form-control form-control-sm" id="purchase_price" name="purchase_price"
-                                                    value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
-                                                @error('purchase_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
-
-                                            <div class="col-md-6 mb-1">
+                                        
+                                            <div class="col-md-4 mb-1">
                                                 <label for="stock_status" class="form-label">Stock Management <span class="text-danger">*</span></label>
                                                 <select name="stock_status" id="stock_status" class="form-select">
                                                     <option value="quantity" {{ old('stock_status', $product->stock_status ?? '') == 'quantity' ? 'selected' : '' }}>Quantity</option>
@@ -111,45 +102,66 @@
                                                 </select>
                                                 @error('stock_status') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
+                                            
+                                            <div class="col-md-4 mb-1">
+                                                <label for="units" class="form-label">Units</label>
+                                                <select class="form-select" name="unit_id">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach($units as $unit)
+                                                        <option value="{{ $unit->id }}" {{ old('unit_id', $product->unit_id) == $unit->id ? 'selected' : '' }}>
+                                                            {{ $unit->name }} ({{ $unit->short_name }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('unit_id')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </div>
 
-                                            <div class="col-md-6 mb-1">
-                                                <label for="total_stock" class="form-label">Total Stock</label>
+                                            <div class="col-md-4 mb-1">
+                                                <label class="form-label">Sale Price <span class="text-danger">*</span></label>
+                                                <input type="number" class="form-control form-control-sm" id="sale_price" name="sale_price"
+                                                    value="{{ old('sale_price', $product->sale_price ?? '0.00') }}" min="0" step="0.01">
+                                                @error('sale_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+
+                                            <div class="col-md-4 mb-1">
+                                                <label for="purchase_price" class="form-label">Regular Price</label>
+                                                <input type="number" class="form-control form-control-sm" id="regular_price" name="regular_price"
+                                                    value="{{ old('regular_price', $product->regular_price ?? '0.00') }}">
+                                                @error('regular_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+
+                                            <div class="col-md-4 mb-1">
+                                                <label for="purchase_price" class="form-label">Purchase Price</label>
+                                                <input type="number" class="form-control form-control-sm" id="purchase_price" name="purchase_price"
+                                                    value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
+                                                @error('purchase_price') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                            </div>
+
+                                            <div class="col-md-4 mb-1">
+                                                <label for="total_stock" class="form-label">Total Stock <span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control form-control-sm" id="total_stock" name="total_stock"
                                                     value="{{ old('total_stock', $product->total_stock ?? 0) }}">
                                                 @error('total_stock') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
 
-                                            <div class="col-md-6 mb-1">
-                                                <label for="stock_out" class="form-label">Stock Out <span class="text-danger">*</span></label>
+                                            <div class="col-md-4 mb-1">
+                                                <label for="stock_out" class="form-label">Stock Out</label>
                                                 <input type="number" class="form-control form-control-sm" id="stock_out" name="stock_out"
                                                     value="{{ old('stock_out', $product->stock_out ?? 1) }}">
                                                 @error('stock_out') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
 
-                                            <div class="col-md-6 mb-1">
+                                            <div class="col-md-4 mb-1">
                                                 <label for="alert_quantity" class="form-label">Alert Quantity</label>
                                                 <input type="number" class="form-control form-control-sm" id="alert_quantity" name="alert_quantity"
                                                     value="{{ old('alert_quantity', $product->alert_quantity ?? 0) }}">
                                                 @error('alert_quantity') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-
-                                            <div class="col-md-6 mb-1">
-                                                <label for="expire" class="form-label">Expire</label>
-                                                <select name="expire" id="expire" class="form-select">
-                                                    <option value="">Select</option>
-                                                    @php
-                                                        $expireOptions = ['7 Days','15 Days','1 Month','2 Month','3 Month','6 Month','1 Year','2 Year','3 Year','5 Year','10 Year','Life Time'];
-                                                        $selectedExpire = old('expire', $product->expire ?? '');
-                                                    @endphp
-                                                    @foreach($expireOptions as $option)
-                                                        <option value="{{ $option }}" {{ $selectedExpire == $option ? 'selected' : '' }}>{{ $option }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('expire') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane text-muted" id="services-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="discounts-link" role="tabpanel">
                                         <!-- Discount -->
                                         <div class="row">
                                             <div class="col-md-6 mb-2">
@@ -183,7 +195,7 @@
                                             </div>
 
                                             <!-- Discount Status -->
-                                            <div class="mt-4 border-top pt-3">
+                                            <div class="border-top pt-3">
                                                 <div class="form-check form-switch">
                                                     <input type="hidden" name="discount_status" value="0">
                                                     <input class="form-check-input"
@@ -196,7 +208,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="tab-pane text-muted" id="about-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="shipping-link" role="tabpanel">
                                         <!-- Weight -->
                                         <div class="mb-2">
                                             <div class="d-flex justify-content-between">
@@ -205,7 +217,7 @@
                                                     <input type="hidden" name="free_shipping" value="0">
                                                     <input class="form-check-input" type="checkbox" id="freeShippingToggle" name="free_shipping" value="1"
                                                         {{ old('free_shipping', optional($product->shipping)->free_shipping ?? false) ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="freeShippingToggle">Free Shipping</label>
+                                                    <label class="form-check-label text-success" for="freeShippingToggle">Free Shipping</label>
                                                 </div>
 
 
@@ -289,7 +301,45 @@
                                         </script>
 
                                     </div>
-                                    <div class="tab-pane text-muted" id="contacts-vertical-link" role="tabpanel">
+                                    <div class="tab-pane text-muted" id="production-link" role="tabpanel">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Manufacturer</label>
+                                                <input type="text" class="form-control" name="manufacturer" 
+                                                    value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
+                                                @error('manufacturer')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Manufactured Date</label>
+                                                <input type="date" class="form-control" name="manufacturer_date" 
+                                                    value="{{ old('manufacturer_date', optional($product->manufacturer_date)->format('Y-m-d')) }}">
+                                                @error('manufacturer_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Warranty</label>
+                                                <select class="form-select" name="warranty_id">
+                                                    <option value="">Select Warranty</option>
+                                                    @if(isset($warranties))
+                                                        @foreach($warranties as $warranty)
+                                                            <option value="{{ $warranty->id }}" 
+                                                                {{ (old('warranty_id', $product->warranty_id ?? '') == $warranty->id) ? 'selected' : '' }}>
+                                                                {{ $warranty->name }} ({{ $warranty->full_duration }})
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                                @error('warranty_id')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Expiry Date</label>
+                                                <input type="date" class="form-control" name="expire_date" 
+                                                    value="{{ old('expire_date', optional($product->expire_date)->format('Y-m-d')) }}">
+                                                @error('expire_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane text-muted" id="seo-link" role="tabpanel">
                                         <div class="mb-1">
                                             <label for="meta_title" class="form-label">Meta Title</label>
                                             <input type="text" class="form-control" id="meta_title" name="meta_title"
@@ -302,33 +352,36 @@
                                             <textarea class="form-control" id="meta_description" name="meta_description" rows="2">{{ old('meta_description', optional($product->seo)->meta_description) }}</textarea>
                                             @error('meta_description') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                         </div>
-
-                                        <div class="mb-1">
-                                            <label for="meta_keywords" class="form-label">Meta Keywords</label>
-                                            <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
-                                                value="{{ old('meta_keywords', optional($product->seo)->meta_keywords) }}"
-                                                placeholder="Separate keywords with commas">
-                                            @error('meta_keywords') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                        </div>
-
                                         <div class="row">
-                                            <div class="col-md-{{optional($product->seo)->og_image ? '8': '12'}}">
-                                                <label for="meta_image" class="form-label">Meta Image</label>
-                                                <input type="file" class="form-control" id="meta_image" name="meta_image">
+                                            <div class="col-md-6">
+                                                <label for="meta_keywords" class="form-label">Meta Keywords</label>
+                                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
+                                                    value="{{ old('meta_keywords', optional($product->seo)->meta_keywords) }}"
+                                                    placeholder="Separate keywords with commas">
+                                                @error('meta_keywords') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-
-                                            @if(optional($product->seo)->og_image)
-                                                <div class="col-md-4 d-flex justify-content-between align-items-center">
-                                                    <div class="form-check mt-4">
-                                                        <input type="checkbox" class="form-check-input" id="delete_meta_image" name="delete_meta_image" value="1">
-                                                        <label class="form-check-label text-danger" for="delete_meta_image">Delete Meta Image</label>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-{{optional($product->seo)->og_image ? '8': '12'}}">
+                                                        <label for="meta_image" class="form-label">Meta Image</label>
+                                                        <input type="file" class="form-control" id="meta_image" name="meta_image">
                                                     </div>
-                                                    <img src="{{ asset(optional($product->seo)->og_image) }}" alt="Meta Image" style="width: 68px;">
+
+                                                    @if(optional($product->seo)->og_image)
+                                                        <div class="col-md-4 d-flex justify-content-between align-items-center">
+                                                            <div class="form-check mt-4">
+                                                                <input type="checkbox" class="form-check-input" id="delete_meta_image" name="delete_meta_image" value="1">
+                                                                <label class="form-check-label text-danger" for="delete_meta_image">Delete Meta Image</label>
+                                                            </div>
+                                                            <img src="{{ asset(optional($product->seo)->og_image) }}" alt="Meta Image" style="width: 68px;">
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
 
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -337,10 +390,17 @@
 
                 <!-- Product Variants -->
                 <div class="card custom-card">
-                    <div class="card-header">
+                    <div class="card-header justify-content-between">
                         <div class="card-title">Product Variants Preview</div>
+                        <div class="custom-toggle-switch d-flex align-items-center">
+                            <input type="hidden" name="has_variant" value="0">
+                            <input id="hasVariantToggle" name="has_variant" type="checkbox" value="1"
+                                {{ old('has_variant', $product->has_variant ?? false) ? 'checked' : '' }}>
+                            <label for="hasVariantToggle" class="label-primary"></label>
+                        </div>
+
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="variant_card_body" style="{{ old('has_variant', $product->has_variant ?? false) ? '' : 'display:none;' }}">
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Attributes</label>
@@ -360,12 +420,11 @@
                     </div>
                 </div>
 
-                @push('css')
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-                @endpush
-
                 @push('js')
-                <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+                <script>
+                    $('#hasVariantToggle').on('change', function() { $('#variant_card_body').toggle(this.checked); });
+                </script>
+
                 <script>
                     $(function() {
                         // Initialize Choices.js for searchable selects
@@ -418,7 +477,7 @@
                             if (!attrs.length) return $('#variant_combinations_container').html('');
 
                             $.get('{{ route("products.getItemsCombo") }}', {
-                                sku_prefix: $('#sku_prefix').val(),
+                                sku: $('#sku').val(),
                                 sale_price: $('#sale_price').val(),
                                 purchase_price: $('#purchase_price').val(),
                                 total_stock: $('#total_stock').val(),
@@ -463,7 +522,6 @@
                             });
                         }
 
-
                         // Attribute select change (main attribute selection)
                         $('#attribute_id').on('change', function() {
                             loadAttributeItems(true);
@@ -477,7 +535,7 @@
                         });
 
                         // Update variant combinations when prices or SKU change
-                        $(document).on('keyup change', '#sku_prefix, #sale_price, #purchase_price, #total_stock', loadVariantCombinations);
+                        $(document).on('keyup change', '#sku, #sale_price, #purchase_price, #total_stock', loadVariantCombinations);
 
                         // Remove variant row
                         $(document).on('click', '.remove-variant', function() {
@@ -512,7 +570,7 @@
                     </div>
                     <div class="card-body pt-1">
                         <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
-                        <select name="category_id" id="category_id" class="form-select searchable" data-placeholder="Select Category" required>
+                        <select name="category_id" id="category_id" class="form-select select2" required>
                             <option value="">Select Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}"
@@ -620,7 +678,13 @@
 
 
     @push('js')
+    <script src="{{asset('backend/libs/summernote/summernote-lite.min.js')}}"></script>
+
     <script>
+        $('.summernote').summernote({
+            height: 100,
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('select.searchable').forEach(select => {
                 new Choices(select, {

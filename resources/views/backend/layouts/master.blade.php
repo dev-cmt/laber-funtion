@@ -28,11 +28,14 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/libs/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/libs/@simonwep/pickr/themes/nano.min.css">
     <!-- Choices Css -->
-    <link rel="stylesheet" href="{{ asset('backend') }}/libs/choices.js/public/assets/styles/choices.min.css">
+    <link rel="stylesheet" href="{{ asset('backend') }}/libs/choices.js/styles/choices.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/libs/jsvectormap/css/jsvectormap.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/libs/swiper/swiper-bundle.min.css">
     <!-- Sweetalert-2 Css -->
     <link rel="stylesheet" href="{{ asset('backend/libs/sweetalert2/sweetalert2.min.css') }}">
+    
+    <!-- Sweetalert-2 Css -->
+    <link rel="stylesheet" href="{{ asset('backend/libs/select2/select2.min.css') }}">
 
     @stack('css')
 </head>
@@ -95,6 +98,8 @@
     <script src="{{ asset('backend')}}/libs/apexcharts/apexcharts.min.js"></script>
     <!-- Chartjs Chart JS -->
     <script src="{{ asset('backend')}}/libs/chart.js/chart.min.js"></script>
+    <!-- Custom-Switcher JS -->
+    <script src="{{ asset('backend') }}/libs/choices.js/scripts/choices.min.js"></script>
     <!-- CRM-Dashboard -->
     <script src="{{ asset('backend')}}/js/crm-dashboard.js"></script>
     <!-- Custom-Switcher JS -->
@@ -102,12 +107,25 @@
     <!-- Custom JS -->
     <script src="{{ asset('backend')}}/js/custom.js"></script>
 
-
     <!-- Jquer JS -->
     <script src="{{ asset('backend/js/jquery.js') }}"></script>
     <!-- Sweetalert-2 JS -->
     <script src="{{ asset('backend') }}/libs/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="{{ asset('backend/libs/select2/select2.min.js') }}"></script>
 
+    <script>
+        // Initialize Select2
+        $('select.select2').select2({
+            width: '100%'
+        });
+        
+        $('.select2').on('select2:open', function() {
+            setTimeout(() => {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
+            }, 0);
+        });
+    </script>
     <script>
         @if (session()->has('success'))
             Swal.fire({
