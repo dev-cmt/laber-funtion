@@ -11,7 +11,7 @@ class AttributeController extends Controller
     public function index()
     {
         $attributes = Attribute::with('items')->orderBy('id','desc')->get();
-        return view('backend.attributes.index', compact('attributes'));
+        return view('backend.inventory.attributes.index', compact('attributes'));
     }
 
     public function store(Request $request)

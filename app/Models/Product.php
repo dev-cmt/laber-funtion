@@ -52,7 +52,7 @@ class Product extends Model
      * Attribute casting
      */
     protected $casts = [
-        'specification' => 'array',  // JSON field
+        'specification' => 'array',
         'published_at' => 'datetime',
         'views' => 'integer',
         'has_variant' => 'boolean',
@@ -60,6 +60,8 @@ class Product extends Model
         'sale_price' => 'decimal:2',
         'regular_price' => 'decimal:2',
         'purchase_price' => 'decimal:2',
+        'expire_date' => 'date',
+        'manufacturer_date' => 'date',
     ];
 
     /**

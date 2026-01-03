@@ -23,13 +23,18 @@ use App\Models\ProductShipping;
 use App\Models\ProductTag;
 use App\Models\ShippingClass;
 use App\Models\Media;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Milon\Barcode\DNS1D;
+use Milon\Barcode\DNS2D;
+
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::orderBy('id','desc')->paginate(2);
-        return view('backend.products.index', compact('products'));
+        return view('backend.inventory.products.index', compact('products'));
     }
 
     public function create()
@@ -42,7 +47,7 @@ class ProductController extends Controller
         $warranties = Warranty::where('status', 1)->get();
         $shippingClasses = ShippingClass::orderBy('id','asc')->where('status', 1)->get();
 
-        return view('backend.products.create', compact('categories', 'brands', 'tags', 'units', 'attributes', 'warranties','shippingClasses'));
+        return view('backend.inventory.products.create', compact('categories', 'brands', 'tags', 'units', 'attributes', 'warranties','shippingClasses'));
     }
 
     public function store(Request $request)
@@ -173,7 +178,7 @@ class ProductController extends Controller
             }
         }
 
-        return view('backend.products.edit', compact(
+        return view('backend.inventory.products.edit', compact(
             'product',
             'categories',
             'brands',
@@ -358,7 +363,7 @@ class ProductController extends Controller
 
         // dd($product->variants);
 
-        return view('backend.products.partials._attribute_items', compact('attributes','selectedItems','existingImages'))->render();
+        return view('backend.inventory.products.partials._attribute_items', compact('attributes','selectedItems','existingImages'))->render();
     }
 
     public function getVariantCombinations(Request $request)
@@ -423,7 +428,7 @@ class ProductController extends Controller
             ];
         });
 
-        return view('backend.products.partials._variant_table', ['variants' => $variants])->render();
+        return view('backend.inventory.products.partials._variant_table', ['variants' => $variants])->render();
     }
 
 
@@ -442,5 +447,167 @@ class ProductController extends Controller
         return $result;
     }
 
+    /**------------------------------------------------------------------------------------------------
+     * Expired Products
+     * ------------------------------------------------------------------------------------------------
+     */
+    public function expiredIndex(Request $request)
+    {
+        $expiredProducts = Product::where('expire_date', '<=', now()->toDateString())
+            ->where('status', 1)
+            ->orderBy('expire_date', 'asc')
+            ->get();
+            
+        return view('backend.inventory.expired.index', compact('expiredProducts'));
+    }
+    public function handleExpired($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->status = 0;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product marked as handled successfully.'
+        ]);
+    }
+    public function restoreExpired(Request $request, $id)
+    {
+        $request->validate([
+            'expire_date' => 'required|date|after:today',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        $product->expire_date = $request->expire_date;
+        $product->status = 1;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product restored successfully.'
+        ]);
+    }
+    /**------------------------------------------------------------------------------------------------
+     * Low Stock
+     * ------------------------------------------------------------------------------------------------
+     */
+
+    public function lowStocksIndex(Request $request)
+    {
+        // Fetch products where stock is less than alert quantity or stock = 0
+        $lowStocks = Product::where('status', 1)
+            ->where(function($q) {
+                $q->whereColumn('total_stock', '<=', 'alert_quantity')
+                ->orWhere('total_stock', '=', 0);
+            })
+            ->orderBy('total_stock', 'asc')
+            ->get();
+
+        return view('backend.inventory.low-stocks.index', compact('lowStocks'));
+    }
+
+    public function notifyLowStock(Request $request)
+    {
+        $productIds = $request->input('products', []);
+        
+        if(empty($productIds)) {
+            return response()->json(['success' => false, 'message' => 'No product selected']);
+        }
+
+        $products = Product::whereIn('id', $productIds)->get();
+
+        // Example: Send notification logic here (email/SMS)
+        foreach ($products as $product) {
+            // Mail::to('admin@example.com')->send(new LowStockAlert($product));
+        }
+
+        return response()->json(['success' => true, 'message' => 'Notification sent successfully']);
+    }
+
+
+
+    /**------------------------------------------------------------------------------------------------
+     * Low Stock
+     * ------------------------------------------------------------------------------------------------
+     */
+    public function labelPrintIndex()
+    {
+        $stores = ['Electro Mart', 'Quantum Gadgets', 'Prime Bazaar', 'Gadget World', 'Volt Vault'];
+        return view('backend.inventory.label-print.index', compact('stores'));
+    }
+
+    public function labelPrintSearch(Request $request)
+    {
+        $q = $request->get('q');
+
+        return Product::where('name', 'like', "%{$q}%")
+            ->orWhere('sku', 'like', "%{$q}%")
+            ->select('id', 'name', 'sku', 'sale_price')
+            ->limit(10)
+            ->get();
+    }
+
+    public function labelPrintGenerate(Request $request)
+    {
+        return $this->processLabelGeneration($request, 'barcode');
+    }
+
+    public function labelPrintGenerateQR(Request $request)
+    {
+        return $this->processLabelGeneration($request, 'qrcode');
+    }
+
+    private function processLabelGeneration(Request $request, $type)
+    {
+        // 1. Decode product data sent from frontend
+        $productsData = json_decode($request->products, true);
+        if (!$productsData) {
+            return back()->with('error', 'No products selected');
+        }
+
+        // 2. Prepare formatting options
+        $store = $request->store ?? 'Our Store'; // Default to 3 columns
+        $columns = $request->columns ?? 3; // Default to 3 columns
+        $paperSize = $request->paper_size ?? 'A4';
+        
+        $options = [
+            'show_store'   => $request->show_store == 1,
+            'show_product' => $request->show_product == 1,
+            'show_price'   => $request->show_price == 1,
+            'store_name'   => $store,
+            'type'         => $type,
+            'columns'      => $columns,
+        ];
+
+        // 3. Flatten the array based on Quantity
+        $labels = [];
+        foreach ($productsData as $item) {
+            $product = Product::find($item['id']);
+            if ($product) {
+                for ($i = 0; $i < $item['qty']; $i++) {
+                    $labels[] = [
+                        'name'  => $product->name,
+                        'sku'   => $product->sku,
+                        'price' => $item['price'] ?? $product->sale_price,
+                    ];
+                }
+            }
+        }
+
+        // 4. Load View and Pass Barcode Generators
+        $pdf = Pdf::loadView('backend.inventory.label-print.label-print-pdf', [
+            'labels'  => $labels,
+            'config'  => $options,
+            'dns1'    => new DNS1D(),
+            'dns2'    => new DNS2D(),
+        ]);
+
+        // 5. Set Paper Size (A4, A3, etc.)
+        $pdf->setPaper($paperSize, 'portrait');
+
+        return $pdf->stream($type . "_labels.pdf");
+    }
 
 }

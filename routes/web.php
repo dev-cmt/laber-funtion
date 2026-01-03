@@ -21,6 +21,7 @@ use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleRequisitionController;
 use App\Http\Controllers\SitemapController;
 
@@ -59,6 +60,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/attributes/items', [ProductController::class, 'getItems'])->name('attributes.getItems');
     Route::get('/products/variants', [ProductController::class, 'getVariantCombinations'])->name('products.getItemsCombo');
 
+    // Expired
+    Route::get('/expired-products', [ProductController::class, 'expiredIndex'])->name('expired-products.index');
+    Route::post('/products/handle-expired/{id}', [ProductController::class, 'handleExpired'])->name('products.handleExpired');
+    Route::post('/products/restore-expired/{id}', [ProductController::class, 'restoreExpired'])->name('products.restoreExpired');
+    
+    // Low Stocks
+    Route::get('/low-stocks', [ProductController::class, 'lowStocksIndex'])->name('low-stocks.index');
+    Route::post('/low-stocks/notify', [ProductController::class, 'notifyLowStock'])->name('low-stocks.notify');
+
     // Store
     Route::get('/stores', [StoreController::class, 'index'])->name('stores.index');
     Route::post('/stores', [StoreController::class, 'store'])->name('stores.store');
@@ -95,7 +105,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/units/update', [UnitController::class, 'update'])->name('units.update');
     Route::delete('/units/{unit}/delete', [UnitController::class, 'destroy'])->name('units.destroy');
 
-
     // Attributes
     Route::get('attributes', [AttributeController::class, 'index'])->name('attributes.index');
     Route::post('attributes/store', [AttributeController::class, 'store'])->name('attributes.store');
@@ -111,6 +120,36 @@ Route::middleware('auth')->group(function () {
     Route::post('/warranties', [WarrantyController::class, 'store'])->name('warranties.store');
     Route::post('/warranties/update', [WarrantyController::class, 'update'])->name('warranties.update');
     Route::delete('/warranties/{warranty}/delete', [WarrantyController::class, 'destroy'])->name('warranties.destroy');
+
+    // Label Print
+    Route::get('/label-print', [ProductController::class, 'labelPrintIndex'])->name('label-print.index');
+    Route::get('/label-print/search', [ProductController::class, 'labelPrintSearch'])->name('label-print.search');
+    Route::post('/label-print/generate', [ProductController::class, 'labelPrintGenerate'])->name('label-print.generate');
+    Route::post('/label-print/generate-qr', [ProductController::class, 'labelPrintGenerateQR'])->name('label-print.generate.qr');
+
+});
+
+/**__________________________________________________________________________
+ * Stock
+ * __________________________________________________________________________
+ */
+Route::middleware('auth')->group(function () {
+    // Stock Manage
+    Route::get('/stock-manage', [StockController::class, 'indexManage'])->name('stock-manage.index');
+    Route::post('/update-stock/{id}', [StockController::class, 'updateManage'])->name('stock.update');
+
+    // Adjustment
+    Route::get('/stock-adjustment', [StockController::class, 'indexAdjustment'])->name('stock-adjustment.index');
+    Route::post('/update-adjustment/{id}', [StockController::class, 'updateAdjustment'])->name('adjustment.update');
+    
+    // Transfers
+    Route::get('/stock-transfer', [StockController::class, 'indexTransfer'])->name('stock-transfer.index');
+    Route::post('/stock-transfer/store', [StockController::class, 'storeTransfer'])->name('stock-transfer.store');
+    Route::post('/update-transfer/{id}', [StockController::class, 'updateTransfer'])->name('transfer.update');
+});
+
+
+Route::middleware('auth')->group(function () {
 
     // Order
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -184,72 +223,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/seo-pages',[PageSeoController::class,'index'])->name('settings.seo.index');
     Route::post('/seo-pages/{page}',[PageSeoController::class,'update'])->name('settings.seo.update');
 });
-
-
-
-
-/**--------------------------------------------------------------------------------------------------------------------
-/**--------------------------------------------------------------------------------------------------------------------
- * PAGE BUILDER
- * --------------------------------------------------------------------------------------------------------------------
- * --------------------------------------------------------------------------------------------------------------------
- */
-// routes/web.php
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\SectionController;
-
-// Route::get('/', function () {
-//     $page = App\Models\Page::where('slug', 'home')->first();
-//     if ($page) {
-//         return app(PageController::class)->show('home');
-//     } return view('welcome');
-// });
-
-// Page routes
-Route::get('/pages/{slug}', [PageController::class, 'show'])->name('pages.show');
-
-
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // Pages Management
-    Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
-    Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
-    Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
-    Route::get('/pages/{page}/edit', [PageController::class, 'edit'])->name('pages.edit');
-    Route::put('/pages/{page}', [PageController::class, 'update'])->name('pages.update');
-    Route::delete('/pages/{page}', [PageController::class, 'destroy'])->name('pages.destroy');
-    Route::get('/pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
-    Route::post('/pages/{page}/publish', [PageController::class, 'publish'])->name('pages.publish');
-    Route::post('/pages/{page}/unpublish', [PageController::class, 'unpublish'])->name('pages.unpublish');
-
-    // Sections Management
-    Route::post('/sections', [SectionController::class, 'store'])->name('sections.store');
-    Route::get('/sections/{section}/edit', [SectionController::class, 'edit'])->name('sections.edit');
-    Route::put('/sections/{section}', [SectionController::class, 'update'])->name('sections.update');
-    Route::delete('/sections/{section}', [SectionController::class, 'destroy'])->name('sections.destroy');
-    Route::post('/sections/reorder', [SectionController::class, 'reorder'])->name('sections.reorder');
-    Route::post('/sections/{section}/duplicate', [SectionController::class, 'duplicate'])->name('sections.duplicate');
-    Route::post('/sections/{section}/toggle-active', [SectionController::class, 'toggleActive'])->name('sections.toggle-active');
-
-    // Products Management
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-});
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -18,8 +18,8 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between d-flex align-items-center">
                 <div class="card-title">Attributes List</div>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createAttributeModal">
-                    <i class="ri-add-line me-1 fw-semibold align-middle"></i> Add Attribute
+                <button type="button" class="btn btn-primary btn-sm btn-wave d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createAttributeModal">
+                    <i class='bx bx-plus-circle fs-18 me-1'></i> Add Attribute
                 </button>
             </div>
             <div class="card-body">

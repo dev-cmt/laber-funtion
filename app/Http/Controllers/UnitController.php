@@ -13,7 +13,7 @@ class UnitController extends Controller
     public function index()
     {
         $units = Unit::latest()->paginate(10);
-        return view('backend.units.index', compact('units'));
+        return view('backend.inventory.units.index', compact('units'));
     }
 
     /**

@@ -10,7 +10,7 @@
             <img src="../assets/images/brand-logos/toggle-white.png" alt="logo" class="toggle-white">
         </a> --}}
         <a href="#" class="header-logo">
-            <img src="{{ asset($settings ? $settings->logo : '') }}" alt="logo">
+            <img src="{{ asset($settings ? $settings->logo : 'images/logo.png') }}" style="height: 2.7rem" alt="logo">
         </a>
     </div>
     <!-- End::main-sidebar-header -->
@@ -60,7 +60,7 @@
                 @endcan
                 @can('view settings')
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('expired-products.index') }}" class="side-menu__item {{ Request::is('expired-products*') ? 'active' : '' }}">
                         <i class="bx bx-timer side-menu__icon"></i>
                         <span class="side-menu__label">Expired Products</span>
                     </a>
@@ -69,7 +69,7 @@
 
                 @can('view settings')
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('low-stocks.index') }}" class="side-menu__item {{ Request::is('low-stocks*') ? 'active' : '' }}">
                         <i class="bx bx-trending-up side-menu__icon"></i>
                         <span class="side-menu__label">Low Stocks</span>
                     </a>
@@ -132,9 +132,9 @@
 
                 @can('view settings')
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('label-print.index') }}" class="side-menu__item {{ Request::is('label-print*') ? 'active' : '' }}">
                         <i class="bx bx-barcode-reader side-menu__icon"></i>
-                        <span class="side-menu__label">Print Barcode</span>
+                        <span class="side-menu__label">Label Print</span>
                     </a>
                 </li>
                 @endcan
@@ -144,7 +144,7 @@
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('stock-manage.index') }}" class="side-menu__item {{ Request::is('stock-manage*') ? 'active' : '' }}">
                         <i class="bx bx-layer side-menu__icon"></i>
                         <span class="side-menu__label">Manage Stock</span>
                     </a>
@@ -154,7 +154,7 @@
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('stock-adjustment.index') }}" class="side-menu__item {{ Request::is('stock-adjustment*') ? 'active' : '' }}">
                         <i class="bx bx-equalizer side-menu__icon"></i>
                         <span class="side-menu__label">Stock Adjustment</span>
                     </a>
@@ -164,7 +164,7 @@
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('stock-transfer.index') }}" class="side-menu__item {{ Request::is('stock-transfer*') ? 'active' : '' }}">
                         <i class="bx bx-transfer side-menu__icon"></i>
                         <span class="side-menu__label">Stock Transfer</span>
                     </a>

@@ -12,7 +12,7 @@ class CategoryController extends Controller
     {
         // Get all categories for hierarchical display
         $categories = Category::orderBy('id', 'desc')->get();
-        return view('backend.categories.index', ['data' => $categories]);
+        return view('backend.inventory.categories.index', ['data' => $categories]);
     }
 
     public function store(Request $request)

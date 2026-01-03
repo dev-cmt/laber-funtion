@@ -30,8 +30,8 @@ return new class extends Migration
             $table->foreignId('warranty_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('unit_id')->nullable()->constrained()->onDelete('set null');
             $table->string('manufacturer')->nullable();
-            $table->timestamp('manufacturer_date')->nullable();
-            $table->timestamp('expire_date')->nullable();
+            $table->date('manufacturer_date')->nullable();
+            $table->date('expire_date')->nullable();
             $table->enum('product_type', ['sale', 'hot', 'regular', 'trending'])->default('regular');
             $table->enum('visibility', ['public', 'private', 'schedule'])->default('public');
             $table->timestamp('published_at')->nullable();

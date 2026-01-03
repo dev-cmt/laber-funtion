@@ -13,7 +13,7 @@ class WarrantyController extends Controller
     public function index()
     {
         $warranties = Warranty::latest()->paginate(10);
-        return view('backend.warranties.index', compact('warranties'));
+        return view('backend.inventory.warranties.index', compact('warranties'));
     }
 
     /**
