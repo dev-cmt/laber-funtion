@@ -410,6 +410,28 @@
                 </li>
                 @endcan
 
+                <li class="slide__category"><span class="category-name">Service</span></li>
+
+                {{-- @can('view service requests') --}}
+                <li class="slide">
+                    <a href="{{ route('service-requests.index') }}" 
+                    class="side-menu__item {{ Request::is('service-requests*') ? 'active' : '' }}">
+                        <i class="bx bx-phone-call side-menu__icon"></i>
+                        <span class="side-menu__label">Service Requests</span>
+                    </a>
+                </li>
+                {{-- @endcan --}}
+
+                {{-- @can('create service requests') --}}
+                <li class="slide">
+                    <a href="{{ route('service-requests.create') }}" 
+                    class="side-menu__item {{ Request::is('service-requests/create') ? 'active' : '' }}">
+                        <i class="bx bx-plus-circle side-menu__icon"></i>
+                        <span class="side-menu__label">New Request</span>
+                    </a>
+                </li>
+                {{-- @endcan --}}
+
 
                 <li class="slide__category"><span class="category-name">Reports</span></li>
 

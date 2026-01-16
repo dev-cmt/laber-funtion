@@ -17,7 +17,6 @@ class AdminController extends Controller
         return view('backend.dashboard',compact('data'));
     }
 
-
     public function resyncPermissions()
     {
         // -------------------------------
@@ -39,6 +38,7 @@ class AdminController extends Controller
             'seo',
             'users',
             'roles',
+            'service requests',
         ];
 
         $singlePermissions = [

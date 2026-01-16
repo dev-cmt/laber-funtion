@@ -23,6 +23,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleRequisitionController;
+use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\SitemapController;
 
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
@@ -187,6 +188,32 @@ Route::middleware('auth')->group(function () {
     Route::resource('blogs', BlogController::class);
 });
 
+
+// Service Requests
+Route::prefix('service-requests')->group(function () {
+    Route::get('/', [ServiceRequestController::class, 'index'])->name('service-requests.index');
+    Route::get('/create', [ServiceRequestController::class, 'create'])->name('service-requests.create');
+    Route::post('/', [ServiceRequestController::class, 'store'])->name('service-requests.store');
+    Route::get('/{serviceRequest}', [ServiceRequestController::class, 'show'])->name('service-requests.show');
+    Route::get('/{serviceRequest}/edit', [ServiceRequestController::class, 'edit'])->name('service-requests.edit');
+    Route::put('/{serviceRequest}', [ServiceRequestController::class, 'update'])->name('service-requests.update');
+    Route::delete('/{serviceRequest}', [ServiceRequestController::class, 'destroy'])->name('service-requests.destroy');
+    
+    // Inspection Assignment
+    Route::get('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspectionForm'])->name('service-requests.assign-inspection');
+    Route::post('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspection'])->name('service-requests.assign-inspection.store');
+    
+    // Inspection Report
+    Route::get('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'inspectionReportForm'])->name('service-requests.inspection-report');
+    Route::post('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'saveInspectionReport'])->name('service-requests.inspection-report.store');
+    
+    // Admin Approval
+    Route::get('/{serviceRequest}/approval', [ServiceRequestController::class, 'approvalForm'])->name('service-requests.approval');
+    Route::post('/{serviceRequest}/approval', [ServiceRequestController::class, 'processApproval'])->name('service-requests.approval.process');
+    
+    // Status Update
+    Route::post('/{serviceRequest}/update-status', [ServiceRequestController::class, 'updateStatus'])->name('service-requests.update-status');
+});
 
 Route::middleware('auth')->group(function () {
     // Developer API
