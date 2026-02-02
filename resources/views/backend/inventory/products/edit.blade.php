@@ -48,6 +48,36 @@
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="main_image" class="form-label">Main Image</label>
+                                <input type="file" class="form-control" id="main_image" name="main_image" value="{{ old('main_image') }}">
+                                @error('main_image') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                                
+                                @if($product->main_image)
+                                    <div class="mt-2 d-flex justify-content-center">
+                                        <img src="{{ asset($product->main_image) }}" alt="Main Image" class="rounded" width="65" height="65">
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="gallary_images" class="form-label">Image Gallary</label>
+                                <input type="file" class="form-control" id="gallary_images" name="gallary_images" value="{{ old('gallary_images') }}">
+                                @error('gallary_images') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+
+                                @if($product->media && $product->media->count() > 0)
+                                    <div class="mt-2 d-flex flex-wrap justify-content-center gap-2">
+                                        @foreach($product->media as $media)
+                                            @if($media->type === 'image')
+                                                <img src="{{ asset($media->path) }}" alt="{{ $media->name }}" class="rounded" width="65" height="65">
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 

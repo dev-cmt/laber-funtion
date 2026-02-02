@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Http\Traits\SeoTrait;
+use App\Models\Product;
 use App\Models\Page;
 
 
@@ -15,6 +16,8 @@ class HomeController extends Controller
 
     public function welcome()
     {
+        $products = Product::with('media')->withCount('reviews')->withAvg('reviews', 'rating')->active()->get();
+
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
         $this->setSeo([
@@ -29,7 +32,7 @@ class HomeController extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.welcome', compact('seotags','breadcrumbs'));
+        return view('frontend.welcome', compact('seotags','breadcrumbs', 'products'));
     }
 
     public function shop()
@@ -51,8 +54,13 @@ class HomeController extends Controller
         return view('frontend.shop', compact('seotags','breadcrumbs'));
     }
 
-    public function productDetails()
+    public function productDetails($slug)
     {
+        $product = Product::with('media', 'brand', 'category')
+        ->withCount('reviews')        // review count
+        ->withAvg('reviews', 'rating') // average rating
+        ->where('slug', $slug)->firstOrFail();
+
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
         $this->setSeo([
@@ -67,7 +75,7 @@ class HomeController extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.product-details', compact('seotags','breadcrumbs'));
+        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product'));
     }
 
     public function checkout()
@@ -125,6 +133,25 @@ class HomeController extends Controller
             ['name' => 'Home', 'url' => url('/')],
         ]);
         return view('frontend.wishlist', compact('seotags','breadcrumbs'));
+    }
+
+    public function compare()
+    {
+        // SEO
+        $page = Page::with('seo')->where('slug','home')->firstOrFail();
+        $this->setSeo([
+            'title'       => $page->seo->meta_title ?? $page->title,
+            'description' => $page->seo->meta_description ?? '',
+            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
+            'image'       => $page->seo->og_image ?? '',
+            'canonical'   => url()->current(),
+        ]);
+        $seotags = $this->generateTags();
+
+        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+            ['name' => 'Home', 'url' => url('/')],
+        ]);
+        return view('frontend.compare', compact('seotags','breadcrumbs'));
     }
 
 }

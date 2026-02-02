@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use App\Helpers\ImageHelper;
@@ -54,8 +55,40 @@ class ProductController extends Controller
     {
         $data = $request->all();
         DB::transaction(function() use ($data, $request) {
+            // Upload main image
+            if ($request->hasFile('main_image')) {
+                $data['main_image'] = ImageHelper::uploadImage(
+                    $request->file('main_image'),
+                    'uploads/products/main'
+                );
+            }
             // 1. Create Product
             $product = Product::create($data);
+
+            // -------------------------
+            // 2. Gallery Images (Media)
+            // -------------------------
+            if ($request->hasFile('gallery_images')) {
+                foreach ($request->file('gallery_images') as $image) {
+
+                    // ✅ MUST come first (temp file still exists)
+                    $size = $image->getSize();
+                    $mime = $image->getMimeType();
+
+                    // ✅ Upload AFTER reading metadata
+                    $path = ImageHelper::uploadImage($image, 'uploads/products/gallery');
+
+                    $product->media()->create([
+                        'name'       => pathinfo($path, PATHINFO_FILENAME),
+                        'path'       => $path,
+                        'type'       => Media::getTypeFromMime($mime),
+                        'size'       => $size,
+                        'user_id'    => Auth::user()->id,
+                        'sort_order' => 0,
+                    ]);
+                }
+            }
+
 
             // 2. Variants
             if (!empty($data['variants'])) {
@@ -99,7 +132,7 @@ class ProductController extends Controller
 
             // 4. Create Shipping
             $shippingData = array_filter(
-                Arr::only($data, ['weight','length','width','height','shipping_cost', 'shipping_class_id', 'inside_city_rate', 'outside_city_rate', 'free_shipping']),
+                Arr::only($data, ['weight', 'length', 'width', 'height', 'shipping_cost', 'shipping_class_id', 'inside_city_rate', 'outside_city_rate', 'free_shipping']),
                 fn($value) => $value !== null
             );
             if ($shippingData) {
@@ -110,7 +143,7 @@ class ProductController extends Controller
             if ($request->hasFile('meta_image')) {
                 $data['og_image'] = ImageHelper::uploadImage($request->file('meta_image'), 'uploads/seo');
             }
-            $seoData = array_filter(Arr::only($data, ['meta_title','meta_description','meta_keywords','og_image']));
+            $seoData = array_filter(Arr::only($data, ['meta_title', 'meta_description', 'meta_keywords', 'og_image']));
             if ($seoData) {
                 $product->seo ? $product->seo()->update($seoData) : $product->seo()->create($seoData);
             }

@@ -41,6 +41,15 @@ Route::get('/', [HomeController::class, 'welcome'])->name('home');
 Route::get('/page/frodly', [HomeController::class, 'pageFrodly'])->name('page.frodly'); // Not used
 Route::get('/get/frodly', [HomeController::class, 'getFrodly'])->name('get.frodly');
 
+Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
+Route::get('/product/{slug}', [HomeController::class, 'productDetails'])->name('product.details');
+Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+Route::get('/place-order', [HomeController::class, 'placeOrder'])->name('place.order');
+
+Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
+Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
+Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
+
 
 // Dashboard
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard')->middleware('auth');

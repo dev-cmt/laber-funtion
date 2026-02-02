@@ -139,8 +139,10 @@
                 </li>
                 @endcan
 
-                
+                @can('view settings')
                 <li class="slide__category"><span class="category-name">Stock</span></li>
+                @endcan
+
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
@@ -232,8 +234,9 @@
                 </li>
                 @endcan
 
+                @can('view settings')
                 <li class="slide__category"><span class="category-name">Purchases</span></li>
-
+                @endcan
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
@@ -264,7 +267,9 @@
                 </li>
                 @endcan
 
+                @can('view settings')
                 <li class="slide__category"><span class="category-name">Finance & Accounts</span></li>
+                @endcan
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
@@ -433,8 +438,9 @@
                 {{-- @endcan --}}
 
 
+                @can('view settings')
                 <li class="slide__category"><span class="category-name">Reports</span></li>
-
+                @endcan
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
@@ -485,8 +491,9 @@
                 </li>
                 @endcan
 
+                @can('view seo')
                 <li class="slide__category"><span class="category-name">Content (CMS)</span></li>
-
+                @endcan
                 @can('view seo')
                 <li class="slide">
                     <a href="{{ route('settings.seo.index') }}" class="side-menu__item {{ Request::is('seo-pages*') ? 'active' : '' }}">

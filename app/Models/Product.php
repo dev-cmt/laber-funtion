@@ -96,6 +96,11 @@ class Product extends Model
     {
         return $this->hasOne(ProductShipping::class);
     }
+    
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 
 
     public function seo(): MorphOne
@@ -104,7 +109,7 @@ class Product extends Model
     }
     public function media(): MorphMany
     {
-        return $this->morphMany(Media::class, 'parent');
+        return $this->morphMany(Media::class, 'model');
     }
 
     // Attributes through variant items

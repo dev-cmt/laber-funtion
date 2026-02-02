@@ -41,6 +41,19 @@
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="main_image" class="form-label">Main Image</label>
+                                <input type="file" class="form-control" id="main_image" name="main_image" value="{{ old('main_image') }}">
+                                @error('main_image') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="gallary_images" class="form-label">Image Gallary</label>
+                                <input type="file" class="form-control" id="gallary_images" name="gallery_images[]" value="{{ old('gallary_images') }}" multiple>
+                                @error('gallary_images') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
 
                     </div>
                 </div>

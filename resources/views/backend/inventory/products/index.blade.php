@@ -40,7 +40,7 @@
                             <td>{{ $products->firstItem() + $key }}</td>
                             <td>
                                 @if($product->main_image)
-                                    <img src="{{ asset('storage/'.$product->main_image) }}" alt="photo" class="rounded-circle" width="40" height="40">
+                                    <img src="{{ asset($product->main_image) }}" alt="photo" class="rounded-circle" width="40" height="40">
                                 @else
                                     <span class="badge bg-secondary">No Photo</span>
                                 @endif
