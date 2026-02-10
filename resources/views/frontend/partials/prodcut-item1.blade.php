@@ -4,7 +4,7 @@
 
         {{-- Product Media --}}
         <figure class="product-media">
-            <a href="{{ route('product.details', $product->slug) }}">
+            <a href="{{ route('product.show', $product->slug) }}">
                 @php
                     $mainImage = $product->main_image ? asset($product->main_image) : asset('images/default-product.png');
                     $galleryImage = $product->media->first()?->path ? asset($product->media->first()->path) : $mainImage;
@@ -26,7 +26,7 @@
         {{-- Product Details --}}
         <div class="product-details">
             <h4 class="product-name">
-                <a href="{{ route('product.details', $product->slug) }}">{{ $product->name }}</a>
+                <a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a>
             </h4>
 
             {{-- Ratings --}}
@@ -38,7 +38,7 @@
                     <span class="ratings" style="width: {{ $ratingPercent }}%;"></span>
                     <span class="tooltiptext tooltip-top"></span>
                 </div>
-                <a href="{{ route('product.details', $product->slug) }}" class="rating-reviews">
+                <a href="{{ route('product.show', $product->slug) }}" class="rating-reviews">
                     ({{ $product->reviews_count ?? 0 }} Reviews)
                 </a>
             </div>

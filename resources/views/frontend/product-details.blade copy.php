@@ -183,11 +183,12 @@
                                 {{-- Add to Cart --}}
                                 <div class="fix-bottom product-sticky-content sticky-content">
                                     <div class="product-form container">
+
                                         <div class="product-qty-form">
                                             <div class="input-group">
-                                                <input class="quantity form-control" type="number" min="1" max="10000000">
-                                                <button class="quantity-plus w-icon-plus"></button>
                                                 <button class="quantity-minus w-icon-minus"></button>
+                                                <input class="quantity form-control" type="number" value="1" min="1">
+                                                <button class="quantity-plus w-icon-plus"></button>
                                             </div>
                                         </div>
 

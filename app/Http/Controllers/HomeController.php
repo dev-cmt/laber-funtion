@@ -54,7 +54,7 @@ class HomeController extends Controller
         return view('frontend.shop', compact('seotags','breadcrumbs'));
     }
 
-    public function productDetails($slug)
+    public function productShow($slug)
     {
         $product = Product::with('media', 'brand', 'category')
         ->withCount('reviews')        // review count

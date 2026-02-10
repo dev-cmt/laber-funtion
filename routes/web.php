@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\SaleRequisitionController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\SitemapController;
 
+
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/cc', function () {
@@ -42,13 +44,19 @@ Route::get('/page/frodly', [HomeController::class, 'pageFrodly'])->name('page.fr
 Route::get('/get/frodly', [HomeController::class, 'getFrodly'])->name('get.frodly');
 
 Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
-Route::get('/product/{slug}', [HomeController::class, 'productDetails'])->name('product.details');
+Route::get('/product/{slug}', [HomeController::class, 'productShow'])->name('product.show');
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
 Route::get('/place-order', [HomeController::class, 'placeOrder'])->name('place.order');
 
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
 Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
+
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'updateQty'])->name('cart.update.qty');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/mini', [CartController::class, 'mini'])->name('cart.mini');
+
 
 
 // Dashboard
