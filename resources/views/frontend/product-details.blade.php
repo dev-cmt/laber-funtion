@@ -1,7 +1,6 @@
 <x-frontend-layout title="Home Page" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
     @push('css')
-        <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/vendor/photoswipe/photoswipe.min.css">
-        <link rel="stylesheet" type="text/css" href="{{asset('frontend')}}/vendor/photoswipe/default-skin/default-skin.min.css">
+    
     @endpush
 
     <!-- Start of Breadcrumb -->
@@ -638,8 +637,49 @@
     <!-- End of Page Content -->
 
     @push('js')
-        <script src="{{asset('frontend')}}/vendor/sticky/sticky.min.js"></script>
-        <script src="{{asset('frontend')}}/vendor/photoswipe/photoswipe.min.js"></script>
-        <script src="{{asset('frontend')}}/vendor/photoswipe/photoswipe-ui-default.min.js"></script>
+    <script>
+        $(document).on('click', '.btn-cart', function(e) {
+            e.preventDefault();
+
+            let button = $(this);
+
+            let id = button.data('id');
+            let name = button.data('name');
+            let price = button.data('price');
+            let image = button.data('image');
+            let url = button.data('url');
+            let qty = $('.quantityl').val();
+
+            $.ajax({
+                url: "{{ route('cart.add') }}",
+                type: "POST",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    id: id,
+                    name: name,
+                    price: price,
+                    image: image,
+                    url: url
+                    qty: qty
+                },
+                success: function(response) {
+
+                    if(response.status) {
+
+                        // update cart count
+                        $('.cart-count').text(response.cart_count);
+
+                        alert(response.message);
+
+                    }
+
+                },
+                error: function() {
+                    alert('Error adding product');
+                }
+            });
+
+        });
+    </script>
     @endpush
 </x-frontend-layout>

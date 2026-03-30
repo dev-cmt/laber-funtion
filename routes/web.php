@@ -58,7 +58,6 @@ Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('car
 Route::get('/cart/mini', [CartController::class, 'mini'])->name('cart.mini');
 
 
-
 // Dashboard
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
