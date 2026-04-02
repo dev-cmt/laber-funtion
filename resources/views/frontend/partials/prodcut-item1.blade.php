@@ -6,7 +6,7 @@
         <figure class="product-media">
             <a href="{{ route('product.show', $product->slug) }}">
                 @php
-                    $mainImage = $product->main_image ? asset($product->main_image) : asset('images/default-product.png');
+                    $mainImage = $product->main_image ? asset($product->main_image) : asset('images/default-product.jpg');
                     $galleryImage = $product->media->first()?->path ? asset($product->media->first()->path) : $mainImage;
                 @endphp
 
