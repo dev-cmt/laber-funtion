@@ -1,109 +1,154 @@
-<footer class="footer appear-animate" data-animation-options="{'name': 'fadeIn'}">
-    <div class="footer-newsletter bg-primary pt-6 pb-6">
-        <div class="container">
-            <div class="row justify-content-center align-items-center">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="icon-box icon-box-side text-white">
-                        <div class="icon-box-icon d-inline-flex">
-                            <i class="w-icon-envelop3"></i>
-                        </div>
-                        <div class="icon-box-content">
-                            <h4 class="icon-box-title text-white text-uppercase mb-0">Subscribe To Our
-                                Newsletter</h4>
-                            <p class="text-white">Get all the latest information on Events, Sales and Offers.
-                            </p>
-                        </div>
+        <!-- site__footer -->
+        <footer class="site__footer">
+            <div class="site-footer">
+                <div class="decor site-footer__decor decor--type--bottom">
+                    <div class="decor__body">
+                        <div class="decor__start"></div>
+                        <div class="decor__end"></div>
+                        <div class="decor__center"></div>
                     </div>
                 </div>
-                <div class="col-xl-7 col-lg-6 col-md-9 mt-4 mt-lg-0 ">
-                    <form action="#" method="get"
-                        class="input-wrapper input-wrapper-inline input-wrapper-rounded">
-                        <input type="email" class="form-control mr-2 bg-white" name="email"
-                            id="email" placeholder="Your E-mail Address" />
-                        <button class="btn btn-dark btn-rounded" type="submit">Subscribe<i
-                                class="w-icon-long-arrow-right"></i></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="footer-top">
-            <div class="row">
-                <div class="col-lg-4 col-sm-6">
-                    <div class="widget widget-about">
-                        <a href="demo2.html" class="logo-footer">
-                            <img src="{{asset('frontend')}}/images/demos/demo2/footer-logo.png" alt="logo-footer"
-                                width="144" height="45" />
-                        </a>
-                        <div class="widget-body">
-                            <p class="widget-about-title">Got Question? Call us 24/7</p>
-                            <a href="tel:18005707777" class="widget-about-call">1-800-570-7777</a>
-                            <p class="widget-about-desc">Register now to get updates on pronot get up icons
-                                & coupons ster now toon.
-                            </p>
+                <div class="site-footer__widgets">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-xl-4">
+                                <div class="site-footer__widget footer-contacts">
+                                    <h5 class="footer-contacts__title">Contact Us</h5>
+                                    <div class="footer-contacts__text">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer in feugiat
+                                        lorem.
+                                    </div>
+                                    <address class="footer-contacts__contacts">
+                                        <dl>
+                                            <dt>Phone number</dt>
+                                            <dd>+1 (800) 060-07-30</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Email Address</dt>
+                                            <dd>red parts@example.com</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Our Location</dt>
+                                            <dd>715 Fake Ave, Apt. 34, New York, NY 10021 USA</dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Working Hours</dt>
+                                            <dd>Mon-Sat 10:00pm - 7:00pm</dd>
+                                        </dl>
+                                    </address>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 col-xl-2">
+                                <div class="site-footer__widget footer-links">
+                                    <h5 class="footer-links__title">Information</h5>
+                                    <ul class="footer-links__list">
+                                        <li class="footer-links__item"><a href="faq.html"
+                                                class="footer-links__link">FAQ</a></li>
+                                        <li class="footer-links__item"><a href="terms-and-conditions.html"
+                                                class="footer-links__link">Terms and Conditions</a></li>
+                                        <li class="footer-links__item"><a href="compare.html"
+                                                class="footer-links__link">Compare</a></li>
+                                        <li class="footer-links__item"><a href="wishlist.html"
+                                                class="footer-links__link">Wishlist</a></li>
+                                        <li class="footer-links__item"><a href="track-order.html"
+                                                class="footer-links__link">Track Order</a></li>
+                                        <li class="footer-links__item"><a href="contact-us.html"
+                                                class="footer-links__link">Contact Us</a></li>
+                                        <li class="footer-links__item"><a href="about-us.html"
+                                                class="footer-links__link">About Us</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 col-xl-2">
+                                <div class="site-footer__widget footer-links">
+                                    <h5 class="footer-links__title">Categories</h5>
+                                    <ul class="footer-links__list">
+                                        <li class="footer-links__item"><a href="oils-and-lubricants.html"
+                                                class="footer-links__link">Oils & Lubricants</a></li>
+                                        <li class="footer-links__item"><a href="engine-and-drivetrain.html"
+                                                class="footer-links__link">Engine & Drivetrain</a></li>
+                                        <li class="footer-links__item"><a href="tires-and-wheels.html"
+                                                class="footer-links__link">Tires & Wheels</a></li>
+                                        <li class="footer-links__item"><a href="interior-accessories.html"
+                                                class="footer-links__link">Interior Accessories</a></li>
+                                        <li class="footer-links__item"><a href="body-parts-and-mirrors.html"
+                                                class="footer-links__link">Body Parts & Mirrors</a></li>
+                                        <li class="footer-links__item"><a href="fuel-system-and-filters.html"
+                                                class="footer-links__link">Fuel System & Filters</a></li>
+                                        <li class="footer-links__item"><a href="headlights-and-lighting.html"
+                                                class="footer-links__link">Headlights & Lighting</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-4">
+                                <div class="site-footer__widget footer-newsletter">
+                                    <h5 class="footer-newsletter__title">Newsletter</h5>
+                                    <div class="footer-newsletter__text">
+                                        Enter your email address below to subscribe to our newsletter and keep up to
+                                        date with the latest news, discounts and special offers.
+                                    </div>
+                                    <form method="post" action="https://redparts.webps.pp.ua/" name="subscribe"
+                                        class="footer-newsletter__form ajax_form">
+                                        <input type="text" name="nospam:blank" value="" style="display:none;" />
+                                        <label class="sr-only" for="footer-newsletter-address">Email Address</label>
+                                        <input type="text" class="footer-newsletter__form-input"
+                                            placeholder="Email Address" name="email" value="" required>
+                                        <button class="footer-newsletter__form-button" type="submit" name="subscribe"
+                                            value="Subscribe">Subscribe</button>
 
-                            <div class="social-icons social-icons-colored">
-                                <a href="#" class="social-icon social-facebook w-icon-facebook"></a>
-                                <a href="#" class="social-icon social-twitter w-icon-twitter"></a>
-                                <a href="#" class="social-icon social-instagram w-icon-instagram"></a>
-                                <a href="#" class="social-icon social-youtube w-icon-youtube"></a>
-                                <a href="#" class="social-icon social-pinterest w-icon-pinterest"></a>
+                                        <input type="hidden" name="af_action"
+                                            value="d492af39bb3336685510cdf720e2859a" />
+                                    </form>
+                                    <div class="footer-newsletter__text footer-newsletter__text--social">
+                                        Follow us on social networks
+                                    </div>
+                                    <div class="footer-newsletter__social-links social-links">
+                                        <ul class="social-links__list">
+                                            <li class="social-links__item social-links__item--instagram">
+                                                <a href="https://instagram.com/" target="_blank">
+                                                    <i class="widget-social__icon fab fa-instagram"></i>
+                                                </a>
+                                            </li>
+                                            <li class="social-links__item social-links__item--twitter">
+                                                <a href="https://twitter.com/" target="_blank">
+                                                    <i class="widget-social__icon fab fa-twitter"></i>
+                                                </a>
+                                            </li>
+                                            <li class="social-links__item social-links__item--youtube">
+                                                <a href="https://youtube.com/" target="_blank">
+                                                    <i class="widget-social__icon fab fa-youtube"></i>
+                                                </a>
+                                            </li>
+                                            <li class="social-links__item social-links__item--facebook">
+                                                <a href="https://facebook.com/" target="_blank">
+                                                    <i class="widget-social__icon fab fa-facebook"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget">
-                        <h3 class="widget-title">Company</h3>
-                        <ul class="widget-body">
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="#">Team Member</a></li>
-                            <li><a href="#">Career</a></li>
-                            <li><a href="contact-us.html">Contact Us</a></li>
-                            <li><a href="#">Affilate</a></li>
-                            <li><a href="#">Order History</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget">
-                        <h4 class="widget-title">My Account</h4>
-                        <ul class="widget-body">
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="cart.html">View Cart</a></li>
-                            <li><a href="login.html">Sign In</a></li>
-                            <li><a href="#">Help</a></li>
-                            <li><a href="wishlist.html">My Wishlist</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="widget">
-                        <h4 class="widget-title">Customer Service</h4>
-                        <ul class="widget-body">
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Money-back guarantee!</a></li>
-                            <li><a href="#">Product Returns</a></li>
-                            <li><a href="#">Support Center</a></li>
-                            <li><a href="#">Shipping</a></li>
-                            <li><a href="#">Term and Conditions</a></li>
-                        </ul>
+                <div class="site-footer__bottom">
+                    <div class="container">
+                        <div class="site-footer__bottom-row">
+                            <div class="site-footer__copyright">
+                                <!-- copyright -->
+                                © 2026 RedParts – Auto Parts eCommerce MODX Theme, Handmade by <a
+                                    href="https://themeforest.net/user/webpsdev/portfolio" target="_blank">WebPSdev</a>
+                                &amp; <a href="https://themeforest.net/user/kos9" target="_blank">Kos</a>.
+
+                                <!-- copyright / end -->
+                            </div>
+                            <div class="site-footer__payments">
+                                <img src="{{asset('frontend')}}/images/payments.png" alt="">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="footer-left">
-                <p class="copyright">Copyright © 2026 Sky Tech Solve. All Rights Reserved.</p>
-            </div>
-            <div class="footer-right">
-                <span class="payment-label mr-lg-8">We're using safe payment for</span>
-                <figure class="payment">
-                    <img src="{{asset('frontend')}}/images/payment.png" alt="payment" width="159" height="25" />
-                </figure>
-            </div>
-        </div>
+        </footer>
+        <!-- site__footer / end -->
     </div>
-</footer>

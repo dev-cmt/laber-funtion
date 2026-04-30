@@ -39,18 +39,18 @@ Route::get('/cc', function () {
     return 'Cleared!';
 });
 
-Route::get('/', [HomeController::class, 'welcome'])->name('home');
-Route::get('/page/frodly', [HomeController::class, 'pageFrodly'])->name('page.frodly'); // Not used
-Route::get('/get/frodly', [HomeController::class, 'getFrodly'])->name('get.frodly');
+$controller = config("theme.main.controller");
+Route::controller($controller)->group(function () {
+    Route::get('/', 'welcome')->name('home');
+    Route::get('/shop', 'shop')->name('shop');
+    Route::get('/product/{slug}', 'productShow')->name('product.show');
+    Route::get('/checkout', 'checkout')->name('checkout');
+    Route::get('/place-order', 'placeOrder')->name('place.order');
+    Route::get('/cart', 'cart')->name('cart');
+    Route::get('/wishlist', 'wishlist')->name('wishlist');
+    Route::get('/compare', 'compare')->name('compare');
+});
 
-Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
-Route::get('/product/{slug}', [HomeController::class, 'productShow'])->name('product.show');
-Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
-Route::get('/place-order', [HomeController::class, 'placeOrder'])->name('place.order');
-
-Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
-Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
-Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
 
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'updateQty'])->name('cart.update.qty');
