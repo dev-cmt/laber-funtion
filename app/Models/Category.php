@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -14,8 +15,11 @@ class Category extends Model
         'parent_id',
         'name',
         'slug',
-        'image',
-        'status'
+        'status',
+        'is_menu',
+        'is_home',
+        'is_section',
+        'is_footer',
     ];
 
     public function blogPosts()
@@ -26,6 +30,12 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function media(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'model');
+    }
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
@@ -37,6 +47,19 @@ class Category extends Model
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');
+    }
+
+    public function getImageAttribute(): ?string
+    {
+        $media = $this->relationLoaded('media')
+            ? $this->media->first()
+            : $this->media()->ordered()->first();
+
+        if ($media) {
+            return $media->path;
+        }
+
+        return $this->attributes['image'] ?? null;
     }
 
     protected static function boot(): void

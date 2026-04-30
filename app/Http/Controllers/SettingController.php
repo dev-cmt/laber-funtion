@@ -51,6 +51,41 @@ class SettingController extends Controller
                 }
             }
         }
+
+        if($request->hasFile('logo_light'))
+        {
+            $file = $request->file('logo_light');
+            $imageName = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+            $path = public_path('uploads/setting');
+            $file->move($path.'/', $imageName);
+            $input['logo_light'] = 'uploads/setting/'.$imageName;
+
+            if($data){
+                if($data->logo_light){
+                    if(file_exists(public_path($data->logo_light))){
+                        @unlink(public_path($data->logo_light));
+                    }
+                }
+            }
+        }
+
+        if($request->hasFile('logo_dark'))
+        {
+            $file = $request->file('logo_dark');
+            $imageName = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+            $path = public_path('uploads/setting');
+            $file->move($path.'/', $imageName);
+            $input['logo_dark'] = 'uploads/setting/'.$imageName;
+
+            if($data){
+                if($data->logo_dark){
+                    if(file_exists(public_path($data->logo_dark))){
+                        @unlink(public_path($data->logo_dark));
+                    }
+                }
+            }
+        }
+
         if($data){
             $data->update($input);
         }else{

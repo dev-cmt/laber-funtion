@@ -52,7 +52,7 @@
                                                 @endif
                                             </td>
                                             <td style="padding-left: {{ $padding }}px;">
-                                                {{ $level > 0 ? '↳ ' : '' }}{{ $category->name }}
+                                                {{ $level > 0 ? str_repeat('— ', $level) . '↳ ' : '' }}{{ $category->name }}
                                             </td>
                                             <td>{{ $parentName }}</td>
                                             <td>
@@ -61,12 +61,16 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-light edit_cat_btn" 
-                                                        data-bs-toggle="modal" 
+                                                <button class="btn btn-sm btn-light edit_cat_btn"
+                                                        data-bs-toggle="modal"
                                                         data-bs-target="#editCategoryModal"
                                                         data-id="{{ $category->id }}"
                                                         data-name="{{ $category->name }}"
                                                         data-status="{{ $category->status }}"
+                                                        data-is_menu="{{ $category->is_menu }}"
+                                                        data-is_home="{{ $category->is_home }}"
+                                                        data-is_section="{{ $category->is_section }}"
+                                                        data-is_footer="{{ $category->is_footer }}"
                                                         data-parent="{{ $category->parent_id ?? '' }}"
                                                         data-image="{{ $category->image ?? '' }}">
                                                     <i class="ri-pencil-line"></i>
@@ -90,7 +94,7 @@
                                 @foreach($data->where('parent_id', null) as $category)
                                     @php $renderCategory($category); @endphp
                                 @endforeach
-                                
+
                                 @if($data->where('parent_id', null)->isEmpty())
                                     <tr>
                                         <td colspan="6" class="text-center text-muted py-4">No categories found</td>
@@ -125,19 +129,26 @@
                             <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
 
-                        <div class="form-check mb-3">
-                            <input type="checkbox" id="is_subcategory_add" class="form-check-input">
-                            <label class="form-check-label">Is Subcategory?</label>
-                        </div>
-
-                        <div class="mb-3" id="parent_cat_group_add" style="display:none;">
+                        <div class="mb-3" id="parent_cat_group_add">
                             <label class="form-label">Parent Category</label>
-                            <select name="parent_id" class="form-control">
+                            <select name="parent_id" id="parent_id_add" class="form-control select2">
                                 <option value="">-- Select --</option>
-                                @foreach($data->where('parent_id', null) as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                @endforeach
+                                @php
+                                    $renderParentOptions = function($categories, $parentId = null, $level = 0) use (&$renderParentOptions) {
+                                        $html = '';
+
+                                        foreach ($categories->where('parent_id', $parentId) as $cat) {
+                                            $prefix = $level > 0 ? str_repeat('— ', $level) . '↳ ' : '';
+                                            $html .= '<option value="' . $cat->id . '">' . $prefix . e($cat->name) . '</option>';
+                                            $html .= $renderParentOptions($categories, $cat->id, $level + 1);
+                                        }
+
+                                        return $html;
+                                    };
+                                @endphp
+                                {!! $renderParentOptions($data) !!}
                             </select>
+                            <small class="text-muted">Leave empty to create a root category.</small>
                         </div>
 
                         <div class="mb-3">
@@ -146,6 +157,26 @@
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
                             </select>
+                        </div>
+
+                        <div class="border rounded p-3 mb-3 bg-light">
+                            <label class="form-label fw-semibold mb-2">Display Placement</label>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_menu" id="is_menu_add" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_menu_add">Show in Menu</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_home" id="is_home_add" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_home_add">Show on Home</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_section" id="is_section_add" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_section_add">Show as Section</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="is_footer" id="is_footer_add" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_footer_add">Show in Footer</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -180,16 +211,12 @@
                             <div id="currentImage" class="mt-2"></div>
                         </div>
 
-                        <div class="form-check mb-3">
-                            <input type="checkbox" id="is_subcategory_edit" class="form-check-input">
-                            <label class="form-check-label">Is Subcategory?</label>
-                        </div>
-
-                        <div class="mb-3" id="parent_cat_group_edit" style="display: none;">
+                        <div class="mb-3" id="parent_cat_group_edit">
                             <label class="form-label">Parent Category</label>
-                            <select name="parent_id" id="parent_id_edit" class="form-control">
+                            <select name="parent_id" id="parent_id_edit" class="form-control select2">
                                 <option value="">-- Select --</option>
                             </select>
+                            <small class="text-muted">Leave empty to keep it as root category.</small>
                         </div>
 
                         <div class="mb-3">
@@ -198,6 +225,26 @@
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
                             </select>
+                        </div>
+
+                        <div class="border rounded p-3 mb-3 bg-light">
+                            <label class="form-label fw-semibold mb-2">Display Placement</label>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_menu" id="is_menu_edit" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_menu_edit">Show in Menu</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_home" id="is_home_edit" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_home_edit">Show on Home</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input type="checkbox" name="is_section" id="is_section_edit" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_section_edit">Show as Section</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="is_footer" id="is_footer_edit" class="form-check-input" value="1">
+                                <label class="form-check-label" for="is_footer_edit">Show in Footer</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -212,48 +259,97 @@
     @push('js')
     <script>
         $(document).ready(function() {
-            const categories = @json($data);
+            const categories = @json($categoriesForJs);
 
-            // Toggle parent category dropdowns
-            $('#is_subcategory_add').change(function() {
-                $('#parent_cat_group_add').toggle(this.checked);
-            });
+            function initParentSelects() {
+                if (!$.fn.select2) {
+                    return;
+                }
 
-            $('#is_subcategory_edit').change(function() {
-                $('#parent_cat_group_edit').toggle(this.checked);
-            });
+                ['#parent_id_add', '#parent_id_edit'].forEach(selector => {
+                    const $select = $(selector);
+
+                    if ($select.hasClass('select2-hidden-accessible')) {
+                        $select.select2('destroy');
+                    }
+
+                    $select.select2({
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: '-- Select --',
+                        dropdownParent: $select.closest('.modal')
+                    });
+                });
+            }
+
+            function getDescendantIds(categoryId, allCategories) {
+                const descendants = [];
+                const stack = [Number(categoryId)];
+
+                while (stack.length > 0) {
+                    const currentId = stack.pop();
+                    const children = allCategories.filter(cat => Number(cat.parent_id) === Number(currentId));
+
+                    children.forEach(child => {
+                        descendants.push(Number(child.id));
+                        stack.push(Number(child.id));
+                    });
+                }
+
+                return descendants;
+            }
+
+            function buildParentOptions(currentId = null, selectedParentId = null) {
+                const excludedIds = [];
+
+                if (currentId !== null) {
+                    excludedIds.push(Number(currentId), ...getDescendantIds(currentId, categories));
+                }
+
+                function renderOptions(parentId = null, level = 0) {
+                    let html = '';
+                    const siblings = categories
+                        .filter(cat => (cat.parent_id === null && parentId === null) || Number(cat.parent_id) === Number(parentId))
+                        .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+
+                    siblings.forEach(cat => {
+                        if (excludedIds.includes(Number(cat.id))) {
+                            return;
+                        }
+
+                        const selected = Number(cat.id) === Number(selectedParentId) ? 'selected' : '';
+                        const prefix = level > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(level) + '↳ ' : '';
+                        html += `<option value="${cat.id}" ${selected}>${prefix}${cat.name}</option>`;
+                        html += renderOptions(cat.id, level + 1);
+                    });
+
+                    return html;
+                }
+
+                return '<option value="">-- Select --</option>' + renderOptions();
+            }
+
+            $('#parent_id_add').html(buildParentOptions());
+            initParentSelects();
 
             // Edit category handler
             $('.edit_cat_btn').on('click', function() {
                 const $this = $(this);
                 const data = $this.data();
                 const currentId = data.id;
-                
+
                 $('#edit_id').val(currentId);
                 $('#edit_name').val(data.name);
                 $('#edit_status').val(data.status);
+                $('#is_menu_edit').prop('checked', data.is_menu == 1 || data.is_menu === true);
+                $('#is_home_edit').prop('checked', data.is_home == 1 || data.is_home === true);
+                $('#is_section_edit').prop('checked', data.is_section == 1 || data.is_section === true);
+                $('#is_footer_edit').prop('checked', data.is_footer == 1 || data.is_footer === true);
 
-                const hasParent = data.parent && data.parent !== 'false';
-                $('#is_subcategory_edit').prop('checked', hasParent);
-                if(hasParent){
-                    $('#parent_cat_group_edit').toggle(hasParent);
-                }
-                
-                // Populate parent dropdown excluding current category and preventing circular relationships
-                let options = '<option value="">-- Select --</option>';
-                
-                // Get all main categories (parent_id = null)
-                const mainCategories = categories.filter(cat => cat.parent_id === null);
-                
-                mainCategories.forEach(cat => {
-                    // Exclude current category and check if it's not a child of current category
-                    if (cat.id != currentId && !isChildCategory(cat.id, currentId, categories)) {
-                        const selected = cat.id == data.parent ? 'selected' : '';
-                        options += `<option value="${cat.id}" ${selected}>${cat.name}</option>`;
-                    }
-                });
-                
-                $('#parent_id_edit').html(options);
+                const selectedParent = data.parent ? Number(data.parent) : null;
+                $('#parent_id_edit').html(buildParentOptions(currentId, selectedParent));
+                initParentSelects();
+                $('#parent_id_edit').val(selectedParent).trigger('change');
 
                 // Show current image
                 const currentImage = $('#currentImage');
@@ -267,25 +363,13 @@
                 }
             });
 
-            // Function to check if a category is a child of the current editing category
-            function isChildCategory(categoryId, currentEditingId, allCategories) {
-                // This prevents circular relationships - if current editing category becomes parent of its own parent
-                let category = allCategories.find(cat => cat.id == categoryId);
-                while (category && category.parent_id) {
-                    if (category.parent_id == currentEditingId) {
-                        return true; // This category is a child of the current editing category
-                    }
-                    category = allCategories.find(cat => cat.id == category.parent_id);
-                }
-                return false;
-            }
-
             // Reset modals when closed
             $('#createCategoryModal, #editCategoryModal').on('hidden.bs.modal', function() {
                 $(this).find('form')[0].reset();
-                $('#parent_cat_group_add, #parent_cat_group_edit').hide();
                 $('#currentImage').empty();
+                $('#parent_id_add').html(buildParentOptions());
                 $('#parent_id_edit').html('<option value="">-- Select --</option>');
+                initParentSelects();
             });
         });
     </script>

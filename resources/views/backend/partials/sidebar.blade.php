@@ -1,16 +1,13 @@
 <aside class="app-sidebar sticky" id="sidebar">
     <!-- Start::main-sidebar-header -->
     <div class="main-sidebar-header">
-        {{-- <a href="index.html" class="header-logo">
-            <img src="../assets/images/brand-logos/desktop-logo.png" alt="logo" class="desktop-logo">
-            <img src="../assets/images/brand-logos/toggle-logo.png" alt="logo" class="toggle-logo">
-            <img src="../assets/images/brand-logos/desktop-dark.png" alt="logo" class="desktop-dark">
-            <img src="../assets/images/brand-logos/toggle-dark.png" alt="logo" class="toggle-dark">
-            <img src="../assets/images/brand-logos/desktop-white.png" alt="logo" class="desktop-white">
-            <img src="../assets/images/brand-logos/toggle-white.png" alt="logo" class="toggle-white">
-        </a> --}}
-        <a href="#" class="header-logo">
-            <img src="{{ asset($settings ? $settings->logo : 'images/logo.png') }}" style="height: 2.7rem" alt="logo">
+        <a href="{{ route('dashboard') }}" class="header-logo">
+            <img src="{{ asset($settings ? $settings->logo_light : '') }}" alt="logo" class="desktop-logo">
+            <img src="{{ asset($settings ? $settings->logo_dark : '') }}" alt="logo" class="toggle-logo">
+            <img src="{{ asset($settings ? $settings->logo_light : '') }}" alt="logo" class="desktop-dark">
+            <img src="{{ asset($settings ? $settings->logo_light : '') }}" alt="logo" class="toggle-dark">
+            <img src="{{ asset($settings ? $settings->logo_dark : '') }}" alt="logo" class="desktop-white">
+            <img src="{{ asset($settings ? $settings->logo_dark : '') }}" alt="logo" class="toggle-white">
         </a>
     </div>
     <!-- End::main-sidebar-header -->
@@ -25,7 +22,7 @@
             </div>
 
             <ul class="main-menu">
-                
+
                 <li class="slide__category"><span class="category-name">Main</span></li>
 
                 @can('view dashboard')
@@ -39,14 +36,14 @@
                 </li>
                 @endcan
 
-                
+
                 <li class="slide__category"><span class="category-name">Inventory</span></li>
                 <!-- Proudct -->
                 @can('view products')
                 <li class="slide">
                     <a href="{{ route('products.index') }}" class="side-menu__item {{ Request::is('products*') && !Request::is('products/create') ? 'active' : '' }}">
                         <i class="bx bx-cube side-menu__icon"></i>
-                        <span class="side-menu__label">Products</span>
+                        <span class="side-menu__label">Products List</span>
                     </a>
                 </li>
                 @endcan
@@ -80,7 +77,7 @@
                 <li class="slide">
                     <a href="{{ route('categories.index') }}" class="side-menu__item {{ Request::is('categories*') ? 'active' : '' }}">
                         <i class="bx bx-slider-alt side-menu__icon"></i>
-                        <span class="side-menu__label">Category</span>
+                        <span class="side-menu__label">Category List</span>
                     </a>
                 </li>
                 @endcan
@@ -89,7 +86,7 @@
                 <li class="slide">
                     <a href="{{ route('brands.index') }}" class="side-menu__item {{ Request::is('brands*') ? 'active' : '' }}">
                         <i class="bx bx-leaf side-menu__icon"></i>
-                        <span class="side-menu__label">Brands</span>
+                        <span class="side-menu__label">Brands List</span>
                     </a>
                 </li>
                 @endcan
@@ -173,7 +170,7 @@
                 </li>
                 @endcan
 
-                
+
                 <li class="slide__category"><span class="category-name">Sales</span></li>
                 @can('view orders')
                 <li class="slide">
@@ -213,7 +210,7 @@
                     </a>
                 </li>
                 @endcan
-                
+
                 @can('view sale approve')
                 <li class="slide">
                     <a href="{{ route('sale-approve.index') }}"
@@ -419,7 +416,7 @@
 
                 {{-- @can('view service requests') --}}
                 <li class="slide">
-                    <a href="{{ route('service-requests.index') }}" 
+                    <a href="{{ route('service-requests.index') }}"
                     class="side-menu__item {{ Request::is('service-requests*') ? 'active' : '' }}">
                         <i class="bx bx-phone-call side-menu__icon"></i>
                         <span class="side-menu__label">Service Requests</span>
@@ -429,7 +426,7 @@
 
                 {{-- @can('create service requests') --}}
                 <li class="slide">
-                    <a href="{{ route('service-requests.create') }}" 
+                    <a href="{{ route('service-requests.create') }}"
                     class="side-menu__item {{ Request::is('service-requests/create') ? 'active' : '' }}">
                         <i class="bx bx-plus-circle side-menu__icon"></i>
                         <span class="side-menu__label">New Request</span>

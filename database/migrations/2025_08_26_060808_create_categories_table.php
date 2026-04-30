@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
+            $table->boolean('is_menu')->default(false);
+            $table->boolean('is_home')->default(false);
+            $table->boolean('is_section')->default(false);
+            $table->boolean('is_footer')->default(false);
             $table->timestamps();
         });
     }

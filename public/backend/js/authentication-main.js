@@ -8,7 +8,27 @@
     if (localStorage.ynexrtl) {
         let html = document.querySelector('html');
         html.setAttribute("dir", "rtl");
-        document.querySelector("#style")?.setAttribute("href", "../assets/libs/bootstrap/css/bootstrap.rtl.min.css");
+
+        const applyRtlCss = () => {
+            let style = document.querySelector("#style");
+            if (style) {
+                let currentHref = style.getAttribute("href");
+                if (currentHref.includes('bootstrap.min.css')) {
+                    style.setAttribute("href", currentHref.replace('bootstrap.min.css', 'bootstrap.rtl.min.css'));
+                }
+                return true;
+            }
+            return false;
+        };
+
+        if (!applyRtlCss()) {
+            const observer = new MutationObserver((mutations, obs) => {
+                if (applyRtlCss()) {
+                    obs.disconnect();
+                }
+            });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+        }
     }
     if (localStorage.getItem("ynexlayout") == "horizontal") {
         document.querySelector("html").setAttribute("data-nav-layout", "horizontal")

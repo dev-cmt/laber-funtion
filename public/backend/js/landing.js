@@ -180,7 +180,10 @@ function switcherClick() {
 
 function ltrFn() {
     let html = document.querySelector('html')
-    document.querySelector("#style")?.setAttribute("href", "../assets/libs/bootstrap/css/bootstrap.min.css");
+    let style = document.querySelector("#style");
+    if (style && style.getAttribute("href").includes('bootstrap.rtl.min.css')) {
+        style.setAttribute("href", style.getAttribute("href").replace('bootstrap.rtl.min.css', 'bootstrap.min.css'));
+    }
     html.setAttribute("dir", "ltr");
     document.querySelector('#switcher-ltr').checked = true;
     checkOptions();
@@ -189,7 +192,10 @@ function ltrFn() {
 function rtlFn() {
     let html = document.querySelector('html');
     html.setAttribute("dir", "rtl");
-    document.querySelector("#style")?.setAttribute("href", "../assets/libs/bootstrap/css/bootstrap.rtl.min.css");
+    let style = document.querySelector("#style");
+    if (style && style.getAttribute("href").includes('bootstrap.min.css')) {
+        style.setAttribute("href", style.getAttribute("href").replace('bootstrap.min.css', 'bootstrap.rtl.min.css'));
+    }
     checkOptions();
 }
 
