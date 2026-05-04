@@ -14,9 +14,10 @@ class HomeController extends Controller
 {
     use SeoTrait;
 
-    public function welcome()
+    public function index()
     {
         $products = Product::with('media')->withCount('reviews')->withAvg('reviews', 'rating')->active()->get();
+        $hot_deals = $products->take(10);
 
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
@@ -32,7 +33,7 @@ class HomeController extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.welcome', compact('seotags','breadcrumbs', 'products'));
+        return view('frontend.index', compact('seotags','breadcrumbs', 'products', 'hot_deals'));
     }
 
     public function shop()

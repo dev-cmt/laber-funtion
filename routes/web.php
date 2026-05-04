@@ -41,7 +41,7 @@ Route::get('/cc', function () {
 
 $controller = config("theme.main.controller");
 Route::controller($controller)->group(function () {
-    Route::get('/', 'welcome')->name('home');
+    Route::get('/', 'index')->name('home');
     Route::get('/shop', 'shop')->name('shop');
     Route::get('/product/{slug}', 'productShow')->name('product.show');
     Route::get('/checkout', 'checkout')->name('checkout');
@@ -51,7 +51,7 @@ Route::controller($controller)->group(function () {
     Route::get('/compare', 'compare')->name('compare');
 });
 
-
+// Frontend Cart
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'updateQty'])->name('cart.update.qty');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
