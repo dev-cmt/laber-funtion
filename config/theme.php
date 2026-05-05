@@ -8,8 +8,8 @@ return [
     ],
 
     'theme1' => [
-        'controller' => App\Http\Controllers\Theme1Controller::class,
+        'controller' => App\Http\Controllers\Theme\Theme1Controller::class,
         'views_path' => 'theme.theme1',
-        'assets_path' => 'frontend1',
+        'assets_path' => 'theme1',
     ],
 ];

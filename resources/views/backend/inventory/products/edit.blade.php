@@ -3,8 +3,8 @@
         <link rel="stylesheet" href="{{asset('backend/libs/summernote/summernote-lite.min.css')}}"/>
         <style>
             .image-preview-box {
-                width: 80px;
-                height: 80px;
+                width: 85px;
+                height: 85px;
                 border: 2px solid #f1f5f9;
                 border-radius: 8px;
                 display: flex;

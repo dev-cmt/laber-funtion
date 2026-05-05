@@ -39,7 +39,7 @@ Route::get('/cc', function () {
     return 'Cleared!';
 });
 
-$controller = config("theme.theme1.controller");
+$controller = config("theme.main.controller");
 Route::controller($controller)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/shop', 'shop')->name('shop');
