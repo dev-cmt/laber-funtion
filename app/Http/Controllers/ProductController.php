@@ -57,10 +57,11 @@ class ProductController extends Controller
         DB::transaction(function() use ($data, $request) {
             // Upload main image
             if ($request->hasFile('main_image')) {
-                $data['main_image'] = ImageHelper::uploadImage(
-                    $request->file('main_image'),
-                    'uploads/products/main'
-                );
+                $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main');
+            }
+            // Upload hover image
+            if ($request->hasFile('hover_image')) {
+                $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover');
             }
             // 1. Create Product
             $product = Product::create($data);
@@ -70,12 +71,8 @@ class ProductController extends Controller
             // -------------------------
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $image) {
-
-                    // ✅ MUST come first (temp file still exists)
                     $size = $image->getSize();
                     $mime = $image->getMimeType();
-
-                    // ✅ Upload AFTER reading metadata
                     $path = ImageHelper::uploadImage($image, 'uploads/products/gallery');
 
                     $product->media()->create([
@@ -229,9 +226,53 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $request->all();
+        // -------------------------
+        // 1. UPDATE PRODUCT IMAGES
+        // -------------------------
+        if ($request->hasFile('main_image')) {
+            $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main', $product->main_image);
+        } elseif ($request->delete_main_image == "1") {
+            ImageHelper::deleteImage($product->main_image);
+            $data['main_image'] = null;
+        }
+
+        if ($request->hasFile('hover_image')) {
+            $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover', $product->hover_image);
+        } elseif ($request->delete_hover_image == "1") {
+            ImageHelper::deleteImage($product->hover_image);
+            $data['hover_image'] = null;
+        }
+
+        // Handle deleted media
+        if ($request->has('deleted_media')) {
+            foreach ($request->deleted_media as $mediaId) {
+                $media = Media::find($mediaId);
+                if ($media) {
+                    ImageHelper::deleteImage($media->path);
+                    $media->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $size = $image->getSize();
+                $mime = $image->getMimeType();
+                $path = ImageHelper::uploadImage($image, 'uploads/products/gallery');
+
+                $product->media()->create([
+                    'name'       => pathinfo($path, PATHINFO_FILENAME),
+                    'path'       => $path,
+                    'type'       => Media::getTypeFromMime($mime),
+                    'size'       => $size,
+                    'user_id'    => Auth::user()->id,
+                    'sort_order' => 0,
+                ]);
+            }
+        }
 
         // -------------------------
-        // 1. UPDATE PRODUCT
+        // 2. UPDATE PRODUCT
         // -------------------------
         $product->update($data);
 
@@ -641,6 +682,36 @@ class ProductController extends Controller
         $pdf->setPaper($paperSize, 'portrait');
 
         return $pdf->stream($type . "_labels.pdf");
+    }
+
+    public function mediaUpload(Request $request)
+    {
+        $file = $request->file('file');
+        $type = $request->input('type', 'gallery'); // main, hover, gallery, etc.
+        
+        $folder = 'uploads/products/' . $type;
+        $path = ImageHelper::uploadImage($file, $folder);
+
+        return response()->json([
+            'name' => $file->getClientOriginalName(),
+            'path' => $path,
+            'size' => $file->getSize(),
+            'type' => $file->getClientOriginalExtension(),
+            'full_path' => asset($path)
+        ]);
+    }
+
+    public function mediaDelete(Request $request)
+    {
+        $path = $request->input('path');
+        if ($path) {
+            ImageHelper::deleteImage($path);
+            
+            // If it's a permanent media record, delete it from DB
+            Media::where('path', $path)->delete();
+        }
+
+        return response()->json(['success' => true]);
     }
 
 }

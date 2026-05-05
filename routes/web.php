@@ -39,7 +39,7 @@ Route::get('/cc', function () {
     return 'Cleared!';
 });
 
-$controller = config("theme.main.controller");
+$controller = config("theme.theme1.controller");
 Route::controller($controller)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/shop', 'shop')->name('shop');
@@ -143,6 +143,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/label-print/search', [ProductController::class, 'labelPrintSearch'])->name('label-print.search');
     Route::post('/label-print/generate', [ProductController::class, 'labelPrintGenerate'])->name('label-print.generate');
     Route::post('/label-print/generate-qr', [ProductController::class, 'labelPrintGenerateQR'])->name('label-print.generate.qr');
+
+    // Media Upload (AJAX)
+    Route::post('/media/upload', [ProductController::class, 'mediaUpload'])->name('media.upload');
+    Route::post('/media/delete', [ProductController::class, 'mediaDelete'])->name('media.delete');
 
 });
 

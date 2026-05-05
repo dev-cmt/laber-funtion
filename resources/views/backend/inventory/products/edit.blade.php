@@ -1,6 +1,167 @@
 <x-backend-layout title="Tags Management">
     @push('css')
         <link rel="stylesheet" href="{{asset('backend/libs/summernote/summernote-lite.min.css')}}"/>
+        <style>
+            .image-preview-box {
+                width: 80px;
+                height: 80px;
+                border: 2px solid #f1f5f9;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                background: #f8fafc;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+            .image-preview-box:hover {
+                border-color: #3b82f6;
+                background: #eff6ff;
+                transform: scale(1.05);
+            }
+            .image-preview-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .image-preview-box i {
+                font-size: 20px;
+                color: #94a3b8;
+            }
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 8px;
+                margin-top: 5px;
+                width: 100%;
+            }
+            .gallery-item {
+                position: relative;
+                aspect-ratio: 1/1;
+                border-radius: 8px;
+                overflow: hidden;
+                border: 2px solid #f1f5f9;
+                background: #fff;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .gallery-item:hover {
+                transform: scale(1.05);
+                border-color: #3b82f6;
+                z-index: 10;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .gallery-upload-card {
+                aspect-ratio: 1/1;
+                border: 2px dashed #cbd5e1;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: #f8fafc;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                color: #64748b;
+            }
+            .gallery-upload-card:hover {
+                background: #eff6ff;
+                border-color: #3b82f6;
+                color: #3b82f6;
+            }
+            .gallery-upload-card i {
+                font-size: 20px;
+            }
+            .gallery-upload-card span {
+                font-size: 9px;
+                font-weight: 600;
+                margin-top: 2px;
+                text-align: center;
+            }
+            .delete-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            .gallery-item:hover .delete-overlay {
+                opacity: 1;
+            }
+            .btn-delete-small {
+                width: 32px;
+                height: 32px;
+                background: #ff4d4f;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                transition: transform 0.2s;
+            }
+            .btn-delete-small:hover {
+                transform: scale(1.2);
+                background: #ff7875;
+            }
+            
+            .progress-container {
+                position: absolute;
+                bottom: 8px;
+                left: 8px;
+                right: 8px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 10px;
+                overflow: hidden;
+                backdrop-filter: blur(4px);
+            }
+            .progress-fill {
+                height: 100%;
+                width: 0%;
+                background: #3b82f6;
+                transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .success-badge {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background: #22c55e;
+                color: white;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                opacity: 0;
+                transform: scale(0);
+                transition: all 0.3s 1.5s; /* Delay to match progress fill */
+            }
+            .gallery-item.loaded .progress-fill {
+                width: 100%;
+            }
+            .gallery-item.loaded .success-badge {
+                opacity: 1;
+                transform: scale(1);
+            }
+            .gallery-item.loaded .progress-container {
+                opacity: 0;
+                transition: opacity 0.5s 2s;
+            }
+        </style>
     @endpush
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
@@ -49,32 +210,74 @@
                             @enderror
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="main_image" class="form-label">Main Image</label>
-                                <input type="file" class="form-control" id="main_image" name="main_image" value="{{ old('main_image') }}">
-                                @error('main_image') <div class="text-danger mt-1">{{ $message }}</div> @enderror
-                                
-                                @if($product->main_image)
-                                    <div class="mt-2 d-flex justify-content-center">
-                                        <img src="{{ asset($product->main_image) }}" alt="Main Image" class="rounded" width="65" height="65">
+                        <div class="card p-2 mb-4 border-0 shadow-sm" style="border-radius: 12px;">
+                            <div class="d-flex gap-3 align-items-start">
+                                <!-- Main & Hover Group -->
+                                <div class="d-flex gap-2">
+                                    <div class="text-center">
+                                        <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">MAIN</span>
+                                        <div class="image-preview-box shadow-sm" id="main_image_container">
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->main_image ? '' : "document.getElementById('main_image').click()" }}" id="main_image_clicker">
+                                                <i class="ri-image-add-line {{ $product->main_image ? 'd-none' : '' }}" id="main_image_icon"></i>
+                                                <img id="main_image_preview" src="{{ $product->main_image ? asset($product->main_image) : '' }}" class="{{ $product->main_image ? '' : 'd-none' }}">
+                                            </div>
+                                            <div class="delete-overlay" id="main_image_delete" style="{{ $product->main_image ? 'display: flex;' : 'display: none;' }}">
+                                                <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('main_image', true)">
+                                                    <i class="ri-close-line"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="file" name="main_image" id="main_image" class="d-none" accept="image/*" onchange="previewImage(this, 'main_image_preview', 'main_image_icon')">
+                                        <input type="hidden" name="delete_main_image" id="delete_main_image" value="0">
+                                        @error('main_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
                                     </div>
-                                @endif
-                            </div>
-                            <div class="col-md-6">
-                                <label for="gallary_images" class="form-label">Image Gallary</label>
-                                <input type="file" class="form-control" id="gallary_images" name="gallary_images" value="{{ old('gallary_images') }}">
-                                @error('gallary_images') <div class="text-danger mt-1">{{ $message }}</div> @enderror
 
-                                @if($product->media && $product->media->count() > 0)
-                                    <div class="mt-2 d-flex flex-wrap justify-content-center gap-2">
-                                        @foreach($product->media as $media)
-                                            @if($media->type === 'image')
-                                                <img src="{{ asset($media->path) }}" alt="{{ $media->name }}" class="rounded" width="65" height="65">
-                                            @endif
-                                        @endforeach
+                                    <div class="text-center">
+                                        <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">HOVER</span>
+                                        <div class="image-preview-box shadow-sm" id="hover_image_container">
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->hover_image ? '' : "document.getElementById('hover_image').click()" }}" id="hover_image_clicker">
+                                                <i class="ri-image-add-line {{ $product->hover_image ? 'd-none' : '' }}" id="hover_image_icon"></i>
+                                                <img id="hover_image_preview" src="{{ $product->hover_image ? asset($product->hover_image) : '' }}" class="{{ $product->hover_image ? '' : 'd-none' }}">
+                                            </div>
+                                            <div class="delete-overlay" id="hover_image_delete" style="{{ $product->hover_image ? 'display: flex;' : 'display: none;' }}">
+                                                <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('hover_image', true)">
+                                                    <i class="ri-close-line"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="file" name="hover_image" id="hover_image" class="d-none" accept="image/*" onchange="previewImage(this, 'hover_image_preview', 'hover_image_icon')">
+                                        <input type="hidden" name="delete_hover_image" id="delete_hover_image" value="0">
+                                        @error('hover_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
                                     </div>
-                                @endif
+                                </div>
+
+                                <!-- Gallery Group -->
+                                <div class="flex-grow-1" style="min-width: 0;">
+                                    <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">GALLERY IMAGES</span>
+                                    <div class="gallery-grid mt-0" id="gallery_preview">
+                                        <div class="gallery-upload-card shadow-sm" onclick="document.getElementById('gallery_images').click()">
+                                            <i class="ri-add-line"></i>
+                                            <span style="font-size: 8px;">ADD</span>
+                                        </div>
+                                        @if($product->media)
+                                            @foreach($product->media as $media)
+                                                @if($media->type === 'image')
+                                                    <div class="gallery-item" id="media_item_{{ $media->id }}">
+                                                        <img src="{{ asset($media->path) }}">
+                                                        <div class="delete-overlay">
+                                                            <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="deleteMedia({{ $media->id }}, '{{ $media->path }}')">
+                                                                <i class="ri-close-line"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <input type="file" name="gallery_images[]" id="gallery_images" class="d-none" accept="image/*" multiple onchange="previewGallery(this, 'gallery_preview')">
+                                    @error('gallery_images') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
+                                    <div id="deleted_media_container"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -715,12 +918,96 @@
             height: 100,
         });
 
+        function previewImage(input, previewId, iconId) {
+            const preview = document.getElementById(previewId);
+            const icon = document.getElementById(iconId);
+            const deleteBtn = document.getElementById(input.id + '_delete');
+            const clicker = document.getElementById(input.id + '_clicker');
+            const deleteFlag = document.getElementById('delete_' + input.id);
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                    icon.classList.add('d-none');
+                    if (deleteBtn) deleteBtn.style.display = 'flex';
+                    if (clicker) clicker.onclick = null;
+                    if (deleteFlag) deleteFlag.value = "0"; // Cancel pending deletion
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearSingleImage(inputId, isEdit = false) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(inputId + '_preview');
+            const icon = document.getElementById(inputId + '_icon');
+            const deleteBtn = document.getElementById(inputId + '_delete');
+            const clicker = document.getElementById(inputId + '_clicker');
+            const deleteFlag = document.getElementById('delete_' + inputId);
+
+            input.value = ''; // Clear file input
+            preview.src = '';
+            preview.classList.add('d-none');
+            icon.classList.remove('d-none');
+            if (deleteBtn) deleteBtn.style.display = 'none';
+            if (clicker) clicker.onclick = function() { input.click(); };
+            
+            if (isEdit && deleteFlag) {
+                deleteFlag.value = "1"; // Mark for deletion on server
+            }
+        }
+
+        function previewGallery(input, previewContainerId) {
+            const container = $('#' + previewContainerId);
+            if (input.files) {
+                Array.from(input.files).forEach(file => {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        const html = `
+                            <div class="gallery-item">
+                                <img src="${e.target.result}">
+                                <div class="progress-container">
+                                    <div class="progress-fill"></div>
+                                </div>
+                                <div class="success-badge">
+                                    <i class="ri-check-line"></i>
+                                </div>
+                                <div class="delete-overlay">
+                                    <button type="button" class="btn-delete-small" onclick="$(this).closest('.gallery-item').remove()">
+                                        <i class="ri-close-line"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        const $item = $(html);
+                        container.append($item);
+                        
+                        // Trigger animation
+                        setTimeout(() => {
+                            $item.addClass('loaded');
+                        }, 50);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        function deleteMedia(id, path) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                $('#media_item_' + id).remove();
+                $('#deleted_media_container').append(`<input type="hidden" name="deleted_media[]" value="${id}">`);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Choices.js Initialization
             document.querySelectorAll('select.searchable').forEach(select => {
                 new Choices(select, {
                     searchEnabled: true,
                     shouldSort: false,
-                    removeItemButton: true, // allow removing selected tags
+                    removeItemButton: true,
                     placeholder: true,
                     placeholderValue: select.dataset.placeholder || 'Select an option'
                 });

@@ -31,6 +31,7 @@ class Product extends Model
         'regular_price',
         'purchase_price',
         'main_image',
+        'hover_image',
         'stock_status',
         'total_stock',
         'stock_out',
