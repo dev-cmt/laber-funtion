@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Theme;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Traits\SeoTrait;
 use App\Models\Product;
 use App\Models\Page;
+use App\Models\Category;
 
 class Theme1Controller extends Controller
 {
@@ -31,7 +32,11 @@ class Theme1Controller extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.welcome', compact('seotags','breadcrumbs', 'products'));
+        $categories = Category::with('media')->where('is_home', true)->where('status', true)->take(8)->get();
+
+        $best_sellers = $products->shuffle()->take(10);
+        $new_arrivals = $products->sortByDesc('created_at')->take(10);
+        return view('frontend.welcome', compact('seotags','breadcrumbs', 'products', 'categories', 'best_sellers', 'new_arrivals'));
     }
 
     public function shop()

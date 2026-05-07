@@ -1,167 +1,6 @@
 <x-backend-layout title="Tags Management">
     @push('css')
         <link rel="stylesheet" href="{{asset('backend/libs/summernote/summernote-lite.min.css')}}"/>
-        <style>
-            .image-preview-box {
-                width: 80px;
-                height: 80px;
-                border: 2px solid #f1f5f9;
-                border-radius: 8px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                background: #f8fafc;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                position: relative;
-            }
-            .image-preview-box:hover {
-                border-color: #3b82f6;
-                background: #eff6ff;
-                transform: scale(1.05);
-            }
-            .image-preview-box img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            .image-preview-box i {
-                font-size: 20px;
-                color: #94a3b8;
-            }
-            .gallery-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 8px;
-                margin-top: 5px;
-                width: 100%;
-            }
-            .gallery-item {
-                position: relative;
-                aspect-ratio: 1/1;
-                border-radius: 8px;
-                overflow: hidden;
-                border: 2px solid #f1f5f9;
-                background: #fff;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .gallery-item:hover {
-                transform: scale(1.05);
-                border-color: #3b82f6;
-                z-index: 10;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            }
-            .gallery-item img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-            .gallery-upload-card {
-                aspect-ratio: 1/1;
-                border: 2px dashed #cbd5e1;
-                border-radius: 8px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                background: #f8fafc;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                color: #64748b;
-            }
-            .gallery-upload-card:hover {
-                background: #eff6ff;
-                border-color: #3b82f6;
-                color: #3b82f6;
-            }
-            .gallery-upload-card i {
-                font-size: 20px;
-            }
-            .gallery-upload-card span {
-                font-size: 9px;
-                font-weight: 600;
-                margin-top: 2px;
-                text-align: center;
-            }
-            .delete-overlay {
-                position: absolute;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.4);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.2s;
-            }
-            .gallery-item:hover .delete-overlay {
-                opacity: 1;
-            }
-            .btn-delete-small {
-                width: 32px;
-                height: 32px;
-                background: #ff4d4f;
-                color: white;
-                border: none;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                transition: transform 0.2s;
-            }
-            .btn-delete-small:hover {
-                transform: scale(1.2);
-                background: #ff7875;
-            }
-            
-            .progress-container {
-                position: absolute;
-                bottom: 8px;
-                left: 8px;
-                right: 8px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 10px;
-                overflow: hidden;
-                backdrop-filter: blur(4px);
-            }
-            .progress-fill {
-                height: 100%;
-                width: 0%;
-                background: #3b82f6;
-                transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .success-badge {
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                background: #22c55e;
-                color: white;
-                width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                opacity: 0;
-                transform: scale(0);
-                transition: all 0.3s 1.5s; /* Delay to match progress fill */
-            }
-            .gallery-item.loaded .progress-fill {
-                width: 100%;
-            }
-            .gallery-item.loaded .success-badge {
-                opacity: 1;
-                transform: scale(1);
-            }
-            .gallery-item.loaded .progress-container {
-                opacity: 0;
-                transition: opacity 0.5s 2s;
-            }
-        </style>
     @endpush
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
@@ -210,77 +49,6 @@
                             @enderror
                         </div>
 
-                        <div class="card p-2 mb-4 border-0 shadow-sm" style="border-radius: 12px;">
-                            <div class="d-flex gap-3 align-items-start">
-                                <!-- Main & Hover Group -->
-                                <div class="d-flex gap-2">
-                                    <div class="text-center">
-                                        <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">MAIN</span>
-                                        <div class="image-preview-box shadow-sm" id="main_image_container">
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->main_image ? '' : "document.getElementById('main_image').click()" }}" id="main_image_clicker">
-                                                <i class="ri-image-add-line {{ $product->main_image ? 'd-none' : '' }}" id="main_image_icon"></i>
-                                                <img id="main_image_preview" src="{{ $product->main_image ? asset($product->main_image) : '' }}" class="{{ $product->main_image ? '' : 'd-none' }}">
-                                            </div>
-                                            <div class="delete-overlay" id="main_image_delete" style="{{ $product->main_image ? 'display: flex;' : 'display: none;' }}">
-                                                <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('main_image', true)">
-                                                    <i class="ri-close-line"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <input type="file" name="main_image" id="main_image" class="d-none" accept="image/*" onchange="previewImage(this, 'main_image_preview', 'main_image_icon')">
-                                        <input type="hidden" name="delete_main_image" id="delete_main_image" value="0">
-                                        @error('main_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
-                                    </div>
-
-                                    <div class="text-center">
-                                        <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">HOVER</span>
-                                        <div class="image-preview-box shadow-sm" id="hover_image_container">
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->hover_image ? '' : "document.getElementById('hover_image').click()" }}" id="hover_image_clicker">
-                                                <i class="ri-image-add-line {{ $product->hover_image ? 'd-none' : '' }}" id="hover_image_icon"></i>
-                                                <img id="hover_image_preview" src="{{ $product->hover_image ? asset($product->hover_image) : '' }}" class="{{ $product->hover_image ? '' : 'd-none' }}">
-                                            </div>
-                                            <div class="delete-overlay" id="hover_image_delete" style="{{ $product->hover_image ? 'display: flex;' : 'display: none;' }}">
-                                                <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('hover_image', true)">
-                                                    <i class="ri-close-line"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <input type="file" name="hover_image" id="hover_image" class="d-none" accept="image/*" onchange="previewImage(this, 'hover_image_preview', 'hover_image_icon')">
-                                        <input type="hidden" name="delete_hover_image" id="delete_hover_image" value="0">
-                                        @error('hover_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Gallery Group -->
-                                <div class="flex-grow-1" style="min-width: 0;">
-                                    <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">GALLERY IMAGES</span>
-                                    <div class="gallery-grid mt-0" id="gallery_preview">
-                                        <div class="gallery-upload-card shadow-sm" onclick="document.getElementById('gallery_images').click()">
-                                            <i class="ri-add-line"></i>
-                                            <span style="font-size: 8px;">ADD</span>
-                                        </div>
-                                        @if($product->media)
-                                            @foreach($product->media as $media)
-                                                @if($media->type === 'image')
-                                                    <div class="gallery-item" id="media_item_{{ $media->id }}">
-                                                        <img src="{{ asset($media->path) }}">
-                                                        <div class="delete-overlay">
-                                                            <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="deleteMedia({{ $media->id }}, '{{ $media->path }}')">
-                                                                <i class="ri-close-line"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                    <input type="file" name="gallery_images[]" id="gallery_images" class="d-none" accept="image/*" multiple onchange="previewGallery(this, 'gallery_preview')">
-                                    @error('gallery_images') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
-                                    <div id="deleted_media_container"></div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
@@ -324,7 +92,7 @@
                                                     value="{{ old('sku', $product->sku ?? 'SKU') }}" required>
                                                 @error('sku') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                        
+
                                             <div class="col-md-4 mb-1">
                                                 <label for="stock_status" class="form-label">Stock Management <span class="text-danger">*</span></label>
                                                 <select name="stock_status" id="stock_status" class="form-select">
@@ -335,7 +103,7 @@
                                                 </select>
                                                 @error('stock_status') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>
-                                            
+
                                             <div class="col-md-4 mb-1">
                                                 <label for="units" class="form-label">Units</label>
                                                 <select class="form-select" name="unit_id">
@@ -538,13 +306,13 @@
                                         <div class="row g-2">
                                             <div class="col-md-6">
                                                 <label class="form-label">Manufacturer</label>
-                                                <input type="text" class="form-control" name="manufacturer" 
+                                                <input type="text" class="form-control" name="manufacturer"
                                                     value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
                                                 @error('manufacturer')<div class="text-danger mt-1">{{ $message }}</div>@enderror
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Manufactured Date</label>
-                                                <input type="date" class="form-control" name="manufacturer_date" 
+                                                <input type="date" class="form-control" name="manufacturer_date"
                                                     value="{{ old('manufacturer_date', optional($product->manufacturer_date)->format('Y-m-d')) }}">
                                                 @error('manufacturer_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
                                             </div>
@@ -554,7 +322,7 @@
                                                     <option value="">Select Warranty</option>
                                                     @if(isset($warranties))
                                                         @foreach($warranties as $warranty)
-                                                            <option value="{{ $warranty->id }}" 
+                                                            <option value="{{ $warranty->id }}"
                                                                 {{ (old('warranty_id', $product->warranty_id ?? '') == $warranty->id) ? 'selected' : '' }}>
                                                                 {{ $warranty->name }} ({{ $warranty->full_duration }})
                                                             </option>
@@ -565,7 +333,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Expiry Date</label>
-                                                <input type="date" class="form-control" name="expire_date" 
+                                                <input type="date" class="form-control" name="expire_date"
                                                     value="{{ old('expire_date', optional($product->expire_date)->format('Y-m-d')) }}">
                                                 @error('expire_date')<div class="text-danger mt-1">{{ $message }}</div>@enderror
                                             </div>
@@ -747,12 +515,40 @@
                                     let itemName = $(`.attribute-item[data-id="${attrId}"] option[value="${itemId}"]`).text();
                                     container.append(`
                                         <div class="d-flex align-items-center mb-2 single-upload-field" data-item-id="${itemId}">
-                                            <span class="me-2 fw-semibold text-secondary" style="min-width:80px">${itemName}</span>
-                                            <input type="file" name="attribute_images[${attrId}][${itemId}]" class="form-control form-control-sm" accept="image/*">
+                                            <span class="me-2 fw-semibold text-secondary attribute-image-label">${itemName}</span>
+                                            <input type="file" name="attribute_images[${attrId}][${itemId}]" class="form-control form-control-sm attribute-image-input" accept="image/*">
+                                            <img src="" alt="${itemName}" class="attribute-image-preview ms-2 d-none">
                                         </div>
                                     `);
                                 });
                             });
+                        }
+
+                        // Show instant thumbnail preview for attribute images (e.g., Color)
+                        function setAttributeImagePreview(fileInput) {
+                            const $field = $(fileInput).closest('.single-upload-field');
+                            let $img = $field.find('.attribute-image-preview');
+
+                            if (!$img.length) {
+                                $img = $('<img class="attribute-image-preview ms-2 d-none" alt="Preview">');
+                                $field.append($img);
+                            }
+
+                            const file = fileInput.files && fileInput.files[0];
+                            const previousUrl = $img.data('object-url');
+                            if (previousUrl) {
+                                URL.revokeObjectURL(previousUrl);
+                                $img.removeData('object-url');
+                            }
+
+                            if (!file) {
+                                $img.attr('src', '').addClass('d-none');
+                                return;
+                            }
+
+                            const url = URL.createObjectURL(file);
+                            $img.attr('src', url).removeClass('d-none');
+                            $img.data('object-url', url);
                         }
 
                         // Attribute select change (main attribute selection)
@@ -765,6 +561,11 @@
                         $(document).on('change', '.attribute-item', function() {
                             syncImageUploadFields();
                             loadVariantCombinations();
+                        });
+
+                        // When user picks an image for a color/attribute item
+                        $(document).on('change', '.attribute-image-input', function() {
+                            setAttributeImagePreview(this);
                         });
 
                         // Update variant combinations when prices or SKU change
@@ -795,6 +596,84 @@
 
             <!-- Right Column: Categories + Brands + Tags + Settings -->
             <div class="col-md-4">
+                <!-- Product Images -->
+                <div class="card custom-card">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">Images</div>
+                    </div>
+                    <div class="card-body pt-1">
+                        <div class="d-flex gap-3 align-items-start">
+                            <!-- Main & Hover Group -->
+                            <div class="d-flex gap-2">
+                                <div class="text-center">
+                                    <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">MAIN</span>
+                                    <div class="image-preview-box shadow-sm" id="main_image_container">
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->main_image ? '' : "document.getElementById('main_image').click()" }}" id="main_image_clicker">
+                                            <i class="ri-image-add-line {{ $product->main_image ? 'd-none' : '' }}" id="main_image_icon"></i>
+                                            <img id="main_image_preview" src="{{ $product->main_image ? asset($product->main_image) : '' }}" class="{{ $product->main_image ? '' : 'd-none' }}">
+                                        </div>
+                                        <div class="delete-overlay" id="main_image_delete" style="{{ $product->main_image ? 'display: flex;' : 'display: none;' }}">
+                                            <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('main_image', true)">
+                                                <i class="ri-close-line"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="file" name="main_image" id="main_image" class="d-none" accept="image/*" onchange="previewImage(this, 'main_image_preview', 'main_image_icon')">
+                                    <input type="hidden" name="delete_main_image" id="delete_main_image" value="0">
+                                    @error('main_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
+                                </div>
+
+                                <div class="text-center">
+                                    <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">HOVER</span>
+                                    <div class="image-preview-box shadow-sm" id="hover_image_container">
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center" onclick="{{ $product->hover_image ? '' : "document.getElementById('hover_image').click()" }}" id="hover_image_clicker">
+                                            <i class="ri-image-add-line {{ $product->hover_image ? 'd-none' : '' }}" id="hover_image_icon"></i>
+                                            <img id="hover_image_preview" src="{{ $product->hover_image ? asset($product->hover_image) : '' }}" class="{{ $product->hover_image ? '' : 'd-none' }}">
+                                        </div>
+                                        <div class="delete-overlay" id="hover_image_delete" style="{{ $product->hover_image ? 'display: flex;' : 'display: none;' }}">
+                                            <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="clearSingleImage('hover_image', true)">
+                                                <i class="ri-close-line"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="file" name="hover_image" id="hover_image" class="d-none" accept="image/*" onchange="previewImage(this, 'hover_image_preview', 'hover_image_icon')">
+                                    <input type="hidden" name="delete_hover_image" id="delete_hover_image" value="0">
+                                    @error('hover_image') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
+                                </div>
+                            </div>
+
+                            <!-- Gallery Group -->
+                            <div class="flex-grow-1" style="min-width: 0;">
+                                <span class="fw-bold text-muted d-block mb-1" style="font-size: 9px; letter-spacing: 0.5px;">GALLERY IMAGES</span>
+                                <div class="gallery-grid mt-0" id="gallery_preview">
+                                    <div class="gallery-upload-card shadow-sm" onclick="document.getElementById('gallery_images').click()">
+                                        <i class="ri-add-line"></i>
+                                        <span style="font-size: 8px;">ADD</span>
+                                    </div>
+                                    @if($product->media)
+                                        @foreach($product->media as $media)
+                                            @if($media->type === 'image')
+                                                <div class="gallery-item" id="media_item_{{ $media->id }}">
+                                                    <img src="{{ asset($media->path) }}">
+                                                    <div class="delete-overlay">
+                                                        <button type="button" class="btn-delete-small" style="width:24px; height:24px; font-size:12px;" onclick="deleteMedia({{ $media->id }}, '{{ $media->path }}')">
+                                                            <i class="ri-close-line"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                                <input type="file" name="gallery_images[]" id="gallery_images" class="d-none" accept="image/*" multiple onchange="previewGallery(this, 'gallery_preview')">
+                                @error('gallery_images') <div class="text-danger mt-1" style="font-size: 8px;">{{ $message }}</div> @enderror
+                                <div id="deleted_media_container"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
                 <!-- Product Categories -->
                 <div class="card custom-card">
                     <div class="card-header justify-content-between">
@@ -953,7 +832,7 @@
             icon.classList.remove('d-none');
             if (deleteBtn) deleteBtn.style.display = 'none';
             if (clicker) clicker.onclick = function() { input.click(); };
-            
+
             if (isEdit && deleteFlag) {
                 deleteFlag.value = "1"; // Mark for deletion on server
             }
@@ -983,7 +862,7 @@
                         `;
                         const $item = $(html);
                         container.append($item);
-                        
+
                         // Trigger animation
                         setTimeout(() => {
                             $item.addClass('loaded');

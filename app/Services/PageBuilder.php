@@ -22,7 +22,7 @@ class PageBuilder
         'features' => [
             'name' => 'Features Grid',
             'description' => 'Showcase features or services in a grid layout',
-            'icon' => 'th-large',
+            'icon' => 'layout-grid',
             'fields' => [
                 'title' => 'text',
                 'description' => 'textarea',
@@ -45,7 +45,7 @@ class PageBuilder
         'contact' => [
             'name' => 'Contact Form',
             'description' => 'Contact form with company information',
-            'icon' => 'envelope',
+            'icon' => 'mail',
             'fields' => [
                 'title' => 'text',
                 'description' => 'textarea',
@@ -76,7 +76,7 @@ class PageBuilder
         'cta' => [
             'name' => 'Call to Action',
             'description' => 'Prominent section to drive user action',
-            'icon' => 'bullhorn',
+            'icon' => 'megaphone',
             'fields' => [
                 'title' => 'text',
                 'subtitle' => 'textarea',
@@ -87,7 +87,7 @@ class PageBuilder
         'testimonials' => [
             'name' => 'Testimonials',
             'description' => 'Customer reviews and testimonials',
-            'icon' => 'comments',
+            'icon' => 'chat-quote',
             'fields' => [
                 'title' => 'text',
                 'testimonials' => 'repeater'
@@ -96,7 +96,7 @@ class PageBuilder
         'team' => [
             'name' => 'Team Members',
             'description' => 'Showcase your team members',
-            'icon' => 'users',
+            'icon' => 'group',
             'fields' => [
                 'title' => 'text',
                 'description' => 'textarea',

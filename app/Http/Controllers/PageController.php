@@ -22,7 +22,7 @@ class PageController extends Controller
     {
         $page = Page::where('slug', $slug)->where('status', true)->with('activeSections')->firstOrFail();
 
-        return view('page-builder.pages.show', compact('page'));
+        return view('frontend.pages.show', compact('page'));
     }
 
     /**-----------------------------------------------------------
@@ -32,12 +32,12 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::latest()->paginate(10);
-        return view('page-builder.admin.pages.index', compact('pages'));
+        return view('backend.page-builder.index', compact('pages'));
     }
 
     public function create()
     {
-        return view('page-builder.admin.pages.create');
+        return view('backend.page-builder.create');
     }
 
     public function store(Request $request)
@@ -54,16 +54,16 @@ class PageController extends Controller
             'slug' => $request->slug ?? Str::slug($request->title),
             'meta_description' => $request->meta_description,
             'layout' => $request->layout,
-            'is_published' => $request->has('is_published'),
+            'status' => $request->has('status'),
         ]);
 
-        return redirect()->route('admin.pages.builder', $page->id)
+        return redirect()->route('page-builder.admin.pages.builder', $page->id)
             ->with('success', 'Page created successfully! You can now add sections.');
     }
 
     public function edit(Page $page)
     {
-        return view('page-builder.admin.pages.edit', compact('page'));
+        return view('backend.page-builder.edit', compact('page'));
     }
 
     public function update(Request $request, Page $page)
@@ -80,24 +80,24 @@ class PageController extends Controller
             'slug' => $request->slug,
             'meta_description' => $request->meta_description,
             'layout' => $request->layout,
-            'is_published' => $request->has('is_published'),
+            'status' => $request->has('status'),
         ]);
 
-        return redirect()->route('admin.pages.index')
+        return redirect()->route('page-builder.admin.pages.index')
             ->with('success', 'Page updated successfully!');
     }
 
     public function destroy(Page $page)
     {
         $page->delete();
-        return redirect()->route('admin.pages.index')
+        return redirect()->route('page-builder.admin.pages.index')
             ->with('success', 'Page deleted successfully!');
     }
 
     public function builder(Page $page)
     {
         $sectionTypes = $this->pageBuilder->getSectionTypes();
-        return view('page-builder.admin.pages.builder', [
+        return view('backend.page-builder.builder', [
             'page' => $page,
             'sectionTypes' => $sectionTypes,
             'pageBuilder' => $this->pageBuilder
@@ -106,13 +106,13 @@ class PageController extends Controller
 
     public function publish(Page $page)
     {
-        $page->update(['is_published' => true]);
+        $page->update(['status' => true]);
         return back()->with('success', 'Page published successfully!');
     }
 
     public function unpublish(Page $page)
     {
-        $page->update(['is_published' => false]);
+        $page->update(['status' => false]);
         return back()->with('success', 'Page unpublished successfully!');
     }
 

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PageSection;
 use App\Models\Page;
+use App\Services\PageBuilder;
 
-class PageSecionController extends Controller
+class PageSectionController extends Controller
 {
     protected $pageBuilder;
 
@@ -29,13 +30,13 @@ class PageSecionController extends Controller
         // Get default content based on section type
         $defaultContent = $this->getDefaultContent($request->type);
 
-        $section = Section::create([
+        $section = PageSection::create([
             'page_id' => $page->id,
             'type' => $request->type,
             'content' => $request->content ?? $defaultContent,
             'settings' => $request->settings ?? [],
             'order' => $page->sections()->count() + 1,
-            'is_active' => true,
+            'status' => true,
         ]);
 
         return response()->json([
@@ -45,24 +46,24 @@ class PageSecionController extends Controller
         ]);
     }
 
-    public function edit(Section $section)
+    public function edit(PageSection $section)
     {
         $sectionTypes = $this->pageBuilder->getSectionTypes();
-        return view('page-builder.admin.sections.edit', compact('section', 'sectionTypes'));
+        return view('backend.page-builder.sections.edit', compact('section', 'sectionTypes'));
     }
 
-    public function update(Request $request, Section $section)
+    public function update(Request $request, PageSection $section)
     {
         $request->validate([
             'content' => 'nullable|array',
             'settings' => 'nullable|array',
-            'is_active' => 'sometimes|boolean',
+            'status' => 'sometimes|boolean',
         ]);
 
         $section->update([
             'content' => $request->content ?? [],
             'settings' => $request->settings ?? [],
-            'is_active' => $request->has('is_active') ? $request->is_active : $section->is_active,
+            'status' => $request->has('status') ? $request->status : $section->status,
         ]);
 
         if ($request->ajax()) {
@@ -73,11 +74,11 @@ class PageSecionController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.pages.builder', $section->page_id)
+        return redirect()->route('page-builder.admin.pages.builder', $section->page_id)
             ->with('success', 'Section updated successfully!');
     }
 
-    public function destroy(Section $section)
+    public function destroy(PageSection $section)
     {
         $pageId = $section->page_id;
         $section->delete();
@@ -86,7 +87,7 @@ class PageSecionController extends Controller
             return response()->json(['success' => true]);
         }
 
-        return redirect()->route('admin.pages.builder', $pageId)
+        return redirect()->route('page-builder.admin.pages.builder', $pageId)
             ->with('success', 'Section deleted successfully!');
     }
 
@@ -98,7 +99,7 @@ class PageSecionController extends Controller
         ]);
 
         foreach ($request->sections as $order => $sectionId) {
-            Section::where('id', $sectionId)
+            PageSection::where('id', $sectionId)
                   ->where('page_id', $request->page_id)
                   ->update(['order' => $order + 1]);
         }
@@ -106,17 +107,17 @@ class PageSecionController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function toggleActive(Section $section)
+    public function toggleActive(PageSection $section)
     {
-        $section->update(['is_active' => !$section->is_active]);
+        $section->update(['status' => !$section->status]);
 
         return response()->json([
             'success' => true,
-            'is_active' => $section->is_active
+            'status' => $section->status
         ]);
     }
 
-    public function duplicate(Section $section)
+    public function duplicate(PageSection $section)
     {
         $newSection = $section->replicate();
         $newSection->order = $section->page->sections()->count() + 1;

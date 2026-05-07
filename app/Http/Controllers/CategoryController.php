@@ -42,7 +42,7 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'status' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
             'is_menu' => 'nullable|boolean',
             'is_home' => 'nullable|boolean',
             'is_section' => 'nullable|boolean',
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         $category = Category::create($validated);
 
         if ($request->hasFile('image')) {
-            $path = ImageHelper::uploadImage($imageFile, 'uploads/category');
+            $path = ImageHelper::uploadImage($imageFile, 'uploads/category', null, null, null, true);
 
             $fileSize = 0;
             if ($path && file_exists(public_path($path))) {
@@ -91,7 +91,7 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'status' => 'required|boolean',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:2048',
             'is_menu' => 'nullable|boolean',
             'is_home' => 'nullable|boolean',
             'is_section' => 'nullable|boolean',
@@ -113,7 +113,7 @@ class CategoryController extends Controller
             $oldMedia = $category->media()->ordered()->first();
             $oldPath = $oldMedia?->path;
 
-            $path = ImageHelper::uploadImage($imageFile, 'uploads/category', $oldPath);
+            $path = ImageHelper::uploadImage($imageFile, 'uploads/category', $oldPath, null, null, true);
 
             $fileSize = 0;
             if ($path && file_exists(public_path($path))) {

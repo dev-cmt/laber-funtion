@@ -26,6 +26,10 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleRequisitionController;
 use App\Http\Controllers\ServiceRequestController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\HomeSlideController;
+use App\Http\Controllers\PromotionBannerController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\PageSectionController;
 
 
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
@@ -39,7 +43,7 @@ Route::get('/cc', function () {
     return 'Cleared!';
 });
 
-$controller = config("theme.theme1.controller");
+$controller = config("theme.frontend.controller");
 Route::controller($controller)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/shop', 'shop')->name('shop');
@@ -81,7 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/expired-products', [ProductController::class, 'expiredIndex'])->name('expired-products.index');
     Route::post('/products/handle-expired/{id}', [ProductController::class, 'handleExpired'])->name('products.handleExpired');
     Route::post('/products/restore-expired/{id}', [ProductController::class, 'restoreExpired'])->name('products.restoreExpired');
-    
+
     // Low Stocks
     Route::get('/low-stocks', [ProductController::class, 'lowStocksIndex'])->name('low-stocks.index');
     Route::post('/low-stocks/notify', [ProductController::class, 'notifyLowStock'])->name('low-stocks.notify');
@@ -91,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/stores', [StoreController::class, 'store'])->name('stores.store');
     Route::post('/stores/update', [StoreController::class, 'update'])->name('stores.update');
     Route::delete('/stores/{stores}/delete', [StoreController::class, 'destroy'])->name('stores.destroy');
-    
+
     // Categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
@@ -115,7 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/warranties', [UnitController::class, 'store'])->name('warranties.store');
     Route::post('/warranties/update', [UnitController::class, 'update'])->name('warranties.update');
     Route::delete('/warranties/{warranty}/delete', [UnitController::class, 'destroy'])->name('warranties.destroy');
-            
+
     // Units
     Route::get('/units', [UnitController::class, 'index'])->name('units.index');
     Route::post('/units', [UnitController::class, 'store'])->name('units.store');
@@ -162,7 +166,7 @@ Route::middleware('auth')->group(function () {
     // Adjustment
     Route::get('/stock-adjustment', [StockController::class, 'indexAdjustment'])->name('stock-adjustment.index');
     Route::post('/update-adjustment/{id}', [StockController::class, 'updateAdjustment'])->name('adjustment.update');
-    
+
     // Transfers
     Route::get('/stock-transfer', [StockController::class, 'indexTransfer'])->name('stock-transfer.index');
     Route::post('/stock-transfer/store', [StockController::class, 'storeTransfer'])->name('stock-transfer.store');
@@ -179,7 +183,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/edit/{orders}', [OrderController::class, 'edit'])->name('orders.edit');
     Route::put('/orders/update/{orders}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/orders/{orders}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
-    
+
     // Sale Requisition
     Route::get('/sale-requisitions', [SaleRequisitionController::class, 'index'])->name('sale-requisitions.index');
     Route::get('/sale-requisitions/create', [SaleRequisitionController::class, 'create'])->name('sale-requisitions.create');
@@ -197,7 +201,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
     Route::post('/customers/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
-    
+
     // Client Management
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::post('/employees/store', [EmployeeController::class, 'store'])->name('employees.store');
@@ -218,19 +222,19 @@ Route::prefix('service-requests')->group(function () {
     Route::get('/{serviceRequest}/edit', [ServiceRequestController::class, 'edit'])->name('service-requests.edit');
     Route::put('/{serviceRequest}', [ServiceRequestController::class, 'update'])->name('service-requests.update');
     Route::delete('/{serviceRequest}', [ServiceRequestController::class, 'destroy'])->name('service-requests.destroy');
-    
+
     // Inspection Assignment
     Route::get('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspectionForm'])->name('service-requests.assign-inspection');
     Route::post('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspection'])->name('service-requests.assign-inspection.store');
-    
+
     // Inspection Report
     Route::get('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'inspectionReportForm'])->name('service-requests.inspection-report');
     Route::post('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'saveInspectionReport'])->name('service-requests.inspection-report.store');
-    
+
     // Admin Approval
     Route::get('/{serviceRequest}/approval', [ServiceRequestController::class, 'approvalForm'])->name('service-requests.approval');
     Route::post('/{serviceRequest}/approval', [ServiceRequestController::class, 'processApproval'])->name('service-requests.approval.process');
-    
+
     // Status Update
     Route::post('/{serviceRequest}/update-status', [ServiceRequestController::class, 'updateStatus'])->name('service-requests.update-status');
 });
@@ -269,24 +273,35 @@ Route::middleware('auth')->group(function () {
     // SEO settings
     Route::get('/seo-pages',[PageSeoController::class,'index'])->name('settings.seo.index');
     Route::post('/seo-pages/{page}',[PageSeoController::class,'update'])->name('settings.seo.update');
+
+    // Home Slides
+    Route::resource('home-slides', HomeSlideController::class)->except(['create', 'edit']);
+    
+    // Promotion Banners
+    Route::resource('promotion-banners', PromotionBannerController::class)->except(['create', 'edit']);
+
+    // Page Builder
+    Route::group(['prefix' => 'page-builder', 'as' => 'page-builder.'], function () {
+        Route::get('/pages', [PageController::class, 'index'])->name('admin.pages.index');
+        Route::get('/pages/create', [PageController::class, 'create'])->name('admin.pages.create');
+        Route::post('/pages', [PageController::class, 'store'])->name('admin.pages.store');
+        Route::get('/pages/{page}/edit', [PageController::class, 'edit'])->name('admin.pages.edit');
+        Route::put('/pages/{page}', [PageController::class, 'update'])->name('admin.pages.update');
+        Route::delete('/pages/{page}', [PageController::class, 'destroy'])->name('admin.pages.destroy');
+        Route::get('/pages/{page}/builder', [PageController::class, 'builder'])->name('admin.pages.builder');
+        Route::post('/pages/{page}/publish', [PageController::class, 'publish'])->name('admin.pages.publish');
+        Route::post('/pages/{page}/unpublish', [PageController::class, 'unpublish'])->name('admin.pages.unpublish');
+
+        // Page Sections
+        Route::post('/sections', [PageSectionController::class, 'store'])->name('admin.sections.store');
+        Route::get('/sections/{section}/edit', [PageSectionController::class, 'edit'])->name('admin.sections.edit');
+        Route::put('/sections/{section}', [PageSectionController::class, 'update'])->name('admin.sections.update');
+        Route::delete('/sections/{section}', [PageSectionController::class, 'destroy'])->name('admin.sections.destroy');
+        Route::post('/sections/reorder', [PageSectionController::class, 'reorder'])->name('admin.sections.reorder');
+        Route::post('/sections/{section}/toggle', [PageSectionController::class, 'toggleActive'])->name('admin.sections.toggle');
+        Route::post('/sections/{section}/duplicate', [PageSectionController::class, 'duplicate'])->name('admin.sections.duplicate');
+    });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 require __DIR__.'/auth.php';

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Traits\SeoTrait;
 use App\Models\Product;
 use App\Models\Page;
+use App\Models\HomeSlide;
+use App\Models\PromotionBanner;
+use App\Models\Category;
 
 
 class HomeController extends Controller
@@ -18,6 +21,20 @@ class HomeController extends Controller
     {
         $products = Product::with('media')->withCount('reviews')->withAvg('reviews', 'rating')->active()->get();
         $hot_deals = $products->take(10);
+
+        $slides = HomeSlide::query()
+            ->where('status', true)
+            ->whereNotNull('desktop_image')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        $promotionBanners = PromotionBanner::query()
+            ->where('status', true)
+            ->whereNotNull('image')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
 
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
@@ -33,7 +50,11 @@ class HomeController extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.index', compact('seotags','breadcrumbs', 'products', 'hot_deals'));
+        $categories = Category::with('media')->where('is_home', true)->where('status', true)->take(8)->get();
+
+        $best_sellers = $products->shuffle()->take(10);
+
+        return view('frontend.index', compact('seotags','breadcrumbs', 'products', 'hot_deals', 'slides', 'promotionBanners', 'categories', 'best_sellers'));
     }
 
     public function shop()

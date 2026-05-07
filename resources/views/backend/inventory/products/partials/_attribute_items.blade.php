@@ -36,11 +36,14 @@
                             $imagePath = $attributeImages[$itemId] ?? null;
                         @endphp
                         <div class="d-flex align-items-center mb-2 single-upload-field" data-item-id="{{ $itemId }}">
-                            <span class="me-2 fw-semibold text-secondary" style="min-width:80px;">{{ $itemName }}</span>
-                            <input type="file" name="attribute_images[{{ $attribute->id }}][{{ $itemId }}]" class="form-control form-control-sm" accept="image/*">
-                            @if ($imagePath)
-                                <img src="{{ asset($imagePath) }}" alt="{{ $itemName }}" class="ms-2" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
-                            @endif
+                            <span class="me-2 fw-semibold text-secondary attribute-image-label">{{ $itemName }}</span>
+                            <input type="file"
+                                   name="attribute_images[{{ $attribute->id }}][{{ $itemId }}]"
+                                   class="form-control form-control-sm attribute-image-input"
+                                   accept="image/*">
+                            <img src="{{ $imagePath ? asset($imagePath) : '' }}"
+                                 alt="{{ $itemName }}"
+                                 class="attribute-image-preview ms-2 {{ $imagePath ? '' : 'd-none' }}">
                         </div>
                     @endforeach
 

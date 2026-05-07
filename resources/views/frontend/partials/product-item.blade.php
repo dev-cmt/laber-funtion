@@ -30,7 +30,7 @@
                 <div class="image image--type--product">
                     <a href="{{ route('product.show', $product->slug) }}" class="image__body">
                         <img class="image__tag"
-                            src="{{ asset('storage/' . $product->main_image) }}"
+                            src="{{ $product->main_image ? asset($product->main_image) : asset('images/no-image.jpg') }}"
                             alt="{{ $product->name }}">
                     </a>
                 </div>

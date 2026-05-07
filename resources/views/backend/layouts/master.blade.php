@@ -33,9 +33,12 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/libs/swiper/swiper-bundle.min.css">
     <!-- Sweetalert-2 Css -->
     <link rel="stylesheet" href="{{ asset('backend/libs/sweetalert2/sweetalert2.min.css') }}">
-    
+
     <!-- Sweetalert-2 Css -->
     <link rel="stylesheet" href="{{ asset('backend/libs/select2/select2.min.css') }}">
+
+    <!-- Custom Css -->
+    <link href="{{ asset('backend') }}/css/custom.css" rel="stylesheet" >
 
     @stack('css')
 </head>
@@ -119,7 +122,7 @@
         $('select.select2').select2({
             width: '100%'
         });
-        
+
         $('.select2').on('select2:open', function() {
             setTimeout(() => {
                 document.querySelector('.select2-container--open .select2-search__field').focus();

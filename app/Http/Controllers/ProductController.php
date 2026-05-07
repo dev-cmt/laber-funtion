@@ -57,11 +57,11 @@ class ProductController extends Controller
         DB::transaction(function() use ($data, $request) {
             // Upload main image
             if ($request->hasFile('main_image')) {
-                $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main');
+                $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main', null, null, null, true);
             }
             // Upload hover image
             if ($request->hasFile('hover_image')) {
-                $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover');
+                $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover', null, null, null, true);
             }
             // 1. Create Product
             $product = Product::create($data);
@@ -73,7 +73,7 @@ class ProductController extends Controller
                 foreach ($request->file('gallery_images') as $image) {
                     $size = $image->getSize();
                     $mime = $image->getMimeType();
-                    $path = ImageHelper::uploadImage($image, 'uploads/products/gallery');
+                    $path = ImageHelper::uploadImage($image, 'uploads/products/gallery', null, null, null, true);
 
                     $product->media()->create([
                         'name'       => pathinfo($path, PATHINFO_FILENAME),
@@ -110,7 +110,7 @@ class ProductController extends Controller
                                 $variant->variantItems()->create([
                                     'attribute_id' => $attrId,
                                     'attribute_item_id' => $itemId,
-                                    'image' => $imageFile ? ImageHelper::uploadImage($imageFile, 'uploads/variant') : null
+                                    'image' => $imageFile ? ImageHelper::uploadImage($imageFile, 'uploads/variant', null, null, null, true) : null
                                 ]);
                             }
                         }
@@ -138,7 +138,7 @@ class ProductController extends Controller
 
             // 5. Create SEO
             if ($request->hasFile('meta_image')) {
-                $data['og_image'] = ImageHelper::uploadImage($request->file('meta_image'), 'uploads/seo');
+                $data['og_image'] = ImageHelper::uploadImage($request->file('meta_image'), 'uploads/seo', null, null, null, true);
             }
             $seoData = array_filter(Arr::only($data, ['meta_title', 'meta_description', 'meta_keywords', 'og_image']));
             if ($seoData) {
@@ -230,14 +230,14 @@ class ProductController extends Controller
         // 1. UPDATE PRODUCT IMAGES
         // -------------------------
         if ($request->hasFile('main_image')) {
-            $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main', $product->main_image);
+            $data['main_image'] = ImageHelper::uploadImage($request->file('main_image'), 'uploads/products/main', $product->main_image, null, null, true);
         } elseif ($request->delete_main_image == "1") {
             ImageHelper::deleteImage($product->main_image);
             $data['main_image'] = null;
         }
 
         if ($request->hasFile('hover_image')) {
-            $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover', $product->hover_image);
+            $data['hover_image'] = ImageHelper::uploadImage($request->file('hover_image'), 'uploads/products/hover', $product->hover_image, null, null, true);
         } elseif ($request->delete_hover_image == "1") {
             ImageHelper::deleteImage($product->hover_image);
             $data['hover_image'] = null;
@@ -258,7 +258,7 @@ class ProductController extends Controller
             foreach ($request->file('gallery_images') as $image) {
                 $size = $image->getSize();
                 $mime = $image->getMimeType();
-                $path = ImageHelper::uploadImage($image, 'uploads/products/gallery');
+                $path = ImageHelper::uploadImage($image, 'uploads/products/gallery', null, null, null, true);
 
                 $product->media()->create([
                     'name'       => pathinfo($path, PATHINFO_FILENAME),
@@ -311,7 +311,7 @@ class ProductController extends Controller
                             $incomingPairs[] = $attrId.'-'.$itemId;
                             $oldItem = $variant->variantItems()->where('attribute_id', $attrId)->where('attribute_item_id', $itemId)->first();
                             $newImage = $request->file("attribute_images.$attrId.$itemId");
-                            $finalImage = ImageHelper::uploadImage($newImage, 'uploads/variant', $oldItem->image ?? null);
+                            $finalImage = ImageHelper::uploadImage($newImage, 'uploads/variant', $oldItem->image ?? null, null, null, true);
 
                             $variant->variantItems()->updateOrCreate(
                                 ['attribute_id' => $attrId, 'attribute_item_id' => $itemId],
@@ -380,7 +380,10 @@ class ProductController extends Controller
         $seoData['og_image'] = ImageHelper::uploadImage(
             $metaImage,
             'uploads/seo',
-            optional($product->seo)->og_image
+            optional($product->seo)->og_image,
+            null,
+            null,
+            true
         );
 
         // Handle delete meta image request
@@ -531,7 +534,7 @@ class ProductController extends Controller
             ->where('status', 1)
             ->orderBy('expire_date', 'asc')
             ->get();
-            
+
         return view('backend.inventory.expired.index', compact('expiredProducts'));
     }
     public function handleExpired($id)
@@ -585,7 +588,7 @@ class ProductController extends Controller
     public function notifyLowStock(Request $request)
     {
         $productIds = $request->input('products', []);
-        
+
         if(empty($productIds)) {
             return response()->json(['success' => false, 'message' => 'No product selected']);
         }
@@ -645,7 +648,7 @@ class ProductController extends Controller
         $store = $request->store ?? 'Our Store'; // Default to 3 columns
         $columns = $request->columns ?? 3; // Default to 3 columns
         $paperSize = $request->paper_size ?? 'A4';
-        
+
         $options = [
             'show_store'   => $request->show_store == 1,
             'show_product' => $request->show_product == 1,
@@ -688,9 +691,9 @@ class ProductController extends Controller
     {
         $file = $request->file('file');
         $type = $request->input('type', 'gallery'); // main, hover, gallery, etc.
-        
+
         $folder = 'uploads/products/' . $type;
-        $path = ImageHelper::uploadImage($file, $folder);
+        $path = ImageHelper::uploadImage($file, $folder, null, null, null, true);
 
         return response()->json([
             'name' => $file->getClientOriginalName(),
@@ -706,7 +709,7 @@ class ProductController extends Controller
         $path = $request->input('path');
         if ($path) {
             ImageHelper::deleteImage($path);
-            
+
             // If it's a permanent media record, delete it from DB
             Media::where('path', $path)->delete();
         }

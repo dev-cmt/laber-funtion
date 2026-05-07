@@ -491,11 +491,33 @@
                 @can('view seo')
                 <li class="slide__category"><span class="category-name">Content (CMS)</span></li>
                 @endcan
+
+                <li class="slide">
+                    <a href="{{ route('home-slides.index') }}" class="side-menu__item {{ Request::is('home-slides*') ? 'active' : '' }}">
+                        <i class="bx bx-images side-menu__icon"></i>
+                        <span class="side-menu__label">Home Slides</span>
+                    </a>
+                </li>
+
+                <li class="slide">
+                    <a href="{{ route('promotion-banners.index') }}" class="side-menu__item {{ Request::is('promotion-banners*') ? 'active' : '' }}">
+                        <i class="bx bx-collection side-menu__icon"></i>
+                        <span class="side-menu__label">Promotion Banners</span>
+                    </a>
+                </li>
+
+                <li class="slide">
+                    <a href="{{ route('page-builder.admin.pages.index') }}" class="side-menu__item {{ Request::is('page-builder/pages*') ? 'active' : '' }}">
+                        <i class="bx bx-window-alt side-menu__icon"></i>
+                        <span class="side-menu__label">Pages</span>
+                    </a>
+                </li>
+
                 @can('view seo')
                 <li class="slide">
                     <a href="{{ route('settings.seo.index') }}" class="side-menu__item {{ Request::is('seo-pages*') ? 'active' : '' }}">
                         <i class="bx bx-layer-plus side-menu__icon"></i>
-                        <span class="side-menu__label">Pages</span>
+                        <span class="side-menu__label">Seo Pages</span>
                     </a>
                 </li>
                 @endcan

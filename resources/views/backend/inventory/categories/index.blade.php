@@ -126,7 +126,21 @@
 
                         <div class="mb-3">
                             <label class="form-label">Category Image</label>
-                            <input type="file" name="image" class="form-control" accept="image/*">
+                            <div class="d-flex align-items-center gap-3">
+                                <label for="create_category_image" class="image-preview-box mb-0" title="Click to upload">
+                                    <img id="createCategoryImagePreview" src="" alt="" style="display:none;">
+                                    <i class="ri-image-add-line" id="createCategoryImageIcon"></i>
+                                    <div class="delete-overlay">
+                                        <button type="button" class="btn-delete-small" id="createCategoryImageRemove" title="Remove">
+                                            <i class="ri-close-line"></i>
+                                        </button>
+                                    </div>
+                                </label>
+                                <div class="flex-grow-1">
+                                    <input type="file" name="image" id="create_category_image" class="form-control" accept="image/*">
+                                    <small class="text-muted">Recommended: square image.</small>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3" id="parent_cat_group_add">
@@ -207,8 +221,21 @@
 
                         <div class="mb-3">
                             <label class="form-label">Category Image</label>
-                            <input type="file" name="image" class="form-control" accept="image/*">
-                            <div id="currentImage" class="mt-2"></div>
+                            <div class="d-flex align-items-center gap-3">
+                                <label for="edit_category_image" class="image-preview-box mb-0" title="Click to upload">
+                                    <img id="editCategoryImagePreview" src="" alt="" style="display:none;">
+                                    <i class="ri-image-add-line" id="editCategoryImageIcon"></i>
+                                    <div class="delete-overlay">
+                                        <button type="button" class="btn-delete-small" id="editCategoryImageRemove" title="Remove">
+                                            <i class="ri-close-line"></i>
+                                        </button>
+                                    </div>
+                                </label>
+                                <div class="flex-grow-1">
+                                    <input type="file" name="image" id="edit_category_image" class="form-control" accept="image/*">
+                                    <small class="text-muted">Upload a new image to replace current.</small>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3" id="parent_cat_group_edit">
@@ -260,6 +287,46 @@
     <script>
         $(document).ready(function() {
             const categories = @json($categoriesForJs);
+
+            function setPreview($img, $icon, src) {
+                if (src) {
+                    $img.attr('src', src).show();
+                    $icon.hide();
+                } else {
+                    $img.attr('src', '').hide();
+                    $icon.show();
+                }
+            }
+
+            function bindFilePreview(inputSelector, imgSelector, iconSelector) {
+                $(document).on('change', inputSelector, function() {
+                    const file = this.files && this.files[0] ? this.files[0] : null;
+                    if (!file) {
+                        return;
+                    }
+
+                    const url = URL.createObjectURL(file);
+                    setPreview($(imgSelector), $(iconSelector), url);
+                });
+            }
+
+            bindFilePreview('#create_category_image', '#createCategoryImagePreview', '#createCategoryImageIcon');
+            bindFilePreview('#edit_category_image', '#editCategoryImagePreview', '#editCategoryImageIcon');
+
+            $('#createCategoryImageRemove').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('#create_category_image').val('');
+                setPreview($('#createCategoryImagePreview'), $('#createCategoryImageIcon'), null);
+            });
+
+            $('#editCategoryImageRemove').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('#edit_category_image').val('');
+                const existing = $('#editCategoryImagePreview').data('existing') || '';
+                setPreview($('#editCategoryImagePreview'), $('#editCategoryImageIcon'), existing);
+            });
 
             function initParentSelects() {
                 if (!$.fn.select2) {
@@ -351,22 +418,23 @@
                 initParentSelects();
                 $('#parent_id_edit').val(selectedParent).trigger('change');
 
-                // Show current image
-                const currentImage = $('#currentImage');
-                if (data.image) {
-                    currentImage.html(`
-                        <small>Current Image:</small><br>
-                        <img src="{{ asset('') }}${data.image}" width="60" class="img-thumbnail mt-1">
-                    `);
-                } else {
-                    currentImage.html('<span class="badge bg-secondary">No Image</span>');
-                }
+                // Set current image in preview box (and keep it as "existing" for remove)
+                const existingSrc = data.image ? `{{ asset('') }}${data.image}` : '';
+                $('#editCategoryImagePreview').data('existing', existingSrc);
+                setPreview($('#editCategoryImagePreview'), $('#editCategoryImageIcon'), existingSrc);
+                $('#edit_category_image').val('');
             });
 
             // Reset modals when closed
             $('#createCategoryModal, #editCategoryModal').on('hidden.bs.modal', function() {
                 $(this).find('form')[0].reset();
-                $('#currentImage').empty();
+                setPreview($('#createCategoryImagePreview'), $('#createCategoryImageIcon'), null);
+                $('#create_category_image').val('');
+
+                $('#editCategoryImagePreview').data('existing', '');
+                setPreview($('#editCategoryImagePreview'), $('#editCategoryImageIcon'), null);
+                $('#edit_category_image').val('');
+
                 $('#parent_id_add').html(buildParentOptions());
                 $('#parent_id_edit').html('<option value="">-- Select --</option>');
                 initParentSelects();
