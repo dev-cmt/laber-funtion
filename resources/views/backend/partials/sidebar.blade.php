@@ -414,22 +414,20 @@
 
                 <li class="slide__category"><span class="category-name">Service</span></li>
 
-                {{-- @can('view service requests') --}}
+                {{-- @can('view service tickets') --}}
                 <li class="slide">
-                    <a href="{{ route('service-requests.index') }}"
-                    class="side-menu__item {{ Request::is('service-requests*') ? 'active' : '' }}">
-                        <i class="bx bx-phone-call side-menu__icon"></i>
-                        <span class="side-menu__label">Service Requests</span>
+                    <a href="{{ route('service-tickets.index') }}"
+                    class="side-menu__item {{ Request::is('service-tickets*') ? 'active' : '' }}">
+                        <i class="ri-customer-service-2-line side-menu__icon"></i>
+                        <span class="side-menu__label">Service tickets</span>
                     </a>
                 </li>
-                {{-- @endcan --}}
 
-                {{-- @can('create service requests') --}}
                 <li class="slide">
-                    <a href="{{ route('service-requests.create') }}"
-                    class="side-menu__item {{ Request::is('service-requests/create') ? 'active' : '' }}">
-                        <i class="bx bx-plus-circle side-menu__icon"></i>
-                        <span class="side-menu__label">New Request</span>
+                    <a href="{{ route('service-tickets.create') }}"
+                    class="side-menu__item {{ Request::is('service-tickets/create') ? 'active' : '' }}">
+                        <i class="ri-add-circle-line side-menu__icon"></i>
+                        <span class="side-menu__label">Add ticket</span>
                     </a>
                 </li>
                 {{-- @endcan --}}
@@ -525,7 +523,7 @@
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
-                    <a href="#" class="side-menu__item">
+                    <a href="{{ route('blogs.index') }}" class="side-menu__item {{ Request::is('blogs*') ? 'active' : '' }}">
                         <i class="bx bx-layout side-menu__icon"></i>
                         <span class="side-menu__label">Blog</span>
                     </a>

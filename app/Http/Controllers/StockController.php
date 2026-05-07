@@ -11,13 +11,19 @@ use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
+    public function indexManage()
+    {
+        $products = Product::with('category')->latest()->get();
+        return view('backend.stock.index', compact('products'));
+    }
+
     public function indexAdjustment()
     {
         $products = Product::latest()->get();
         return view('backend.stock.manage', compact('products'));
     }
 
-    public function updateAdjustment(Request $request, $id)
+    public function updateManage(Request $request, $id)
     {
         $request->validate([
             'adjustment_type' => 'required|in:add,subtract',
@@ -42,6 +48,11 @@ class StockController extends Controller
             'message' => 'Stock updated successfully!',
             'new_stock' => $product->total_stock
         ]);
+    }
+
+    public function updateAdjustment(Request $request, $id)
+    {
+        return $this->updateManage($request, $id);
     }
 
 

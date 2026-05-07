@@ -1,25 +1,25 @@
 <?php
-// ServiceRequestProduct.php
+// ServiceTicketProduct.php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ServiceRequestProduct extends Model
+class ServiceTicketProduct extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'service_request_id',
+        'service_ticket_id',
         'product_id',
         'quantity',
         'notes',
     ];
 
-    public function serviceRequest()
+    public function serviceTicket()
     {
-        return $this->belongsTo(ServiceRequest::class);
+        return $this->belongsTo(ServiceTicket::class);
     }
 
     public function product()

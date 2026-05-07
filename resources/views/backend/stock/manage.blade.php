@@ -1,13 +1,14 @@
-<x-backend-layout title="Manage Inventory">
+<x-backend-layout title="Stock Adjustment">
 <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
     <div>
-        <h1 class="page-title fw-semibold fs-18 mb-0">Stock Adjustment Management</h1>
-        <p class="text-muted mb-0">Update and monitor current inventory levels across all products.</p>
+        <h1 class="page-title fw-semibold fs-18 mb-0">Stock Adjustment</h1>
+        <p class="text-muted mb-0">Manually adjust inventory levels for corrections, damages, or returns.</p>
     </div>
     <div class="ms-md-1 ms-0">
         <nav>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}" class="text-primary">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('stock-manage.index') }}" class="text-primary">Manage Stock</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Adjustment</li>
             </ol>
         </nav>

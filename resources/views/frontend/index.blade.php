@@ -412,7 +412,7 @@
                     <div class="block-products-carousel__carousel-loader"></div>
                     <div class="owl-carousel">
                         @foreach ($new_arrivals as $product)
-                            @include('frontend.partials.product-item', ['product' => $product])
+                            @include('frontend.partials.product-item-horizontal', ['product' => $product])
                         @endforeach
                     </div>
                 </div>
@@ -459,479 +459,125 @@
             </div>
         </div>
         @endif
-
-                                                        src="frontend/images/cache/product-13-245x245.d9d987356f81ac80dd5e997b2f64b4652.jpg"
-                                                        alt="360 hp Disel Engine">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="product-card__info">
-                                            <div class="product-card__meta"><span
-                                                    class="product-card__meta-title">SKU:</span> 021-45789-H</div>
-                                            <div class="product-card__name">
-                                                <div>
-                                                    <div class="product-card__badges">
-                                                        <div class="tag-badge tag-badge--sale">sale</div>
-                                                        <div class="tag-badge tag-badge--new">new</div>
-                                                    </div>
-                                                    <a href="360-hp-disel-engine.html">360 hp Disel Engine</a>
-                                                </div>
-                                            </div>
-                                            <div class="product-card__rating">
-                                                <div class="rating product-card__rating-stars">
-                                                    <div class="rating__body">
-                                                        <div class="product__rating-stars">
-                                                            <div class="rating">
-                                                                <div class="rating__body">
-                                                                    <div class="rating__best">
-                                                                        <div class="rating__current" data-id="60"
-                                                                            style="display: block; width: 117px;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form method="post" class="ms2_form">
-                                            <input type="hidden" name="id" value="60">
-                                            <input type="hidden" name="count" value="1">
-                                            <input type="hidden" name="options" value="[]">
-                                            <div class="product-card__footer">
-                                                <div class="product-card__prices">
-                                                    <div class="product-card__price product-card__price--new">$ 2
-                                                        500</div>
-                                                    <div class="product-card__price product-card__price--old">$ 2
-                                                        600</div>
-                                                </div>
-                                                <button class="product-card__addtocart-icon" type="submit"
-                                                    aria-label="Add to cart" name="ms2_action" value="cart/add">
-                                                    <svg width="20" height="20">
-                                                        <circle cx="7" cy="17" r="2" />
-                                                        <circle cx="15" cy="17" r="2" />
-                                                        <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
-    V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-    C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
+        <div class="block-space block-space--layout--divider-nl"></div>
+        <div class="block block-products-columns">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="block-products-columns__title">Top Rated</div>
+                        <div class="block-products-columns__list">
+                            @foreach($top_rated as $product)
+                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="block-products-columns__title">Special Offers</div>
+                        <div class="block-products-columns__list">
+                            @foreach($special_offers as $product)
+                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                            @endforeach
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="block-products-columns__title">Bestsellers</div>
                         <div class="block-products-columns__list">
-                            <div class="block-products-carousel__column">
-                                <div class="block-products-carousel__cell">
-                                    <div class="product-card product-card--layout--horizontal">
-                                        <div class="product-card__actions-list">
-                                            <form method="post" class="ms2_form">
-                                                <input type="hidden" name="id" value="27">
-                                                <input type="hidden" name="count" value="1">
-                                                <input type="hidden" name="options" value="[]">
-                                                <button
-                                                    class="product-card__action product-card__action--wishlist msWishlistTogglePage"
-                                                    type="button" aria-label="Add to wish list">
-                                                    <svg width="16" height="16">
-                                                        <path d="M13.9,8.4l-5.4,5.4c-0.3,0.3-0.7,0.3-1,0L2.1,8.4c-1.5-1.5-1.5-3.8,0-5.3C2.8,2.4,3.8,2,4.8,2s1.9,0.4,2.6,1.1L8,3.7
-    l0.6-0.6C9.3,2.4,10.3,2,11.3,2c1,0,1.9,0.4,2.6,1.1C15.4,4.6,15.4,6.9,13.9,8.4z" />
-                                                    </svg>
-                                                </button>
-                                                <button
-                                                    class="product-card__action product-card__action--compare msCompareTogglePage"
-                                                    type="button" aria-label="Add to compare">
-                                                    <svg width="16" height="16">
-                                                        <path
-                                                            d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z" />
-                                                        <path
-                                                            d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z" />
-                                                        <path
-                                                            d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                        <div class="product-card__image">
-                                            <div class="image image--type--product">
-                                                <a href="left-headlight-of-brandix-z54.html" class="image__body">
-                                                    <img class="image__tag"
-                                                        src="frontend/images/cache/product-3-500x500.d9d987356f81ac80dd5e997b2f64b4652.jpg"
-                                                        alt="Left Headlight Of Brandix Z54">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="product-card__info">
-                                            <div class="product-card__meta"><span
-                                                    class="product-card__meta-title">SKU:</span> 009-50078-Z</div>
-                                            <div class="product-card__name">
-                                                <div>
-                                                    <div class="product-card__badges">
-                                                        <div class="tag-badge tag-badge--sale">sale</div>
-                                                    </div>
-                                                    <a href="left-headlight-of-brandix-z54.html">Left Headlight Of
-                                                        Brandix Z54</a>
-                                                </div>
-                                            </div>
-                                            <div class="product-card__rating">
-                                                <div class="rating product-card__rating-stars">
-                                                    <div class="rating__body">
-                                                        <div class="product__rating-stars">
-                                                            <div class="rating">
-                                                                <div class="rating__body">
-                                                                    <div class="rating__best">
-                                                                        <div class="rating__current" data-id="27"
-                                                                            style="display: block; width: 111.8px;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form method="post" class="ms2_form">
-                                            <input type="hidden" name="id" value="27">
-                                            <input type="hidden" name="count" value="1">
-                                            <input type="hidden" name="options" value="[]">
-                                            <div class="product-card__footer">
-                                                <div class="product-card__prices">
-                                                    <div class="product-card__price product-card__price--new">$ 349
-                                                    </div>
-                                                    <div class="product-card__price product-card__price--old">$ 415
-                                                    </div>
-                                                </div>
-                                                <button class="product-card__addtocart-icon" type="submit"
-                                                    aria-label="Add to cart" name="ms2_action" value="cart/add">
-                                                    <svg width="20" height="20">
-                                                        <circle cx="7" cy="17" r="2" />
-                                                        <circle cx="15" cy="17" r="2" />
-                                                        <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
-    V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-    C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="block-products-carousel__column">
-                                <div class="block-products-carousel__cell">
-                                    <div class="product-card product-card--layout--horizontal">
-                                        <div class="product-card__actions-list">
-                                            <form method="post" class="ms2_form">
-                                                <input type="hidden" name="id" value="40">
-                                                <input type="hidden" name="count" value="1">
-                                                <input type="hidden" name="options" value="[]">
-                                                <button
-                                                    class="product-card__action product-card__action--wishlist msWishlistTogglePage"
-                                                    type="button" aria-label="Add to wish list">
-                                                    <svg width="16" height="16">
-                                                        <path d="M13.9,8.4l-5.4,5.4c-0.3,0.3-0.7,0.3-1,0L2.1,8.4c-1.5-1.5-1.5-3.8,0-5.3C2.8,2.4,3.8,2,4.8,2s1.9,0.4,2.6,1.1L8,3.7
-    l0.6-0.6C9.3,2.4,10.3,2,11.3,2c1,0,1.9,0.4,2.6,1.1C15.4,4.6,15.4,6.9,13.9,8.4z" />
-                                                    </svg>
-                                                </button>
-                                                <button
-                                                    class="product-card__action product-card__action--compare msCompareTogglePage"
-                                                    type="button" aria-label="Add to compare">
-                                                    <svg width="16" height="16">
-                                                        <path
-                                                            d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z" />
-                                                        <path
-                                                            d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z" />
-                                                        <path
-                                                            d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                        <div class="product-card__image">
-                                            <div class="image image--type--product">
-                                                <a href="air-filter-from-ashs-chainsaw.html" class="image__body">
-                                                    <img class="image__tag"
-                                                        src="frontend/images/cache/product-17-245x245.d9d987356f81ac80dd5e997b2f64b4652.jpg"
-                                                        alt="Air Filter From Ash's Chainsaw">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="product-card__info">
-                                            <div class="product-card__meta"><span
-                                                    class="product-card__meta-title">SKU:</span> A43-44328-B</div>
-                                            <div class="product-card__name">
-                                                <div>
-                                                    <div class="product-card__badges">
-                                                    </div>
-                                                    <a href="air-filter-from-ashs-chainsaw.html">Air Filter From
-                                                        Ash's Chainsaw</a>
-                                                </div>
-                                            </div>
-                                            <div class="product-card__rating">
-                                                <div class="rating product-card__rating-stars">
-                                                    <div class="rating__body">
-                                                        <div class="product__rating-stars">
-                                                            <div class="rating">
-                                                                <div class="rating__body">
-                                                                    <div class="rating__best">
-                                                                        <div class="rating__current" data-id="40"
-                                                                            style="display: block; width: 104px;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form method="post" class="ms2_form">
-                                            <input type="hidden" name="id" value="40">
-                                            <input type="hidden" name="count" value="1">
-                                            <input type="hidden" name="options" value="[]">
-                                            <div class="product-card__footer">
-                                                <div class="product-card__prices">
-                                                    <div class="product-card__price product-card__price--current">$
-                                                        666.99</div>
-                                                </div>
-                                                <button class="product-card__addtocart-icon" type="submit"
-                                                    aria-label="Add to cart" name="ms2_action" value="cart/add">
-                                                    <svg width="20" height="20">
-                                                        <circle cx="7" cy="17" r="2" />
-                                                        <circle cx="15" cy="17" r="2" />
-                                                        <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
-    V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-    C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="block-products-carousel__column">
-                                <div class="block-products-carousel__cell">
-                                    <div class="product-card product-card--layout--horizontal">
-                                        <div class="product-card__actions-list">
-                                            <form method="post" class="ms2_form">
-                                                <input type="hidden" name="id" value="42">
-                                                <input type="hidden" name="count" value="1">
-                                                <input type="hidden" name="options" value="[]">
-                                                <button
-                                                    class="product-card__action product-card__action--wishlist msWishlistTogglePage"
-                                                    type="button" aria-label="Add to wish list">
-                                                    <svg width="16" height="16">
-                                                        <path d="M13.9,8.4l-5.4,5.4c-0.3,0.3-0.7,0.3-1,0L2.1,8.4c-1.5-1.5-1.5-3.8,0-5.3C2.8,2.4,3.8,2,4.8,2s1.9,0.4,2.6,1.1L8,3.7
-    l0.6-0.6C9.3,2.4,10.3,2,11.3,2c1,0,1.9,0.4,2.6,1.1C15.4,4.6,15.4,6.9,13.9,8.4z" />
-                                                    </svg>
-                                                </button>
-                                                <button
-                                                    class="product-card__action product-card__action--compare msCompareTogglePage"
-                                                    type="button" aria-label="Add to compare">
-                                                    <svg width="16" height="16">
-                                                        <path
-                                                            d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z" />
-                                                        <path
-                                                            d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z" />
-                                                        <path
-                                                            d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z" />
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                        <div class="product-card__image">
-                                            <div class="image image--type--product">
-                                                <a href="brandix-brake-kit-bdx-750z370-s.html" class="image__body">
-                                                    <img class="image__tag"
-                                                        src="frontend/images/cache/product-2-500x500.d9d987356f81ac80dd5e997b2f64b4652.jpg"
-                                                        alt="Brandix Brake Kit BDX-750Z370-S">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="product-card__info">
-                                            <div class="product-card__meta"><span
-                                                    class="product-card__meta-title">SKU:</span> 573-23743-C</div>
-                                            <div class="product-card__name">
-                                                <div>
-                                                    <div class="product-card__badges">
-                                                    </div>
-                                                    <a href="brandix-brake-kit-bdx-750z370-s.html">Brandix Brake Kit
-                                                        BDX-750Z370-S</a>
-                                                </div>
-                                            </div>
-                                            <div class="product-card__rating">
-                                                <div class="rating product-card__rating-stars">
-                                                    <div class="rating__body">
-                                                        <div class="product__rating-stars">
-                                                            <div class="rating">
-                                                                <div class="rating__body">
-                                                                    <div class="rating__best">
-                                                                        <div class="rating__current" data-id="42"
-                                                                            style="display: block; width: 117px;">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <form method="post" class="ms2_form">
-                                            <input type="hidden" name="id" value="42">
-                                            <input type="hidden" name="count" value="1">
-                                            <input type="hidden" name="options" value="[]">
-                                            <div class="product-card__footer">
-                                                <div class="product-card__prices">
-                                                    <div class="product-card__price product-card__price--current">$
-                                                        224</div>
-                                                </div>
-                                                <button class="product-card__addtocart-icon" type="submit"
-                                                    aria-label="Add to cart" name="ms2_action" value="cart/add">
-                                                    <svg width="20" height="20">
-                                                        <circle cx="7" cy="17" r="2" />
-                                                        <circle cx="15" cy="17" r="2" />
-                                                        <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
-    V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-    C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
+                            @foreach($column_bestsellers as $product)
+                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        @if($brands && count($brands) > 0)
         <div class="block-space block-space--layout--divider-nl"></div>
         <!-- block-brands -->
         <div class="block block-brands block-brands--layout--columns-8-full">
             <div class="container">
                 <ul class="block-brands__list">
+                    @foreach($brands as $brand)
                     <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-1.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Aimparts</span>
+                        <a href="{{ route('shop', ['brand' => $brand->slug]) }}" class="block-brands__item-link">
+                            <img src="{{ $brand->logo ? asset($brand->logo) : asset('images/no-image.jpg') }}" alt="{{ $brand->name }}">
+                            <span class="block-brands__item-name">{{ $brand->name }}</span>
                         </a>
                     </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-2.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Windengine</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-3.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Turboelectric</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-4.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Startone</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-5.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Brandix</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-6.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">ABS-Brand</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-7.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Greatcircle</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-8.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Justromb</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-9.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Fastwheels</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-10.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Stroyka-X</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-11.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Mission-51</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-12.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Fuelcorp</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-13.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Redgate</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-14.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Blocks</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-15.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Blackbox</span>
-                        </a>
-                    </li>
-                    <li class="block-brands__item">
-                        <a href="#" class="block-brands__item-link">
-                            <img src="frontend/images/cache/brand-16.99663875bbf13133fa6904fe1114f84f2.png"
-                                alt="">
-                            <span class="block-brands__item-name">Squaregarage</span>
-                        </a>
-                    </li>
+                    @endforeach
                 </ul>
             </div>
         </div>
+        @endif
+
+        <!-- Latest News -->
+        @if($latest_posts && count($latest_posts) > 0)
+        <div class="block-space block-space--layout--divider-nl"></div>
+        <div class="block block-posts-carousel block-posts-carousel--layout--grid" data-layout="grid">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-header__body">
+                        <h2 class="section-header__title">Latest News</h2>
+                        <div class="section-header__spring"></div>
+                        <div class="section-header__arrows">
+                            <div class="arrow section-header__arrow section-header__arrow--prev arrow--prev">
+                                <button class="arrow__button" type="button"><svg width="7" height="11">
+                                        <path
+                                            d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="arrow section-header__arrow section-header__arrow--next arrow--next">
+                                <button class="arrow__button" type="button"><svg width="7" height="11">
+                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
+C-0.1,9.8-0.1,10.4,0.3,10.7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="section-header__divider"></div>
+                    </div>
+                </div>
+                <div class="block-posts-carousel__carousel">
+                    <div class="owl-carousel">
+                        @foreach($latest_posts as $post)
+                        <div class="posts-list__item">
+                            <div class="post-card post-card--layout--grid-sm">
+                                <div class="post-card__image">
+                                    <a href="{{ route('blog.show', $post->slug) }}">
+                                        @if($post->image_path)
+                                            <img src="{{ asset($post->image_path) }}" alt="{{ $post->title }}">
+                                        @else
+                                            <img src="{{ asset('frontend/images/posts/post-1-730x485.jpg') }}" alt="{{ $post->title }}">
+                                        @endif
+                                    </a>
+                                </div>
+                                <div class="post-card__content">
+                                    <div class="post-card__title">
+                                        <h2><a href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a></h2>
+                                    </div>
+                                    <div class="post-card__date">
+                                        By <a>{{ $post->author->name ?? 'Admin' }}</a> on {{ $post->published_date ? $post->published_date->format('F d, Y') : $post->created_at->format('F d, Y') }}
+                                    </div>
+                                    <div class="post-card__excerpt">
+                                        <div class="typography">
+                                            {!! Str::limit(strip_tags($post->content), 150) !!}
+                                        </div>
+                                    </div>
+                                    <div class="post-card__more">
+                                        <a href="{{ route('blog.show', $post->slug) }}"
+                                            class="btn btn-secondary btn-sm">Read more</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="block-space block-space--layout--before-footer"></div>
     </div>
 </x-frontend-layout>

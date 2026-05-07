@@ -38,7 +38,7 @@ class AdminController extends Controller
             'seo',
             'users',
             'roles',
-            'service requests',
+            'service tickets',
         ];
 
         $singlePermissions = [

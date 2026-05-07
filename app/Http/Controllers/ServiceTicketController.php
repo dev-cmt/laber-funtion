@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ServiceRequest;
+use App\Models\ServiceTicket;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\ServiceRequestProduct;
+use App\Models\ServiceTicketProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class ServiceRequestController extends Controller
+class ServiceTicketController extends Controller
 {
     public function index()
     {
-        $requests = ServiceRequest::with(['assignedEmployee', 'products'])
+        $tickets = ServiceTicket::with(['assignedEmployee', 'products'])
             ->latest()
             ->paginate(20);
+        $employees = User::where('status', true)->get();
+        $products = Product::active()->get();
         
-        return view('backend.service-requests.index', compact('requests'));
+        return view('backend.service-tickets.index', compact('tickets', 'employees', 'products'));
     }
 
     public function create()
     {
-        $employees = User::where('status', true)->get();
-        $products = Product::active()->get();
-        
-        return view('backend.service-requests.create', compact('employees', 'products'));
+        return redirect()->route('service-tickets.index')->with('open_create_modal', true);
     }
 
     public function store(Request $request)
@@ -40,7 +39,7 @@ class ServiceRequestController extends Controller
 
         DB::beginTransaction();
         try {
-            $serviceRequest = ServiceRequest::create([
+            $serviceTicket = ServiceTicket::create([
                 'customer_name' => $validated['customer_name'],
                 'customer_phone' => $validated['customer_phone'],
                 'customer_address' => $validated['customer_address'],
@@ -51,37 +50,42 @@ class ServiceRequestController extends Controller
 
             DB::commit();
             
-            return redirect()->route('service-requests.show', $serviceRequest)
-                ->with('success', 'Service request created successfully.');
+            return redirect()->route('service-tickets.index')
+                ->with('success', 'Service ticket created successfully.');
                 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Failed to create service request: ' . $e->getMessage());
+            return back()->with('error', 'Failed to create service ticket: ' . $e->getMessage());
         }
     }
 
-    public function show(ServiceRequest $serviceRequest)
+    public function show(ServiceTicket $serviceTicket, Request $request)
     {
-        $serviceRequest->load(['assignedEmployee', 'products.product', 'createdBy']);
+        $serviceTicket->load(['assignedEmployee', 'products.product', 'createdBy', 'approvedBy']);
+        
+        if ($request->ajax()) {
+            return response()->json($serviceTicket);
+        }
+
         $employees = User::where('status', true)->get();
         $products = Product::active()->get();
         
-        return view('backend.service-requests.show', compact('serviceRequest', 'employees', 'products'));
+        return view('backend.service-tickets.show', compact('serviceTicket', 'employees', 'products'));
     }
 
-    public function edit(ServiceRequest $serviceRequest)
+    public function edit(ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'requested') {
-            return redirect()->route('service-requests.show', $serviceRequest)
+        if ($serviceTicket->status !== 'requested') {
+            return redirect()->route('service-tickets.show', $serviceTicket)
                 ->with('error', 'Cannot edit request in current status.');
         }
         
-        return view('backend.service-requests.edit', compact('serviceRequest'));
+        return view('backend.service-tickets.edit', compact('serviceTicket'));
     }
 
-    public function update(Request $request, ServiceRequest $serviceRequest)
+    public function update(Request $request, ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'requested') {
+        if ($serviceTicket->status !== 'requested') {
             return back()->with('error', 'Cannot edit request in current status.');
         }
 
@@ -92,43 +96,43 @@ class ServiceRequestController extends Controller
             'customer_notes' => 'nullable|string',
         ]);
 
-        $serviceRequest->update($validated);
+        $serviceTicket->update($validated);
         
-        return redirect()->route('service-requests.show', $serviceRequest)
-            ->with('success', 'Service request updated successfully.');
+        return redirect()->route('service-tickets.index')
+            ->with('success', 'Service ticket updated successfully.');
     }
 
-    public function destroy(ServiceRequest $serviceRequest)
+    public function destroy(ServiceTicket $serviceTicket)
     {
-        if (!in_array($serviceRequest->status, ['requested', 'rejected'])) {
+        if (!in_array($serviceTicket->status, ['requested', 'rejected'])) {
             return back()->with('error', 'Cannot delete request in current status.');
         }
         
-        $serviceRequest->delete();
+        $serviceTicket->delete();
         
-        return redirect()->route('service-requests.index')
-            ->with('success', 'Service request deleted successfully.');
+        return redirect()->route('service-tickets.index')
+            ->with('success', 'Service ticket deleted successfully.');
     }
 
     // ======================================
     // INSPECTION ASSIGNMENT METHODS
     // ======================================
     
-    public function assignInspectionForm(ServiceRequest $serviceRequest)
+    public function assignInspectionForm(ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'requested') {
-            return redirect()->route('service-requests.show', $serviceRequest)
+        if ($serviceTicket->status !== 'requested') {
+            return redirect()->route('service-tickets.show', $serviceTicket)
                 ->with('error', 'Request already assigned or processed.');
         }
         
         $employees = User::where('status', true)->get();
         
-        return view('backend.service-requests.assign-inspection', compact('serviceRequest', 'employees'));
+        return view('backend.service-tickets.assign-inspection', compact('serviceTicket', 'employees'));
     }
 
-    public function assignInspection(Request $request, ServiceRequest $serviceRequest)
+    public function assignInspection(Request $request, ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'requested') {
+        if ($serviceTicket->status !== 'requested') {
             return back()->with('error', 'Request is already assigned or in a different status.');
         }
 
@@ -157,24 +161,12 @@ class ServiceRequestController extends Controller
                 'assignment_notes' => $validated['notes'] ?? null,
             ];
 
-            // If you want to keep JSON structure in assignment_notes, use this:
-            // $extraInfo = [
-            //     'visit_time' => $validated['visit_time'] ?? null,
-            //     'priority' => $validated['priority'] ?? 'medium',
-            //     'estimated_hours' => $validated['estimated_hours'] ?? null,
-            //     'required_tools' => $validated['required_tools'] ?? [],
-            // ];
-            // $assignmentData['assignment_notes'] = json_encode([
-            //     'instructions' => $validated['notes'] ?? '',
-            //     'extra_info' => $extraInfo
-            // ]);
-
-            // Update service request
-            $serviceRequest->update($assignmentData);
+            // Update service ticket
+            $serviceTicket->update($assignmentData);
 
             DB::commit();
             
-            return redirect()->route('service-requests.show', $serviceRequest)->with('success', 'Inspection assigned successfully.');
+            return redirect()->route('service-tickets.index')->with('success', 'Inspection assigned successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -189,21 +181,21 @@ class ServiceRequestController extends Controller
     /**
      * Show inspection report form
      */
-    public function inspectionReportForm(ServiceRequest $serviceRequest)
+    public function inspectionReportForm(ServiceTicket $serviceTicket)
     {
-        if (!in_array($serviceRequest->status, ['assigned', 'inspected'])) {
-            return redirect()->route('service-requests.show', $serviceRequest)
+        if (!in_array($serviceTicket->status, ['assigned', 'inspected'])) {
+            return redirect()->route('service-tickets.show', $serviceTicket)
                 ->with('error', 'Cannot add inspection report in current status.');
         }
         
         $products = Product::active()->get();
         
-        return view('backend.service-requests.inspection-report', compact('serviceRequest', 'products'));
+        return view('backend.service-tickets.inspection-report', compact('serviceTicket', 'products'));
     }
 
-    public function saveInspectionReport(Request $request, ServiceRequest $serviceRequest)
+    public function saveInspectionReport(Request $request, ServiceTicket $serviceTicket)
     {
-        if (!in_array($serviceRequest->status, ['assigned', 'inspected'])) {
+        if (!in_array($serviceTicket->status, ['assigned', 'inspected'])) {
             return back()->with('error', 'Cannot add inspection report in current status.');
         }
 
@@ -218,27 +210,27 @@ class ServiceRequestController extends Controller
         DB::beginTransaction();
         try {
             // Clear existing products
-            ServiceRequestProduct::where('service_request_id', $serviceRequest->id)->delete();
+            ServiceTicketProduct::where('service_ticket_id', $serviceTicket->id)->delete();
             
             // Add new products
             foreach ($validated['products'] as $productData) {
-                ServiceRequestProduct::create([
-                    'service_request_id' => $serviceRequest->id,
+                ServiceTicketProduct::create([
+                    'service_ticket_id' => $serviceTicket->id,
                     'product_id' => $productData['product_id'],
                     'quantity' => $productData['quantity'],
                     'notes' => $productData['notes'] ?? null,
                 ]);
             }
             
-            // Update service request
-            $serviceRequest->update([
+            // Update service ticket
+            $serviceTicket->update([
                 'technician_notes' => $validated['technician_notes'],
                 'status' => 'inspected',
             ]);
 
             DB::commit();
             
-            return redirect()->route('service-requests.show', $serviceRequest)
+            return redirect()->route('service-tickets.index')
                 ->with('success', 'Inspection report saved successfully.');
                 
         } catch (\Exception $e) {
@@ -251,21 +243,21 @@ class ServiceRequestController extends Controller
     // APPROVAL METHODS
     // ======================================
     
-    public function approvalForm(ServiceRequest $serviceRequest)
+    public function approvalForm(ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'inspected') {
-            return redirect()->route('service-requests.show', $serviceRequest)
+        if ($serviceTicket->status !== 'inspected') {
+            return redirect()->route('service-tickets.show', $serviceTicket)
                 ->with('error', 'Cannot approve/reject in current status.');
         }
         
-        $serviceRequest->load('products.product');
+        $serviceTicket->load('products.product');
         
-        return view('backend.service-requests.approval', compact('serviceRequest'));
+        return view('backend.service-tickets.approval', compact('serviceTicket'));
     }
 
-    public function processApproval(Request $request, ServiceRequest $serviceRequest)
+    public function processApproval(Request $request, ServiceTicket $serviceTicket)
     {
-        if ($serviceRequest->status !== 'inspected') {
+        if ($serviceTicket->status !== 'inspected') {
             return back()->with('error', 'Cannot approve/reject in current status.');
         }
 
@@ -276,22 +268,22 @@ class ServiceRequestController extends Controller
 
         $status = $validated['action'] === 'approve' ? 'approved' : 'rejected';
         
-        $serviceRequest->update([
+        $serviceTicket->update([
             'status' => $status,
             'admin_notes' => $validated['admin_notes'] ?? null,
             'approved_by' => Auth::user()->id,
             'approved_at' => now(),
         ]);
 
-        return redirect()->route('service-requests.show', $serviceRequest)
-            ->with('success', "Service request {$validated['action']}d successfully.");
+        return redirect()->route('service-tickets.index')
+            ->with('success', "Service ticket {$validated['action']}d successfully.");
     }
 
     // ======================================
     // STATUS UPDATE METHOD
     // ======================================
     
-    public function updateStatus(Request $request, ServiceRequest $serviceRequest)
+    public function updateStatus(Request $request, ServiceTicket $serviceTicket)
     {
         $validated = $request->validate([
             'status' => 'required|in:assigned,inspected,approved,completed,cancelled',
@@ -303,12 +295,12 @@ class ServiceRequestController extends Controller
             'approved' => ['completed', 'cancelled'],
         ];
 
-        if (isset($allowedTransitions[$serviceRequest->status]) && 
-            !in_array($validated['status'], $allowedTransitions[$serviceRequest->status])) {
+        if (isset($allowedTransitions[$serviceTicket->status]) && 
+            !in_array($validated['status'], $allowedTransitions[$serviceTicket->status])) {
             return back()->with('error', 'Invalid status transition.');
         }
 
-        $serviceRequest->update(['status' => $validated['status']]);
+        $serviceTicket->update(['status' => $validated['status']]);
         
         return back()->with('success', 'Status updated successfully.');
     }

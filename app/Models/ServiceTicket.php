@@ -1,13 +1,11 @@
 <?php
-// ServiceRequest.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ServiceRequest extends Model
+class ServiceTicket extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -59,7 +57,7 @@ class ServiceRequest extends Model
 
     public function products()
     {
-        return $this->hasMany(ServiceRequestProduct::class);
+        return $this->hasMany(ServiceTicketProduct::class);
     }
 
     public function scopeFilter($query, $filters)

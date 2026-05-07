@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('service_request_products', function (Blueprint $table) {
+        Schema::create('service_ticket_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_request_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_ticket_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained();
             $table->integer('quantity');
             $table->text('notes')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('service_request_products');
+        Schema::dropIfExists('service_ticket_products');
     }
 };

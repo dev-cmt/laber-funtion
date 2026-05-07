@@ -1,9 +1,4 @@
-@extends('backEnd.admin.layout.master')
-@section('title')
-    Edit Blog Post
-@endsection
-
-@section('content')
+<x-backend-layout title="Edit Blog Post">
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <h1 class="page-title fw-semibold fs-18 mb-0">Edit Blog Post</h1>
@@ -11,7 +6,7 @@
             <nav>
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('admin.blogs.index') }}">Blog Posts</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('blogs.index') }}">Blog Posts</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                 </ol>
             </nav>
@@ -19,7 +14,7 @@
     </div>
 
 
-    <form action="{{ route('admin.blogs.update', $blog) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('blogs.update', $blog) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
@@ -60,18 +55,18 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="meta_title" class="form-label">Meta Title</label>
-                            <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ old('meta_title', $blog->seo->meta_title) }}">
+                            <input type="text" class="form-control" id="meta_title" name="meta_title" value="{{ old('meta_title', $blog->seo->meta_title ?? '') }}">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="meta_keywords" class="form-label">Meta Keywords</label>
-                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords', $blog->seo->meta_keywords) }}">
+                                <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords', $blog->seo->meta_keywords ?? '') }}">
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="meta_image" class="form-label">Meta Image</label>
                                 <input type="file" class="form-control" id="meta_image" name="meta_image" accept="image/*">
-                                @if($blog->seo->og_image)
+                                @if($blog->seo && $blog->seo->og_image)
                                     <img src="{{ asset($blog->seo->og_image) }}" class="mt-2" height="60">
                                 @endif
                             </div>
@@ -79,7 +74,7 @@
 
                         <div class="mb-3">
                             <label for="meta_description" class="form-label">Meta Description</label>
-                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3">{{ old('meta_description', $blog->seo->meta_description) }}</textarea>
+                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3">{{ old('meta_description', $blog->seo->meta_description ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -174,7 +169,7 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Update Post</button>
-                            <a href="{{ route('admin.blogs.index') }}" class="btn btn-secondary">Cancel</a>
+                            <a href="{{ route('blogs.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -182,9 +177,8 @@
         </div>
 
     </form>
-@endsection
 
-@push('js')
+    @push('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const statusSelect = document.getElementById('status');
@@ -204,7 +198,7 @@
     </script>
 
     <!-- Include Editor -->
-    <script src="{{asset('backEnd')}}/tinymce/tinymce.min.js"></script>
+    <script src="{{asset('backend')}}/tinymce/tinymce.min.js"></script>
 
     <script>
         tinymce.init({
@@ -226,4 +220,5 @@
             content_style: 'body{font-family:Helvetica,Arial,sans-serif; font-size:16px}'
         });
     </script>
-@endpush
+    @endpush
+</x-backend-layout>

@@ -19,7 +19,7 @@ class BlogController extends Controller
     {
         $posts = BlogPost::with(['category', 'author'])->latest()->paginate(10);
 
-        return view('backEnd.admin.blog.index', compact('posts'));
+        return view('backend.blog.index', compact('posts'));
     }
 
     /**
@@ -29,7 +29,7 @@ class BlogController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
-        return view('backEnd.admin.blog.create', compact('categories', 'tags'));
+        return view('backend.blog.create', compact('categories', 'tags'));
     }
 
     /**
@@ -66,6 +66,9 @@ class BlogController extends Controller
             'author_id' => Auth::id(),
             'status' => $request->status,
             'published_date' => $request->published_date ?? now(),
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
+            'meta_keywords' => $request->meta_keywords,
         ];
 
         // Handle image upload using ImageHelper
@@ -95,7 +98,7 @@ class BlogController extends Controller
             'alert-type' => 'success'
         ];
 
-        return redirect()->route('admin.blogs.index')->with($notification);
+        return redirect()->route('blogs.index')->with($notification);
     }
 
     /**
@@ -106,7 +109,7 @@ class BlogController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
 
-        return view('backEnd.admin.blog.edit', compact('blog', 'categories', 'tags'));
+        return view('backend.blog.edit', compact('blog', 'categories', 'tags'));
     }
 
     /**
@@ -170,7 +173,7 @@ class BlogController extends Controller
             if ($ogImagePath && file_exists(public_path($ogImagePath))) {
                 unlink(public_path($ogImagePath));
             }
-            $data['og_image'] = ImageHelper::uploadImage($request->file('meta_image'), 'uploads/seo');
+            $updateData['og_image'] = ImageHelper::uploadImage($request->file('meta_image'), 'uploads/seo');
         }
 
         // Update blog
@@ -181,7 +184,7 @@ class BlogController extends Controller
             'meta_title' => $request->meta_title,
             'meta_description' => $request->meta_description,
             'meta_keywords' => $request->meta_keywords,
-            'og_image' => $data['og_image'] ?? $ogImagePath,
+            'og_image' => $updateData['og_image'] ?? $ogImagePath,
         ];
 
         // Update or create SEO record
@@ -194,7 +197,7 @@ class BlogController extends Controller
 
         $blog->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('admin.blogs.index')->with(['messege' => 'Blog post updated successfully!', 'alert-type' => 'success']);
+        return redirect()->route('blogs.index')->with(['messege' => 'Blog post updated successfully!', 'alert-type' => 'success']);
     }
 
     /**
@@ -212,6 +215,6 @@ class BlogController extends Controller
 
         $blog->delete();
 
-        return redirect()->route('admin.blogs.index')->with(['messege' => 'Blog post deleted successfully!', 'alert-type' => 'success']);
+        return redirect()->route('blogs.index')->with(['messege' => 'Blog post deleted successfully!', 'alert-type' => 'success']);
     }
 }

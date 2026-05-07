@@ -99,7 +99,7 @@
                                                     <option value="quantity" {{ old('stock_status', $product->stock_status ?? '') == 'quantity' ? 'selected' : '' }}>Quantity</option>
                                                     <option value="in_stock" {{ old('stock_status', $product->stock_status ?? '') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
                                                     <option value="out_of_stock" {{ old('stock_status', $product->stock_status ?? '') == 'out_of_stock' ? 'selected' : '' }}>Out Of Stock</option>
-                                                    <option value="upcomming" {{ old('stock_status', $product->stock_status ?? '') == 'upcomming' ? 'selected' : '' }}>Upcomming</option>
+                                                    <option value="upcoming" {{ old('stock_status', $product->stock_status ?? '') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
                                                 </select>
                                                 @error('stock_status') <div class="text-danger mt-1">{{ $message }}</div> @enderror
                                             </div>

@@ -1,9 +1,4 @@
-@extends('backEnd.admin.layout.master')
-@section('title')
-    Blog Management
-@endsection
-
-@section('content')
+<x-backend-layout title="Blog Management">
     <!-- Page Header -->
     <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
         <h1 class="page-title fw-semibold fs-18 mb-0">Blog Management</h1>
@@ -24,7 +19,7 @@
                     <div class="card-title">
                         Blog Posts List
                     </div>
-                    <a href="{{ route('admin.blogs.create') }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('blogs.create') }}" class="btn btn-primary btn-sm">
                         <i class="ri-add-line me-1 fw-semibold align-middle"></i>Add New Post
                     </a>
                 </div>
@@ -65,10 +60,10 @@
                                     <td>{{ $post->published_date ? $post->published_date->format('M d, Y') : 'Not set' }}</td>
                                     <td>
                                         <div class="btn-list">
-                                            <a href="{{ route('admin.blogs.edit', $post) }}" class="btn btn-sm btn-warning-light btn-icon">
+                                            <a href="{{ route('blogs.edit', $post) }}" class="btn btn-sm btn-warning-light btn-icon">
                                                 <i class="ri-pencil-line"></i>
                                             </a>
-                                            <form action="{{ route('admin.blogs.destroy', $post) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('blogs.destroy', $post) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger-light btn-icon" onclick="return confirm('Are you sure you want to delete this post?')">
@@ -94,4 +89,4 @@
             </div>
         </div>
     </div>
-@endsection
+</x-backend-layout>

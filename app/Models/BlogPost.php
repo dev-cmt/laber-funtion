@@ -63,14 +63,6 @@ class BlogPost extends Model
     {
         parent::boot();
 
-        static::creating(function ($blogPost) {
-            $blogPost->slug = Str::slug($blogPost->title);
-        });
-
-        static::updating(function ($blogPost) {
-            $blogPost->slug = Str::slug($blogPost->title);
-        });
-
         static::saving(function ($blogPost) {
             if ($blogPost->status === 'published' && empty($blogPost->published_date)) {
                 $blogPost->published_date = now();

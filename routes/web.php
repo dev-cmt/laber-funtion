@@ -24,7 +24,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleRequisitionController;
-use App\Http\Controllers\ServiceRequestController;
+use App\Http\Controllers\ServiceTicketController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\HomeSlideController;
 use App\Http\Controllers\PromotionBannerController;
@@ -53,6 +53,7 @@ Route::controller($controller)->group(function () {
     Route::get('/cart', 'cart')->name('cart');
     Route::get('/wishlist', 'wishlist')->name('wishlist');
     Route::get('/compare', 'compare')->name('compare');
+    Route::get('/blog/{slug}', 'blogShow')->name('blog.show');
 });
 
 // Frontend Cart
@@ -213,30 +214,30 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Service Requests
-Route::prefix('service-requests')->group(function () {
-    Route::get('/', [ServiceRequestController::class, 'index'])->name('service-requests.index');
-    Route::get('/create', [ServiceRequestController::class, 'create'])->name('service-requests.create');
-    Route::post('/', [ServiceRequestController::class, 'store'])->name('service-requests.store');
-    Route::get('/{serviceRequest}', [ServiceRequestController::class, 'show'])->name('service-requests.show');
-    Route::get('/{serviceRequest}/edit', [ServiceRequestController::class, 'edit'])->name('service-requests.edit');
-    Route::put('/{serviceRequest}', [ServiceRequestController::class, 'update'])->name('service-requests.update');
-    Route::delete('/{serviceRequest}', [ServiceRequestController::class, 'destroy'])->name('service-requests.destroy');
+// Service tickets
+Route::prefix('service-tickets')->group(function () {
+    Route::get('/', [ServiceTicketController::class, 'index'])->name('service-tickets.index');
+    Route::get('/create', [ServiceTicketController::class, 'create'])->name('service-tickets.create');
+    Route::post('/', [ServiceTicketController::class, 'store'])->name('service-tickets.store');
+    Route::get('/{serviceTicket}', [ServiceTicketController::class, 'show'])->name('service-tickets.show');
+    Route::get('/{serviceTicket}/edit', [ServiceTicketController::class, 'edit'])->name('service-tickets.edit');
+    Route::put('/{serviceTicket}', [ServiceTicketController::class, 'update'])->name('service-tickets.update');
+    Route::delete('/{serviceTicket}', [ServiceTicketController::class, 'destroy'])->name('service-tickets.destroy');
 
     // Inspection Assignment
-    Route::get('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspectionForm'])->name('service-requests.assign-inspection');
-    Route::post('/{serviceRequest}/assign-inspection', [ServiceRequestController::class, 'assignInspection'])->name('service-requests.assign-inspection.store');
+    Route::get('/{serviceTicket}/assign-inspection', [ServiceTicketController::class, 'assignInspectionForm'])->name('service-tickets.assign-inspection');
+    Route::post('/{serviceTicket}/assign-inspection', [ServiceTicketController::class, 'assignInspection'])->name('service-tickets.assign-inspection.store');
 
     // Inspection Report
-    Route::get('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'inspectionReportForm'])->name('service-requests.inspection-report');
-    Route::post('/{serviceRequest}/inspection-report', [ServiceRequestController::class, 'saveInspectionReport'])->name('service-requests.inspection-report.store');
+    Route::get('/{serviceTicket}/inspection-report', [ServiceTicketController::class, 'inspectionReportForm'])->name('service-tickets.inspection-report');
+    Route::post('/{serviceTicket}/inspection-report', [ServiceTicketController::class, 'saveInspectionReport'])->name('service-tickets.inspection-report.store');
 
     // Admin Approval
-    Route::get('/{serviceRequest}/approval', [ServiceRequestController::class, 'approvalForm'])->name('service-requests.approval');
-    Route::post('/{serviceRequest}/approval', [ServiceRequestController::class, 'processApproval'])->name('service-requests.approval.process');
+    Route::get('/{serviceTicket}/approval', [ServiceTicketController::class, 'approvalForm'])->name('service-tickets.approval');
+    Route::post('/{serviceTicket}/approval', [ServiceTicketController::class, 'processApproval'])->name('service-tickets.approval.process');
 
     // Status Update
-    Route::post('/{serviceRequest}/update-status', [ServiceRequestController::class, 'updateStatus'])->name('service-requests.update-status');
+    Route::post('/{serviceTicket}/update-status', [ServiceTicketController::class, 'updateStatus'])->name('service-tickets.update-status');
 });
 
 Route::middleware('auth')->group(function () {
