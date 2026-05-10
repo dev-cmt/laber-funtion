@@ -49,11 +49,18 @@ Route::controller($controller)->group(function () {
     Route::get('/shop', 'shop')->name('shop');
     Route::get('/product/{slug}', 'productShow')->name('product.show');
     Route::get('/checkout', 'checkout')->name('checkout');
-    Route::get('/place-order', 'placeOrder')->name('place.order');
+    Route::post('/place-order', 'placeOrder')->name('place.order');
     Route::get('/cart', 'cart')->name('cart');
     Route::get('/wishlist', 'wishlist')->name('wishlist');
+    Route::post('/wishlist/add', 'addWishlist')->name('wishlist.add');
+    Route::delete('/wishlist/remove/{id}', 'removeWishlist')->name('wishlist.remove');
+
     Route::get('/compare', 'compare')->name('compare');
+    Route::post('/compare/add', 'addCompare')->name('compare.add');
+    Route::delete('/compare/remove/{id}', 'removeCompare')->name('compare.remove');
+    Route::get('/blog', 'blog')->name('blog');
     Route::get('/blog/{slug}', 'blogShow')->name('blog.show');
+    Route::post('/review-store/{product}', 'storeReview')->name('review.store');
 });
 
 // Frontend Cart
@@ -61,7 +68,6 @@ Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'updateQty'])->name('cart.update.qty');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/mini', [CartController::class, 'mini'])->name('cart.mini');
-
 
 // Dashboard
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard')->middleware('auth');

@@ -13,6 +13,10 @@ use App\Models\PromotionBanner;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\BlogPost;
+use App\Models\Order;
+use App\Models\OrderItem;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Illuminate\Support\Facades\Auth;
 
 
 class HomeController extends Controller
@@ -122,7 +126,17 @@ class HomeController extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product'));
+
+        $related_products = Product::with('media', 'brand', 'category')
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->active()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(10)
+            ->get();
+
+        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product', 'related_products'));
     }
 
     public function checkout()
@@ -201,6 +215,10 @@ class HomeController extends Controller
         return view('frontend.compare', compact('seotags','breadcrumbs'));
     }
 
+    public function blog(){
+        return view('frontend.blog');
+    }
+
     public function blogShow($slug)
     {
         $post = BlogPost::with('author', 'category', 'tags')->where('slug', $slug)->firstOrFail();
@@ -222,6 +240,136 @@ class HomeController extends Controller
         ]);
 
         return view('frontend.blog-details', compact('seotags', 'breadcrumbs', 'post'));
+    }
+
+
+    public function storeReview(Request $request, Product $product)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'text' => 'required|string|max:1000',
+        ]);
+
+        ProductReview::create([
+            'product_id' => $product->id,
+            'user_id' => auth()->id(), // Nullable if guest
+            'name' => $request->name,
+            'email' => $request->email,
+            'rating' => $request->rating,
+            'comment' => $request->text,
+            'status' => 0, // Pending approval by default
+        ]);
+
+        return redirect()->back()->with('success', 'Your review has been submitted and is waiting for approval.');
+    }
+
+    public function placeOrder(Request $request)
+    {
+        $cart = Cart::session(Auth::id() ?? session()->getId());
+        if ($cart->isEmpty()) {
+            return redirect()->route('cart')->with('error', 'Your cart is empty!');
+        }
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string',
+            'city' => 'required|string|max:255',
+            'payment_method' => 'required|string',
+        ]);
+
+        $order = Order::create([
+            'invoice_no' => 'INV-' . strtoupper(uniqid()),
+            'source' => 'web',
+            'customer_name' => $request->first_name . ' ' . $request->last_name,
+            'customer_phone' => $request->phone,
+            'customer_address' => $request->address . ', ' . $request->city,
+            'sub_total' => $cart->getSubTotal(),
+            'shipping_cost' => 0, // Placeholder
+            'discount' => 0,
+            'total' => $cart->getTotal(),
+            'paid' => 0,
+            'due' => $cart->getTotal(),
+            'payment_method' => $request->payment_method,
+            'payment_status' => 'unpaid',
+            'status' => 'pending',
+            'notes' => $request->note,
+            'customer_id' => Auth::id(),
+        ]);
+
+        foreach ($cart->getContent() as $item) {
+            // Need product ID from associated model or attribute if available, fallback to 0
+            $productId = $item->associatedModel->id ?? $item->id;
+            
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $productId,
+                'sku' => $item->id,
+                'quantity' => $item->quantity,
+                'purchase_price' => 0, // Fallback if unknown
+                'sale_price' => $item->price,
+                'attributes' => $item->attributes->toArray() ?? [],
+            ]);
+        }
+
+        $cart->clear();
+
+        // Redirect to a thank you page, for now just home with success
+        return redirect()->route('home')->with('success', 'Thank you! Your order has been placed successfully. Invoice: ' . $order->invoice_no);
+    }
+
+    public function addWishlist(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->add([
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->sale_price,
+            'quantity' => 1,
+            'attributes' => [
+                'image' => $product->main_image ? asset($product->main_image) : asset('images/no-image.jpg'),
+                'url' => route('product.show', $product->slug),
+                'stock' => $product->current_stock > 0 ? 'In Stock' : 'Out of Stock',
+            ]
+        ]);
+        return response()->json(['message' => 'Added to wishlist successfully']);
+    }
+
+    public function removeWishlist($id)
+    {
+        Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->remove($id);
+        return back()->with('success', 'Item removed from wishlist.');
+    }
+
+    public function addCompare(Request $request)
+    {
+        $product = Product::with('category', 'brand')->findOrFail($request->id);
+        Cart::session((Auth::id() ?? session()->getId()) . '_compare')->add([
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->sale_price,
+            'quantity' => 1,
+            'attributes' => [
+                'image' => $product->main_image ? asset($product->main_image) : asset('images/no-image.jpg'),
+                'url' => route('product.show', $product->slug),
+                'stock' => $product->current_stock > 0 ? 'In Stock' : 'Out of Stock',
+                'sku' => $product->sku ?? 'N/A',
+                'category' => $product->category->name ?? 'Uncategorized',
+                'brand' => $product->brand->name ?? 'No Brand',
+                'description' => $product->short_description ?? 'No description',
+            ]
+        ]);
+        return response()->json(['message' => 'Added to compare list successfully']);
+    }
+
+    public function removeCompare($id)
+    {
+        Cart::session((Auth::id() ?? session()->getId()) . '_compare')->remove($id);
+        return back()->with('success', 'Item removed from compare list.');
     }
 
 }

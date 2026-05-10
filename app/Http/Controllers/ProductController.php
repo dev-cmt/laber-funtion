@@ -54,6 +54,18 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        
+        // Handle specifications
+        if ($request->has('spec_keys') && $request->has('spec_values')) {
+            $specs = [];
+            foreach ($request->spec_keys as $index => $key) {
+                if (!empty($key)) {
+                    $specs[$key] = $request->spec_values[$index] ?? '';
+                }
+            }
+            $data['specification'] = !empty($specs) ? $specs : null;
+        }
+
         DB::transaction(function() use ($data, $request) {
             // Upload main image
             if ($request->hasFile('main_image')) {
@@ -226,6 +238,20 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = $request->all();
+        
+        // Handle specifications
+        if ($request->has('spec_keys') && $request->has('spec_values')) {
+            $specs = [];
+            foreach ($request->spec_keys as $index => $key) {
+                if (!empty($key)) {
+                    $specs[$key] = $request->spec_values[$index] ?? '';
+                }
+            }
+            $data['specification'] = !empty($specs) ? $specs : null;
+        } else {
+            $data['specification'] = null;
+        }
+
         // -------------------------
         // 1. UPDATE PRODUCT IMAGES
         // -------------------------

@@ -166,7 +166,7 @@ class Product extends Model
 
     public function getCurrentDiscountAttribute()
     {
-        return $this->discounts()->where('status', true)->where('start_date', '<=', now())->where('end_date', '>=', now())->first();
+        return $this->discount()->where('status', true)->where('start_date', '<=', now())->where('end_date', '>=', now())->first();
     }
 
 

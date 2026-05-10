@@ -53,12 +53,12 @@ class ProductVariant extends Model
 
         if ($discount) {
             if ($discount->discount_type === 'percentage') {
-                return $this->price - ($this->price * $discount->amount / 100);
+                return $this->variant_price - ($this->variant_price * $discount->amount / 100);
             } else {
-                return max(0, $this->price - $discount->amount);
+                return max(0, $this->variant_price - $discount->amount);
             }
         }
 
-        return $this->price;
+        return $this->variant_price;
     }
 }

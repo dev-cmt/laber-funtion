@@ -60,7 +60,13 @@ class Theme1Controller extends Controller
 
     public function productShow($slug)
     {
-        $product = Product::with('media', 'brand', 'category')
+        $product = Product::with([
+            'media', 
+            'brand', 
+            'category',
+            'variants.variantItems.attribute',
+            'variants.variantItems.attributeItem'
+        ])
         ->withCount('reviews')        // review count
         ->withAvg('reviews', 'rating') // average rating
         ->where('slug', $slug)->firstOrFail();
@@ -79,7 +85,17 @@ class Theme1Controller extends Controller
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
         ]);
-        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product'));
+
+        $related_products = Product::with('media', 'brand', 'category')
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->active()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(10)
+            ->get();
+
+        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product', 'related_products'));
     }
 
     public function checkout()

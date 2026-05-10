@@ -76,6 +76,9 @@
                                     <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#production-link" aria-selected="false">
                                         <i class="ri-building-3-line me-2 align-middle d-inline-block"></i> Production
                                     </a>
+                                    <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#specifications-link" aria-selected="false">
+                                        <i class="ri-list-check-2 me-2 align-middle d-inline-block"></i> Specifications
+                                    </a>
                                     <a class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" href="#seo-link" aria-selected="false">
                                         <i class="ri-search-eye-line me-2 align-middle d-inline-block"></i> SEO Info.
                                     </a>
@@ -340,6 +343,42 @@
 
                                         </div>
                                     </div>
+                                    <div class="tab-pane text-muted" id="specifications-link" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm" id="specifications_table">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Specification Name (e.g., Brand)</th>
+                                                        <th>Specification Value (e.g., Apple)</th>
+                                                        <th class="text-center" style="width: 50px;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if(is_array($product->specification) && count($product->specification) > 0)
+                                                        @foreach($product->specification as $key => $value)
+                                                            <tr>
+                                                                <td><input type="text" name="spec_keys[]" class="form-control form-control-sm" placeholder="Name" value="{{ $key }}"></td>
+                                                                <td><input type="text" name="spec_values[]" class="form-control form-control-sm" placeholder="Value" value="{{ $value }}"></td>
+                                                                <td class="text-center">
+                                                                    <button type="button" class="btn btn-sm btn-danger remove-spec-row"><i class="ri-delete-bin-line"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td><input type="text" name="spec_keys[]" class="form-control form-control-sm" placeholder="Name"></td>
+                                                            <td><input type="text" name="spec_values[]" class="form-control form-control-sm" placeholder="Value"></td>
+                                                            <td class="text-center">
+                                                                <button type="button" class="btn btn-sm btn-danger remove-spec-row"><i class="ri-delete-bin-line"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                            <button type="button" class="btn btn-sm btn-primary mt-2" id="add_spec_row"><i class="ri-add-line"></i> Add Row</button>
+                                        </div>
+                                    </div>
+
                                     <div class="tab-pane text-muted" id="seo-link" role="tabpanel">
                                         <div class="mb-1">
                                             <label for="meta_title" class="form-label">Meta Title</label>
@@ -573,6 +612,21 @@
 
                         // Remove variant row
                         $(document).on('click', '.remove-variant', function() {
+                            $(this).closest('tr').remove();
+                        });
+
+                        // Add/Remove Specification row
+                        $('#add_spec_row').on('click', function() {
+                            let row = `<tr>
+                                <td><input type="text" name="spec_keys[]" class="form-control form-control-sm" placeholder="Name"></td>
+                                <td><input type="text" name="spec_values[]" class="form-control form-control-sm" placeholder="Value"></td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-danger remove-spec-row"><i class="ri-delete-bin-line"></i></button>
+                                </td>
+                            </tr>`;
+                            $('#specifications_table tbody').append(row);
+                        });
+                        $(document).on('click', '.remove-spec-row', function() {
                             $(this).closest('tr').remove();
                         });
 

@@ -143,23 +143,20 @@ class CartController extends Controller
     /* ADD TO CART */
     public function add(Request $request)
     {
-        $cartItem = Cart::add([
+        $this->cart()->add([
             'id' => $request->id,
             'name' => $request->name,
-            'qty' => 1,
+            'quantity' => $request->qty ?? 1,
             'price' => $request->price,
-            'options' => [
+            'attributes' => [
                 'image' => $request->image,
                 'url' => $request->url,
             ]
         ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Product added successfully',
-            'cart_count' => Cart::count(),
-            'cart_total' => Cart::total()
-        ]);
+        $response = $this->mini()->getData(true);
+        $response['message'] = 'Product added to cart successfully!';
+        return response()->json($response);
     }
 
     /* UPDATE QTY */

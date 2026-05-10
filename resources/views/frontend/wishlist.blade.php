@@ -1,6 +1,87 @@
-<x-frontend-layout title="Home Page" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
-    <h1 style="justify-content: center;display: flex;align-items: center;justify-items: center;flex-direction: column; height: 100vh;font-family: cursive;color: #02ff00;">
-       <p> Hello, Welcome Master Teamplate!!! </p>
-       <a href="{{route('login')}}">Login</a>
-    </h1>
+<x-frontend-layout title="Wishlist" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
+    <div class="page-header">
+        <div class="page-header__container container">
+            <div class="page-header__breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{{ url('/') }}">Home</a>
+                            <svg class="breadcrumb-arrow" width="6px" height="9px">
+                                <use xlink:href="{{ asset('frontend/images/sprite.svg#arrow-rounded-right-6x9') }}"></use>
+                            </svg>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="page-header__title">
+                <h1>Wishlist</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="block">
+        <div class="container">
+            @php
+                $wishlist = \Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->getContent();
+            @endphp
+            @if($wishlist->count() > 0)
+            
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            
+            <table class="wishlist">
+                <thead class="wishlist__head">
+                    <tr class="wishlist__row">
+                        <th class="wishlist__column wishlist__column--image">Image</th>
+                        <th class="wishlist__column wishlist__column--product">Product</th>
+                        <th class="wishlist__column wishlist__column--stock">Stock Status</th>
+                        <th class="wishlist__column wishlist__column--price">Price</th>
+                        <th class="wishlist__column wishlist__column--tocart"></th>
+                        <th class="wishlist__column wishlist__column--remove"></th>
+                    </tr>
+                </thead>
+                <tbody class="wishlist__body">
+                    @foreach($wishlist as $item)
+                    <tr class="wishlist__row">
+                        <td class="wishlist__column wishlist__column--image">
+                            <a href="{{ $item->attributes->url }}"><img src="{{ $item->attributes->image }}" alt=""></a>
+                        </td>
+                        <td class="wishlist__column wishlist__column--product">
+                            <a href="{{ $item->attributes->url }}" class="wishlist__product-name">{{ $item->name }}</a>
+                        </td>
+                        <td class="wishlist__column wishlist__column--stock">
+                            <div class="badge badge-success">{{ $item->attributes->stock }}</div>
+                        </td>
+                        <td class="wishlist__column wishlist__column--price">${{ number_format($item->price, 2) }}</td>
+                        <td class="wishlist__column wishlist__column--tocart">
+                            <button type="button" class="btn btn-primary btn-sm btn-cart" 
+                                data-id="{{ $item->id }}" 
+                                data-name="{{ $item->name }}" 
+                                data-price="{{ $item->price }}" 
+                                data-image="{{ $item->attributes->image }}" 
+                                data-url="{{ $item->attributes->url }}">Add to cart</button>
+                        </td>
+                        <td class="wishlist__column wishlist__column--remove">
+                            <form action="{{ route('wishlist.remove', $item->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-light btn-sm btn-svg-icon">
+                                    <svg width="12px" height="12px"><use xlink:href="{{asset('frontend')}}/images/sprite.svg#cross-12"></use></svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @else
+            <div class="text-center pb-5 pt-5">
+                <h3 class="mb-4">Your wishlist is empty</h3>
+                <a href="{{ url('/') }}" class="btn btn-primary">Continue Shopping</a>
+            </div>
+            @endif
+        </div>
+    </div>
 </x-frontend-layout>
