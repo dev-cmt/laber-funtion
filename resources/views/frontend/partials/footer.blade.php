@@ -42,19 +42,19 @@
                                 <div class="site-footer__widget footer-links">
                                     <h5 class="footer-links__title">Information</h5>
                                     <ul class="footer-links__list">
-                                        <li class="footer-links__item"><a href="faq.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">FAQ</a></li>
-                                        <li class="footer-links__item"><a href="terms-and-conditions.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Terms and Conditions</a></li>
-                                        <li class="footer-links__item"><a href="compare.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Compare</a></li>
-                                        <li class="footer-links__item"><a href="wishlist.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Wishlist</a></li>
-                                        <li class="footer-links__item"><a href="track-order.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Track Order</a></li>
-                                        <li class="footer-links__item"><a href="contact-us.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Contact Us</a></li>
-                                        <li class="footer-links__item"><a href="about-us.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">About Us</a></li>
                                     </ul>
                                 </div>
@@ -63,19 +63,19 @@
                                 <div class="site-footer__widget footer-links">
                                     <h5 class="footer-links__title">Categories</h5>
                                     <ul class="footer-links__list">
-                                        <li class="footer-links__item"><a href="oils-and-lubricants.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Oils & Lubricants</a></li>
-                                        <li class="footer-links__item"><a href="engine-and-drivetrain.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Engine & Drivetrain</a></li>
-                                        <li class="footer-links__item"><a href="tires-and-wheels.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Tires & Wheels</a></li>
-                                        <li class="footer-links__item"><a href="interior-accessories.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Interior Accessories</a></li>
-                                        <li class="footer-links__item"><a href="body-parts-and-mirrors.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Body Parts & Mirrors</a></li>
-                                        <li class="footer-links__item"><a href="fuel-system-and-filters.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Fuel System & Filters</a></li>
-                                        <li class="footer-links__item"><a href="headlights-and-lighting.html"
+                                        <li class="footer-links__item"><a href="#"
                                                 class="footer-links__link">Headlights & Lighting</a></li>
                                     </ul>
                                 </div>

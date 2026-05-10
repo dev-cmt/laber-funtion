@@ -5,7 +5,7 @@
             <nav>
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('orders.index') }}">Orders</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('sale-requisitions.index') }}">Sale Requisition</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                 </ol>
             </nav>
@@ -14,7 +14,7 @@
 
     <div class="row">
         <div class="col-xl-12">
-            <form action="{{ route('orders.update', $order->id ) }}" method="POST">
+            <form action="{{ route('sale-requisitions.update', $order->id ) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -180,24 +180,24 @@
                                 <div class="mb-3">
                                     <label class="form-label">Payment Method <span class="text-danger">*</span></label>
                                     <select class="form-select" name="payment_method" required>
-                                        @foreach($paymentMethods as $method)
-                                            <option value="{{ $method }}" {{ old('payment_method', $order->payment_method) == $method ? 'selected' : '' }}>{{ $method }}</option>
+                                        @foreach($paymentMethods as $key => $method)
+                                            <option value="{{ $key }}" {{ old('payment_method', $order->payment_method) == $key ? 'selected' : '' }}>{{ $method }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Payment Status <span class="text-danger">*</span></label>
                                     <select class="form-select" name="payment_status" required>
-                                        @foreach($paymentStatuses as $status)
-                                            <option value="{{ $status }}" {{ old('payment_status', $order->payment_status) == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                        @foreach($paymentStatuses as $key => $status)
+                                            <option value="{{ $key }}" {{ old('payment_status', $order->payment_status) == $key ? 'selected' : '' }}>{{ $status }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Order Status <span class="text-danger">*</span></label>
                                     <select class="form-select" name="status" required>
-                                        @foreach($orderStatuses as $status)
-                                            <option value="{{ $status }}" {{ old('status', $order->status) == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                        @foreach($orderStatuses as $key => $status)
+                                            <option value="{{ $key }}" {{ old('status', $order->status) == $key ? 'selected' : '' }}>{{ $status }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -205,7 +205,7 @@
                                     <label class="form-label">Assigned To</label>
                                     <select class="form-select" name="assigned_to">
                                         <option value="">Select Staff</option>
-                                        @foreach($staff as $user)
+                                        @foreach($employees as $user)
                                             <option value="{{ $user->id }}" {{ old('assigned_to', $order->assigned_to) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                         @endforeach
                                     </select>

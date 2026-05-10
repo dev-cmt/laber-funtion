@@ -25,6 +25,7 @@ class Order extends Model
         'store_id',
         'customer_id',
         'assigned_to',
+        'is_requisition',
     ];
 
     // 🔗 Order has many items

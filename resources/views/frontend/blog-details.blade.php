@@ -7,19 +7,19 @@
             <div class="header__topbar-start">
                 <div class="topbar topbar--spaceship-start">
                     <div class="topbar__item-text d-none d-xxl-flex">Call Us: +1 (800) 060-07-30</div>
-                    <div class="topbar__item-text"><a class="topbar__link" href="about-us.html">About Us</a></div><div class="topbar__item-text"><a class="topbar__link" href="contact-us.html">Contacts</a></div><div class="topbar__item-text"><a class="topbar__link" href="track-order.html">Track Order</a></div>
+                    <div class="topbar__item-text"><a class="topbar__link" href="#">About Us</a></div><div class="topbar__item-text"><a class="topbar__link" href="#">Contacts</a></div><div class="topbar__item-text"><a class="topbar__link" href="#">Track Order</a></div>
                 </div>
             </div>
             <div class="header__topbar-end-bg"></div>
             <div class="header__topbar-end">
                 <div class="topbar topbar--spaceship-end">
                     <div class="topbar__item-button">
-                        <a href="faq.html" class="topbar__button">
+                        <a href="#" class="topbar__button">
                             <span class="topbar__button-label">FAQ</span>
                         </a>
                     </div>
                     <div class="topbar__item-button">
-                        <a href="compare.html" class="topbar__button">
+                        <a href="#" class="topbar__button">
                             <span class="topbar__button-label">Compare</span>
                         </a>
                     </div>
@@ -32,7 +32,7 @@
                                 </span>
                             </button>
                             <div class="topbar__menu-body">
-                                <a class="topbar__menu-item" href="headlights-and-lighting.html"><span>Category</span></a><a class="topbar__menu-item" href="left-headlight-of-brandix-z54.html"><span>Product</span></a>
+                                <a class="topbar__menu-item" href="#"><span>Category</span></a><a class="topbar__menu-item" href="#"><span>Product</span></a>
                             </div>
                         </div>
                 </div>
@@ -57,35 +57,35 @@
                                 <ul class="departments__list">
                                     <li class="departments__list-padding" role="presentation"></li>
                                     <li class="departments__item">
-                                            <a href="headlights-and-lighting.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Headlights & Lighting
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="fuel-system-and-filters.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Fuel System & Filters
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="body-parts-and-mirrors.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Body Parts & Mirrors
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="interior-accessories.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Interior Accessories
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="tires-and-wheels.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Tires & Wheels
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="engine-and-drivetrain.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Engine & Drivetrain
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="oils-and-lubricants.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Oils & Lubricants
                                             </a>
                                         </li><li class="departments__item">
-                                            <a href="tools-and-garage.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Tools & Garage
                                             </a>
                                         </li>
@@ -104,11 +104,11 @@
     Home
 </a>
 </li><li class="main-menu__item main-menu__item--submenu--menu ">
-<a href="blog.html" class="main-menu__link">
+<a href="#" class="main-menu__link">
     Blog
 </a>
 </li><li class="main-menu__item main-menu__item--submenu--menu ">
-<a href="catalog.html" class="main-menu__link">
+<a href="#" class="main-menu__link">
     Catalog
 </a>
 </li><li class="main-menu__item main-menu__item--submenu--menu main-menu__item--has-submenu">
@@ -118,14 +118,14 @@
         <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z" />
     </svg>
 </a>
-<div class="main-menu__submenu"><ul class="menu"><li class="menu__item"><a href="components.html" class="menu__link">Components</a></li><li class="menu__item"><a href="typography.html" class="menu__link">Typography</a></li></ul></div>
+<div class="main-menu__submenu"><ul class="menu"><li class="menu__item"><a href="#" class="menu__link">Components</a></li><li class="menu__item"><a href="#" class="menu__link">Typography</a></li></ul></div>
 </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="header__logo">
-                <a href="index.html" class="logo">
+                <a href="#" class="logo">
                     <div class="logo__slogan">
                         Auto parts for Cars, trucks and motorcycles
                     </div>
@@ -196,7 +196,7 @@ c0,2.8,2.2,5,5,5c2.8,0,5-2.2,5-5C13,5.2,10.8,3,8,3z" />
             </div>
             <div class="header__indicators">
                 <div class="indicator">
-                    <a href="wishlist.html" class="indicator__button">
+                    <a href="#" class="indicator__button">
                         <span class="indicator__icon">
                             <svg width="32" height="32">
                                 <path d="M23,4c3.9,0,7,3.1,7,7c0,6.3-11.4,15.9-14,16.9C13.4,26.9,2,17.3,2,11c0-3.9,3.1-7,7-7c2.1,0,4.1,1,5.4,2.6l1.6,2l1.6-2
@@ -208,7 +208,7 @@ z" />
                 </div>
                 
                 <div class="indicator">
-                    <a href="cart.html" class="indicator__button">
+                    <a href="#" class="indicator__button">
                         <div id="msMiniCart" class="">
 <div class="empty">
     <span class="indicator__icon">
@@ -255,7 +255,7 @@ c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,
                     <div class="post-header__categories">
                         <ul class="post-header__categories-list">
                             <li class="post-header__categories-item">
-                                <a href="blog.html" class="post-header__categories-link">Lastest News</a>
+                                <a href="#" class="post-header__categories-link">Lastest News</a>
                             </li>
                         </ul>
                     </div>
@@ -347,7 +347,7 @@ c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,
                                     </div>
                                     <div class="widget-posts__info">
                                         <div class="widget-posts__name">
-                                            <a href="engineers-use-many-methods-to-minimize-logic-functions.html">Engineers Use Many Methods To Minimize Logic Functions</a>
+                                            <a href="#">Engineers Use Many Methods To Minimize Logic Functions</a>
                                         </div>
                                         <div class="widget-posts__date">November 16, 2020</div>
                                     </div>
@@ -360,7 +360,7 @@ c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,
                                     </div>
                                     <div class="widget-posts__info">
                                         <div class="widget-posts__name">
-                                            <a href="an-advantage-of-digital-circuits-when-compared-to-analog-circuits.html">An Advantage Of Digital Circuits When Compared To Analog Circuits</a>
+                                            <a href="#">An Advantage Of Digital Circuits When Compared To Analog Circuits</a>
                                         </div>
                                         <div class="widget-posts__date">November 16, 2020</div>
                                     </div>
@@ -373,7 +373,7 @@ c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,
                                     </div>
                                     <div class="widget-posts__info">
                                         <div class="widget-posts__name">
-                                            <a href="many-inquiries-outside-of-academia-are-philosophical-in-the-broad-sense.html">Many Inquiries Outside Of Academia Are Philosophical In The Broad Sense</a>
+                                            <a href="#">Many Inquiries Outside Of Academia Are Philosophical In The Broad Sense</a>
                                         </div>
                                         <div class="widget-posts__date">November 16, 2020</div>
                                     </div>
@@ -386,7 +386,7 @@ c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,
                                     </div>
                                     <div class="widget-posts__info">
                                         <div class="widget-posts__name">
-                                            <a href="logic-is-the-study-of-reasoning-and-argument-part-1.html">Logic Is The Study Of Reasoning And Argument Part 1</a>
+                                            <a href="#">Logic Is The Study Of Reasoning And Argument Part 1</a>
                                         </div>
                                         <div class="widget-posts__date">November 16, 2020</div>
                                     </div>

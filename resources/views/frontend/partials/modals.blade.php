@@ -16,7 +16,7 @@ C11.2,9.8,11.2,10.4,10.8,10.8z" />
 
                 <div class="mobile-menu__divider"></div>
                 <div class="mobile-menu__indicators">
-                    <a class="mobile-menu__indicator" href="wishlist.html">
+                    <a class="mobile-menu__indicator" href="#">
                         <span class="mobile-menu__indicator-icon">
                             <svg width="20" height="20">
                                 <path d="M14,3c2.2,0,4,1.8,4,4c0,4-5.2,10-8,10S2,11,2,7c0-2.2,1.8-4,4-4c1,0,1.9,0.4,2.7,1L10,5.2L11.3,4C12.1,3.4,13,3,14,3 M14,1
@@ -26,7 +26,7 @@ c-1.5,0-2.9,0.6-4,1.5C8.9,1.6,7.5,1,6,1C2.7,1,0,3.7,0,7c0,5,6,12,10,12s10-7,10-1
                         <span class="mobile-menu__indicator-title">Wishlist</span>
                     </a>
 
-                    <a class="mobile-menu__indicator" href="cart.html">
+                    <a class="mobile-menu__indicator" href="#">
                         <span class="mobile-menu__indicator-icon">
                             <svg width="20" height="20">
                                 <circle cx="7" cy="17" r="2" />
@@ -50,7 +50,7 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                         </a>
                     </li>
                     <li data-mobile-menu-item>
-                        <a href="blog.html" class="" data-mobile-menu-trigger>
+                        <a href="#" class="" data-mobile-menu-trigger>
                             Blog
                             <svg width="7" height="11">
                                 <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
@@ -71,57 +71,57 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                                 <div class="mobile-menu__panel-body">
                                     <ul class="mobile-menu__links">
                                         <li data-mobile-menu-item>
-                                            <a href="logic-is-the-study-of-reasoning-and-argument-part-2.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Logic Is The Study Of Reasoning And Argument Part 2
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="some-philosophers-specialize-in-one-or-more-historical-periods.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Some Philosophers Specialize In One Or More Historical Periods
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="a-variety-of-other-academic-and-non-academic-approaches-have-been-explored.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 A Variety Of Other Academic And Non-Academic Approaches Have Been
                                                 Explored
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="germany-was-the-first-country-to-professionalize-philosophy.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Germany Was The First Country To Professionalize Philosophy
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="logic-is-the-study-of-reasoning-and-argument-part-1.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Logic Is The Study Of Reasoning And Argument Part 1
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="many-inquiries-outside-of-academia-are-philosophical-in-the-broad-sense.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Many Inquiries Outside Of Academia Are Philosophical In The Broad
                                                 Sense
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="an-advantage-of-digital-circuits-when-compared-to-analog-circuits.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 An Advantage Of Digital Circuits When Compared To Analog Circuits
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="engineers-use-many-methods-to-minimize-logic-functions.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Engineers Use Many Methods To Minimize Logic Functions
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="philosophy-that-addresses-topics-such-as-goodness.html"
+                                            <a href="#"
                                                 class="" data-mobile-menu-trigger>
                                                 Philosophy That Addresses Topics Such As Goodness
                                             </a>
@@ -132,7 +132,7 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                         </div>
                     </li>
                     <li data-mobile-menu-item>
-                        <a href="catalog.html" class="" data-mobile-menu-trigger>
+                        <a href="#" class="" data-mobile-menu-trigger>
                             Catalog
                             <svg width="7" height="11">
                                 <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
@@ -153,44 +153,44 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                                 <div class="mobile-menu__panel-body">
                                     <ul class="mobile-menu__links">
                                         <li data-mobile-menu-item>
-                                            <a href="headlights-and-lighting.html" class=""
+                                            <a href="#" class=""
                                                 data-mobile-menu-trigger>
                                                 Headlights & Lighting
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="fuel-system-and-filters.html" class=""
+                                            <a href="#" class=""
                                                 data-mobile-menu-trigger>
                                                 Fuel System & Filters
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="body-parts-and-mirrors.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Body Parts & Mirrors
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="interior-accessories.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Interior Accessories
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="tires-and-wheels.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Tires & Wheels
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="engine-and-drivetrain.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Engine & Drivetrain
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="oils-and-lubricants.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Oils & Lubricants
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="tools-and-garage.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Tools & Garage
                                             </a>
                                         </li>
@@ -200,7 +200,7 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                         </div>
                     </li>
                     <li data-mobile-menu-item>
-                        <a href="pages.html" class="" data-mobile-menu-trigger>
+                        <a href="#" class="" data-mobile-menu-trigger>
                             Pages
                             <svg width="7" height="11">
                                 <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
@@ -221,12 +221,12 @@ C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,2
                                 <div class="mobile-menu__panel-body">
                                     <ul class="mobile-menu__links">
                                         <li data-mobile-menu-item>
-                                            <a href="components.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Components
                                             </a>
                                         </li>
                                         <li data-mobile-menu-item>
-                                            <a href="typography.html" class="" data-mobile-menu-trigger>
+                                            <a href="#" class="" data-mobile-menu-trigger>
                                                 Typography
                                             </a>
                                         </li>

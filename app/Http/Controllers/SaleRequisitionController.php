@@ -18,6 +18,7 @@ class SaleRequisitionController extends Controller
     public function index()
     {
         $saleRequisitions = Order::latest()
+            ->where('is_requisition', true)
             ->with(['store', 'customer', 'assignedTo'])
             ->paginate(10);
 
@@ -32,14 +33,15 @@ class SaleRequisitionController extends Controller
         // Fetch necessary data for dropdowns
         $customers = User::get(['id', 'name', 'phone']);
         $stores = Store::where('status', 1)->get(['id', 'name']);
-        $products = Product::where('status', 1)->get(['id', 'name', 'sale_price', 'sku_prefix']);
+        $products = Product::where('status', 1)->get(['id', 'name', 'sale_price', 'sku']);
+        $employees = User::where('is_admin', false)->get(['id', 'name']);
 
         $paymentMethods = [0=>'Cash',1=>'Card',2=>'Mobile Banking',3=>'COD',4=>'Bank Transfer'];
         $paymentStatuses = [0=>'Pending',1=>'Partial',2=>'Paid',3=>'Cancelled'];
         $orderStatuses = [0=>'Pending',1=>'Confirmed',2=>'Hold',3=>'Cancelled',4=>'Delivered'];
 
         return view('backend.sale-requisitions.create', compact(
-            'customers', 'stores', 'products',
+            'customers', 'stores', 'products', 'employees',
             'paymentMethods', 'paymentStatuses', 'orderStatuses'
         ));
     }
@@ -88,7 +90,8 @@ class SaleRequisitionController extends Controller
         try {
             DB::beginTransaction();
 
-            // 3. Create the Order
+            // 3. Create the Order (as a requisition)
+            $orderValidated['is_requisition'] = true;
             $order = Order::create($orderValidated);
 
             // 4. Create Order Items
@@ -128,14 +131,15 @@ class SaleRequisitionController extends Controller
         // Fetch necessary data for dropdowns
         $customers = User::get(['id', 'name', 'phone']);
         $stores = Store::where('status', 1)->get(['id', 'name']);
-        $products = Product::where('status', 1)->get(['id', 'name', 'sale_price', 'sku_prefix']);
+        $products = Product::where('status', 1)->get(['id', 'name', 'sale_price', 'sku']);
+        $employees = User::where('is_admin', false)->get(['id', 'name']);
 
-        $paymentMethods = ['Cash', 'Card', 'Mobile Banking', 'Bank Transfer'];
-        $paymentStatuses = ['Pending', 'Paid', 'Partial'];
-        $orderStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+        $paymentMethods = [0=>'Cash',1=>'Card',2=>'Mobile Banking',3=>'COD',4=>'Bank Transfer'];
+        $paymentStatuses = [0=>'Pending',1=>'Partial',2=>'Paid',3=>'Cancelled'];
+        $orderStatuses = [0=>'Pending',1=>'Confirmed',2=>'Hold',3=>'Cancelled',4=>'Delivered'];
 
         return view('backend.sale-requisitions.edit', compact(
-            'order', 'customers', 'stores', 'products',
+            'order', 'customers', 'stores', 'products', 'employees',
             'paymentMethods', 'paymentStatuses', 'orderStatuses'
         ));
     }
@@ -250,9 +254,26 @@ class SaleRequisitionController extends Controller
     public function indexApprove()
     {
         $saleRequisitions = Order::latest()
+            ->where('is_requisition', true)
             ->with(['store', 'customer', 'assignedTo'])
             ->paginate(10);
 
         return view('backend.sale-requisitions.approve', compact('saleRequisitions'));
+    }
+
+    public function saleApproved($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = 1; // Confirmed
+        $order->save();
+        return redirect()->back()->with('success', 'Sale Requisition approved successfully.');
+    }
+
+    public function saleCanceled($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = 3; // Cancelled
+        $order->save();
+        return redirect()->back()->with('success', 'Sale Requisition cancelled successfully.');
     }
 }

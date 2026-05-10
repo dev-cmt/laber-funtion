@@ -50,6 +50,7 @@ Route::controller($controller)->group(function () {
     Route::get('/product/{slug}', 'productShow')->name('product.show');
     Route::get('/checkout', 'checkout')->name('checkout');
     Route::post('/place-order', 'placeOrder')->name('place.order');
+    Route::get('/order/confirm/{invoice}', 'orderConfirm')->name('order.confirm');
     Route::get('/cart', 'cart')->name('cart');
     Route::get('/wishlist', 'wishlist')->name('wishlist');
     Route::post('/wishlist/add', 'addWishlist')->name('wishlist.add');

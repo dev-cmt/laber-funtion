@@ -180,24 +180,24 @@
                                 <div class="mb-3">
                                     <label class="form-label">Payment Method <span class="text-danger">*</span></label>
                                     <select class="form-select" name="payment_method" required>
-                                        @foreach($paymentMethods as $method)
-                                            <option value="{{ $method }}" {{ old('payment_method', $order->payment_method) == $method ? 'selected' : '' }}>{{ $method }}</option>
+                                        @foreach($paymentMethods as $key => $method)
+                                            <option value="{{ $key }}" {{ old('payment_method', $order->payment_method) == $key ? 'selected' : '' }}>{{ $method }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Payment Status <span class="text-danger">*</span></label>
                                     <select class="form-select" name="payment_status" required>
-                                        @foreach($paymentStatuses as $status)
-                                            <option value="{{ $status }}" {{ old('payment_status', $order->payment_status) == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                        @foreach($paymentStatuses as $key => $status)
+                                            <option value="{{ $key }}" {{ old('payment_status', $order->payment_status) == $key ? 'selected' : '' }}>{{ $status }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Order Status <span class="text-danger">*</span></label>
                                     <select class="form-select" name="status" required>
-                                        @foreach($orderStatuses as $status)
-                                            <option value="{{ $status }}" {{ old('status', $order->status) == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                        @foreach($orderStatuses as $key => $status)
+                                            <option value="{{ $key }}" {{ old('status', $order->status) == $key ? 'selected' : '' }}>{{ $status }}</option>
                                         @endforeach
                                     </select>
                                 </div>

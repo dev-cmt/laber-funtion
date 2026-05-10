@@ -39,7 +39,7 @@
                         </a>
                         <div class="mobile-header__search mobile-search">
                             <form class="mobile-search__body" id="my_id"
-                                action="http://redparts.webps.pp.ua/shop-search-results.html" method="get">
+                                action="{{ route('shop') }}" method="get">
                                 <input type="text" autocomplete="off" name="search" id="search" value=""
                                     class="mobile-search__input" placeholder="Enter Keywords or Part Number">
                                 <button type="submit" class="mobile-search__button mobile-search__button--search">
@@ -72,7 +72,7 @@
                                 </button>
                             </div>
                             <div class="mobile-indicator d-none d-md-block">
-                                <a href="wishlist.html" class="mobile-indicator__button">
+                                <a href="{{ route('wishlist') }}" class="mobile-indicator__button">
                                     <span class="mobile-indicator__icon">
                                         <svg width="20" height="20">
                                             <path d="M14,3c2.2,0,4,1.8,4,4c0,4-5.2,10-8,10S2,11,2,7c0-2.2,1.8-4,4-4c1,0,1.9,0.4,2.7,1L10,5.2L11.3,4C12.1,3.4,13,3,14,3 M14,1
@@ -82,7 +82,7 @@
                                 </a>
                             </div>
                             <div class="mobile-indicator">
-                                <a href="cart.html" class="mobile-indicator__button">
+                                <a href="{{ route('cart') }}" class="mobile-indicator__button">
                                     <span class="mobile-menu__indicator-icon">
                                         <svg width="20" height="20">
                                             <circle cx="7" cy="17" r="2" />
@@ -91,7 +91,7 @@
 	V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
 	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
                                         </svg>
-                                        <span class="mobile-menu__indicator-counter ms2_total_count">0</span>
+                                        <span class="mobile-menu__indicator-counter ms2_total_count">{{ Cart::getTotalQuantity() }}</span>
                                     </span>
                                 </a>
                             </div>
@@ -109,9 +109,9 @@
                 <div class="header__topbar-start">
                     <div class="topbar topbar--spaceship-start">
                         <div class="topbar__item-text d-none d-xxl-flex">Call Us: +1 (800) 060-07-30</div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="about-us.html">About Us</a></div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="contact-us.html">Contacts</a></div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="track-order.html">Track Order</a>
+                        <div class="topbar__item-text"><a class="topbar__link" href="#">About Us</a></div>
+                        <div class="topbar__item-text"><a class="topbar__link" href="#">Contacts</a></div>
+                        <div class="topbar__item-text"><a class="topbar__link" href="#">Track Order</a>
                         </div>
                     </div>
                 </div>
@@ -119,12 +119,12 @@
                 <div class="header__topbar-end">
                     <div class="topbar topbar--spaceship-end">
                         <div class="topbar__item-button">
-                            <a href="faq.html" class="topbar__button">
+                            <a href="#" class="topbar__button">
                                 <span class="topbar__button-label">FAQ</span>
                             </a>
                         </div>
                         <div class="topbar__item-button">
-                            <a href="compare.html" class="topbar__button">
+                            <a href="{{ route('compare') }}" class="topbar__button">
                                 <span class="topbar__button-label">Compare</span>
                             </a>
                         </div>
@@ -139,9 +139,9 @@
                             </button>
                             <div class="topbar__menu-body">
                                 <a class="topbar__menu-item"
-                                    href="headlights-and-lighting.html"><span>Category</span></a><a
+                                    href="#"><span>Category</span></a><a
                                     class="topbar__menu-item"
-                                    href="left-headlight-of-brandix-z54.html"><span>Product</span></a>
+                                    href="#"><span>Product</span></a>
                             </div>
                         </div>
                     </div>
@@ -168,42 +168,42 @@
                                     <ul class="departments__list">
                                         <li class="departments__list-padding" role="presentation"></li>
                                         <li class="departments__item">
-                                            <a href="headlights-and-lighting.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Headlights & Lighting
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="fuel-system-and-filters.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Fuel System & Filters
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="body-parts-and-mirrors.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Body Parts & Mirrors
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="interior-accessories.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Interior Accessories
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="tires-and-wheels.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Tires & Wheels
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="engine-and-drivetrain.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Engine & Drivetrain
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="oils-and-lubricants.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Oils & Lubricants
                                             </a>
                                         </li>
                                         <li class="departments__item">
-                                            <a href="tools-and-garage.html" class="departments__item-link">
+                                            <a href="#" class="departments__item-link">
                                                 Tools & Garage
                                             </a>
                                         </li>
@@ -223,12 +223,12 @@
                                     </a>
                                 </li>
                                 <li class="main-menu__item main-menu__item--submenu--menu ">
-                                    <a href="blog.html" class="main-menu__link">
+                                    <a href="#" class="main-menu__link">
                                         Blog
                                     </a>
                                 </li>
                                 <li class="main-menu__item main-menu__item--submenu--menu ">
-                                    <a href="catalog.html" class="main-menu__link">
+                                    <a href="#" class="main-menu__link">
                                         Catalog
                                     </a>
                                 </li>
@@ -242,9 +242,9 @@
                                     </a>
                                     <div class="main-menu__submenu">
                                         <ul class="menu">
-                                            <li class="menu__item"><a href="components.html"
+                                            <li class="menu__item"><a href="#"
                                                     class="menu__link">Components</a></li>
-                                            <li class="menu__item"><a href="typography.html"
+                                            <li class="menu__item"><a href="#"
                                                     class="menu__link">Typography</a></li>
                                         </ul>
                                     </div>
@@ -254,7 +254,7 @@
                     </div>
                 </div>
                 <div class="header__logo">
-                    <a href="index.html" class="logo">
+                    <a href="{{ route('home') }}" class="logo">
                         <div class="logo__slogan">
                             Auto parts for Cars, trucks and motorcycles
                         </div>
@@ -285,7 +285,7 @@
                 <div class="header__search">
                     <div class="search">
                         <form class="search__body" id="search_form"
-                            action="http://redparts.webps.pp.ua/shop-search-results.html" method="get">
+                            action="{{ route('shop') }}" method="get">
                             <div class="search__shadow"></div>
                             <input class="search__input" type="text" autocomplete="off" name="search"
                                 id="search_desktop" value="" placeholder="Enter Keywords or Part Number">
@@ -318,7 +318,7 @@
                 </div>
                 <div class="header__indicators">
                     <div class="indicator">
-                        <a href="wishlist.html" class="indicator__button">
+                        <a href="{{ route('wishlist') }}" class="indicator__button">
                             <span class="indicator__icon">
                                 <svg width="32" height="32">
                                     <path d="M23,4c3.9,0,7,3.1,7,7c0,6.3-11.4,15.9-14,16.9C13.4,26.9,2,17.3,2,11c0-3.9,3.1-7,7-7c2.1,0,4.1,1,5.4,2.6l1.6,2l1.6-2
@@ -330,7 +330,7 @@
                     </div>
 
                     <div class="indicator">
-                        <a href="cart.html" class="indicator__button">
+                        <a href="{{ route('cart') }}" class="indicator__button">
                             <div id="msMiniCart" class="">
                                 <div class="empty">
                                     <span class="indicator__icon">
@@ -341,7 +341,7 @@
 	l3.4,14.3c0.1,0.2,0.3,0.4,0.5,0.4h15.2c0.2,0,0.4-0.1,0.5-0.4l3.1-10c0.1-0.2,0-0.4-0.1-0.4C29.8,8.1,29.7,8,29.5,8H14
 	c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,10C28.5,20.3,27.5,21,26.4,21z" />
                                         </svg>
-                                        <span class="indicator__counter ms2_total_count">0</span>
+                                        <span class="indicator__counter ms2_total_count">{{ Cart::getTotalQuantity() }}</span>
                                     </span>
                                     <span class="indicator__title">Cart</span>
 

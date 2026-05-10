@@ -46,7 +46,7 @@
                             <tbody>
                                 @forelse($saleRequisitions as $key => $items)
                                     <tr>
-                                        <td>{{ $itemss->firstItem() + $key }}</td>
+                                        <td>{{ $saleRequisitions->firstItem() + $key }}</td>
                                         <td><a href="{{ route('sale-requisitions.edit', $items->id) }}" class="fw-bold text-primary">{{ $items->invoice_no }}</a></td>
                                         <td>
                                             <strong>{{ $items->customer_name }}</strong><br>
@@ -59,8 +59,25 @@
                                             <span class="badge bg-danger-transparent">Due: ${{ number_format($items->due, 2) }}</span>
                                         </td>
                                         <td>
-                                            <span class="badge bg-warning-transparent">
-                                                Pandding
+                                            @php
+                                                $statusClass = [
+                                                    0 => 'bg-warning-transparent',
+                                                    1 => 'bg-success-transparent',
+                                                    2 => 'bg-info-transparent',
+                                                    3 => 'bg-danger-transparent',
+                                                    4 => 'bg-primary-transparent',
+                                                ][$items->status] ?? 'bg-secondary-transparent';
+                                                
+                                                $statusText = [
+                                                    0 => 'Pending',
+                                                    1 => 'Confirmed',
+                                                    2 => 'Hold',
+                                                    3 => 'Cancelled',
+                                                    4 => 'Delivered',
+                                                ][$items->status] ?? 'Unknown';
+                                            @endphp
+                                            <span class="badge {{ $statusClass }}">
+                                                {{ $statusText }}
                                             </span>
                                         </td>
                                         <td>

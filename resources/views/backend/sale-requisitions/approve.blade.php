@@ -46,7 +46,7 @@
                             <tbody>
                                 @forelse($saleRequisitions as $key => $items)
                                     <tr>
-                                        <td>{{ $itemss->firstItem() + $key }}</td>
+                                        <td>{{ $saleRequisitions->firstItem() + $key }}</td>
                                         <td><a href="{{ route('sale-requisitions.edit', $items->id) }}" class="fw-bold text-primary">{{ $items->invoice_no }}</a></td>
                                         <td>
                                             <strong>{{ $items->customer_name }}</strong><br>
@@ -59,22 +59,39 @@
                                             <span class="badge bg-danger-transparent">Due: ${{ number_format($items->due, 2) }}</span>
                                         </td>
                                         <td>
-                                            <span class="badge bg-warning-transparent">
-                                                Pandding
+                                            @php
+                                                $statusClass = [
+                                                    0 => 'bg-warning-transparent',
+                                                    1 => 'bg-success-transparent',
+                                                    2 => 'bg-info-transparent',
+                                                    3 => 'bg-danger-transparent',
+                                                    4 => 'bg-primary-transparent',
+                                                ][$items->status] ?? 'bg-secondary-transparent';
+                                                
+                                                $statusText = [
+                                                    0 => 'Pending',
+                                                    1 => 'Confirmed',
+                                                    2 => 'Hold',
+                                                    3 => 'Cancelled',
+                                                    4 => 'Delivered',
+                                                ][$items->status] ?? 'Unknown';
+                                            @endphp
+                                            <span class="badge {{ $statusClass }}">
+                                                {{ $statusText }}
                                             </span>
                                         </td>
                                         <td>
                                             <div class="btn-list">
-                                                <a href="{{ route('sale-requisitions.edit', $items) }}" class="btn btn-sm btn-warning-light btn-icon" title="Edit">
-                                                    <i class="ri-pencil-line"></i>
-                                                </a>
-                                                <form action="{{ route('sale-requisitions.destroy', $items->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger-light btn-icon" onclick="return confirm('Are you sure you want to delete this sale requisitions and all its items?')" title="Delete">
-                                                        <i class="ri-delete-bin-line"></i>
-                                                    </button>
-                                                </form>
+                                                @if($items->status == 0)
+                                                    <a href="{{ route('sale-approve.approved', $items->id) }}" class="btn btn-sm btn-success-light" title="Approve">
+                                                        <i class="ri-check-line me-1"></i> Approve
+                                                    </a>
+                                                    <a href="{{ route('sale-approve.canceled', $items->id) }}" class="btn btn-sm btn-danger-light" title="Cancel">
+                                                        <i class="ri-close-line me-1"></i> Cancel
+                                                    </a>
+                                                @else
+                                                    <span class="badge bg-light text-dark">Processed</span>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

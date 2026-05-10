@@ -32,7 +32,7 @@
             <nav>
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('orders.index') }}">Sale Requisition</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('sale-requisitions.index') }}">Sale Requisition</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Create</li>
                 </ol>
             </nav>
@@ -41,7 +41,7 @@
 
     <div class="row">
         <div class="col-xl-12">
-            <form action="{{ route('orders.store') }}" method="POST">
+            <form action="{{ route('sale-requisitions.store') }}" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col-xl-8 mx-auto">
@@ -184,6 +184,27 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 mb-2">
+                                        <label class="form-label">Invoice No <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="invoice_no" value="{{ old('invoice_no', 'REQ-' . time()) }}" required readonly>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Store <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="store_id" required>
+                                            <option value="">Select Store</option>
+                                            @foreach($stores as $store)
+                                                <option value="{{ $store->id }}" {{ old('store_id') == $store->id ? 'selected' : '' }}>{{ $store->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Source</label>
+                                        <select class="form-select" name="source">
+                                            @foreach(['Facebook', 'Website', 'Walk-in', 'Referral', 'Other'] as $source)
+                                                <option value="{{ $source }}" {{ old('source') == $source ? 'selected' : '' }}>{{ $source }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
                                         <label class="form-label">Existing Customer</label>
                                         <select class="form-select" name="customer_id" id="customer_select">
                                             <option value="">Search/Select Customer</option>
@@ -232,7 +253,7 @@
                                         <label class="form-label">Payment Method <span class="text-danger">*</span></label>
                                         <select class="form-select" name="payment_method" required>
                                             @foreach($paymentMethods as $key => $method)
-                                                <option value="{{ $key }}" {{ (int) old('payment_method', $order->payment_method ?? 0) === $key ? 'selected' : '' }}>
+                                                <option value="{{ $key }}" {{ (int) old('payment_method', 0) === $key ? 'selected' : '' }}>
                                                     {{ $method }}
                                                 </option>
                                             @endforeach
@@ -243,9 +264,28 @@
                                         <label class="form-label">Payment Status <span class="text-danger">*</span></label>
                                         <select class="form-select" name="payment_status" required>
                                             @foreach($paymentStatuses as $key => $status)
-                                                <option value="{{ $key }}" {{ (int) old('payment_status', $order->payment_status ?? 0) === $key ? 'selected' : '' }}>
+                                                <option value="{{ $key }}" {{ (int) old('payment_status', 0) === $key ? 'selected' : '' }}>
                                                     {{ $status }}
                                                 </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Order Status <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="status" required>
+                                            @foreach($orderStatuses as $key => $status)
+                                                <option value="{{ $key }}" {{ (int) old('status', 0) === $key ? 'selected' : '' }}>
+                                                    {{ $status }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label">Assigned To</label>
+                                        <select class="form-select" name="assigned_to">
+                                            <option value="">Select Employee</option>
+                                            @foreach($employees as $user)
+                                                <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

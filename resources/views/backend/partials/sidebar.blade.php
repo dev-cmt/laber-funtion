@@ -176,6 +176,7 @@
                 <li class="slide">
                     <a href="{{ route('orders.index') }}"
                         class="side-menu__item {{ Request::is('orders*') ? 'active' : '' }}">
+                        <i class="bx bx-shopping-bag side-menu__icon"></i>
                         <span class="side-menu__label">Online Orders</span>
                     </a>
                 </li>

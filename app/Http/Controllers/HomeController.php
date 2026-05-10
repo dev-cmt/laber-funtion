@@ -282,6 +282,13 @@ class HomeController extends Controller
             'payment_method' => 'required|string',
         ]);
 
+        $payment_method = 3; // cod
+        if ($request->payment_method == 'cash') {
+            $payment_method = 0;
+        } elseif ($request->payment_method == 'cod') {
+            $payment_method = 3;
+        }
+
         $order = Order::create([
             'invoice_no' => 'INV-' . strtoupper(uniqid()),
             'source' => 'web',
@@ -294,9 +301,9 @@ class HomeController extends Controller
             'total' => $cart->getTotal(),
             'paid' => 0,
             'due' => $cart->getTotal(),
-            'payment_method' => $request->payment_method,
-            'payment_status' => 'unpaid',
-            'status' => 'pending',
+            'payment_method' => $payment_method,
+            'payment_status' => 0, // pending
+            'status' => 0, // pending
             'notes' => $request->note,
             'customer_id' => Auth::id(),
         ]);
@@ -318,8 +325,16 @@ class HomeController extends Controller
 
         $cart->clear();
 
-        // Redirect to a thank you page, for now just home with success
-        return redirect()->route('home')->with('success', 'Thank you! Your order has been placed successfully. Invoice: ' . $order->invoice_no);
+        // Redirect to order confirmation page
+        return redirect()->route('order.confirm', ['invoice' => $order->invoice_no]);
+    }
+
+    public function orderConfirm($invoice)
+    {
+        $order = Order::where('invoice_no', $invoice)->with('items.product')->firstOrFail();
+        
+        $theme = config('theme.frontend.views_path');
+        return view($theme . '.order_confirm', compact('order'));
     }
 
     public function addWishlist(Request $request)

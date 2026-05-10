@@ -46,11 +46,11 @@
                             <tbody>
                                 @php
                                     $orderStatus = [
-                                        1 => ['label' => 'Pending',    'color' => 'warning'],
-                                        2 => ['label' => 'Processing', 'color' => 'info'],
-                                        3 => ['label' => 'Shipped',    'color' => 'primary'],
+                                        0 => ['label' => 'Pending',    'color' => 'warning'],
+                                        1 => ['label' => 'Confirmed',  'color' => 'info'],
+                                        2 => ['label' => 'Hold',       'color' => 'secondary'],
+                                        3 => ['label' => 'Cancelled',  'color' => 'danger'],
                                         4 => ['label' => 'Delivered',  'color' => 'success'],
-                                        5 => ['label' => 'Cancelled',  'color' => 'danger'],
                                     ];
                                 @endphp
                                 @forelse($orders as $key => $order)
