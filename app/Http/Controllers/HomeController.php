@@ -53,9 +53,10 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
         $categories = Category::with('media')->where('is_home', true)->where('status', true)->take(8)->get();
 
         $best_sellers = $products->shuffle()->take(10);
@@ -71,6 +72,7 @@ class HomeController extends Controller
         return view('frontend.index', compact(
             'seotags',
             'breadcrumbs', 
+            'breadcrumb_list',
             'products', 
             'hot_deals', 
             'slides', 
@@ -86,12 +88,64 @@ class HomeController extends Controller
         ));
     }
 
-    public function shop()
+    public function shop(Request $request)
     {
+        $query = Product::with('media')->withCount('reviews')->withAvg('reviews', 'rating')->active();
+
+        // Filtering
+        if ($request->has('category') && !empty($request->category)) {
+            $category = Category::where('slug', $request->category)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+
+        if ($request->has('brand') && !empty($request->brand)) {
+            $brand = Brand::where('slug', $request->brand)->first();
+            if ($brand) {
+                $query->where('brand_id', $brand->id);
+            }
+        }
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('min_price')) {
+            $query->where('sale_price', '>=', $request->min_price);
+        }
+
+        if ($request->has('max_price')) {
+            $query->where('sale_price', '<=', $request->max_price);
+        }
+
+        // Sorting
+        $sort = $request->get('sort', 'latest');
+        switch ($sort) {
+            case 'price_low_high':
+                $query->orderBy('sale_price', 'asc');
+                break;
+            case 'price_high_low':
+                $query->orderBy('sale_price', 'desc');
+                break;
+            case 'rating':
+                $query->orderByDesc('reviews_avg_rating');
+                break;
+            case 'latest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+
+        $categories = Category::where('status', true)->whereNull('parent_id')->with('children')->get();
+        $brands = Brand::where('status', true)->get();
+
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
+        $page = Page::with('seo')->where('slug', 'home')->first(); // Using home SEO as default for now or create a shop page entry
         $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
+            'title'       => 'Shop - ' . (config('app.name')),
             'description' => $page->seo->meta_description ?? '',
             'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
             'image'       => $page->seo->og_image ?? '',
@@ -99,10 +153,15 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
-        return view('frontend.shop', compact('seotags','breadcrumbs'));
+            ['name' => 'Shop', 'url' => route('shop')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        $latest_products = Product::with('media')->active()->latest()->take(5)->get();
+
+        return view('frontend.shop', compact('seotags', 'breadcrumbs', 'breadcrumb_list', 'products', 'categories', 'brands', 'latest_products'));
     }
 
     public function productShow($slug)
@@ -123,9 +182,12 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
+            ['name' => 'Shop', 'url' => route('shop')],
+            ['name' => $product->name, 'url' => route('product.show', $product->slug)],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
 
         $related_products = Product::with('media', 'brand', 'category')
             ->withCount('reviews')
@@ -136,7 +198,7 @@ class HomeController extends Controller
             ->take(10)
             ->get();
 
-        return view('frontend.product-details', compact('seotags','breadcrumbs', 'product', 'related_products'));
+        return view('frontend.product-details', compact('seotags','breadcrumbs', 'breadcrumb_list', 'product', 'related_products'));
     }
 
     public function checkout()
@@ -152,10 +214,12 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
-        return view('frontend.checkout', compact('seotags','breadcrumbs'));
+            ['name' => 'Checkout', 'url' => route('checkout')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+        return view('frontend.checkout', compact('seotags','breadcrumbs', 'breadcrumb_list'));
     }
 
     public function cart()
@@ -171,10 +235,12 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
-        return view('frontend.cart', compact('seotags','breadcrumbs'));
+            ['name' => 'Cart', 'url' => route('cart')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+        return view('frontend.cart', compact('seotags','breadcrumbs', 'breadcrumb_list'));
     }
 
     public function wishlist()
@@ -190,10 +256,12 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
-        return view('frontend.wishlist', compact('seotags','breadcrumbs'));
+            ['name' => 'Wishlist', 'url' => route('wishlist')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+        return view('frontend.wishlist', compact('seotags','breadcrumbs', 'breadcrumb_list'));
     }
 
     public function compare()
@@ -209,10 +277,12 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-        ]);
-        return view('frontend.compare', compact('seotags','breadcrumbs'));
+            ['name' => 'Compare', 'url' => route('compare')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+        return view('frontend.compare', compact('seotags','breadcrumbs', 'breadcrumb_list'));
     }
 
     public function blog(){
@@ -233,13 +303,14 @@ class HomeController extends Controller
         ]);
         $seotags = $this->generateTags();
 
-        $breadcrumbs = $this->generateBreadcrumbJsonLd([
+        $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
-            ['name' => 'Blog', 'url' => '#'],
+            ['name' => 'Blog', 'url' => route('blog')],
             ['name' => $post->title, 'url' => url()->current()],
-        ]);
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
 
-        return view('frontend.blog-details', compact('seotags', 'breadcrumbs', 'post'));
+        return view('frontend.blog-details', compact('seotags', 'breadcrumbs', 'breadcrumb_list', 'post'));
     }
 
 

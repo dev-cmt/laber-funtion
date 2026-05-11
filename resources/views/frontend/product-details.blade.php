@@ -8,23 +8,17 @@
                 <div class="block-header__body">
                     <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
                         <ol class="breadcrumb__list">
-                            @if(isset($breadcrumbs) && is_array($breadcrumbs))
-                                @foreach($breadcrumbs as $breadcrumb)
-                                    <li class="breadcrumb__item {{ $loop->first ? 'breadcrumb__item--parent breadcrumb__item--first' : ($loop->last ? '' : 'breadcrumb__item--parent') }}">
+                            @foreach($breadcrumb_list as $breadcrumb)
+                                @if($loop->last)
+                                    <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+                                        <span class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</span>
+                                    </li>
+                                @else
+                                    <li class="breadcrumb__item breadcrumb__item--parent {{ $loop->first ? 'breadcrumb__item--first' : '' }}">
                                         <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>
                                     </li>
-                                @endforeach
-                            @else
-                                <li class="breadcrumb__item breadcrumb__item--parent breadcrumb__item--first">
-                                    <a href="{{ url('/') }}" class="breadcrumb__item-link">Home</a>
-                                </li>
-                                <li class="breadcrumb__item breadcrumb__item--parent">
-                                    <a href="{{ route('shop') }}" class="breadcrumb__item-link">Catalog</a>
-                                </li>
-                                <li class="breadcrumb__item breadcrumb__item--parent">
-                                    <a href="#" class="breadcrumb__item-link">{{ $product->name }}</a>
-                                </li>
-                            @endif
+                                @endif
+                            @endforeach
                         </ol>
                     </nav>
                 </div>
@@ -103,6 +97,16 @@
                                     <div class="product__excerpt">
                                         {{ Str::limit(strip_tags($product->description), 200) }}
                                     </div>
+                                    @if(is_array($product->specification) && count($product->specification) > 0)
+                                    <div class="product__features">
+                                        <div class="product__features-title">Key Features:</div>
+                                        <ul>
+                                            @foreach(array_slice($product->specification, 0, 5) as $key => $value)
+                                                <li>{{ ucfirst($key) }}: <span>{{ $value }}</span></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="product__info">
                                     <div class="product__info-card">
@@ -114,10 +118,10 @@
                                             <div class="product__prices-stock">
                                                 <div class="product__prices">
                                                     @if($product->sale_price < $product->regular_price)
-                                                        <div class="product__price product__price--new">${{ number_format($product->sale_price, 2) }}</div>
-                                                        <div class="product__price product__price--old">${{ number_format($product->regular_price, 2) }}</div>
+                                                        <div class="product__price product__price--new">TK {{ number_format($product->sale_price, 2) }}</div>
+                                                        <div class="product__price product__price--old">TK {{ number_format($product->regular_price, 2) }}</div>
                                                     @else
-                                                        <div class="product__price product__price--current">${{ number_format($product->regular_price, 2) }}</div>
+                                                        <div class="product__price product__price--current">TK {{ number_format($product->regular_price, 2) }}</div>
                                                     @endif
                                                 </div>
                                                 <div class="status-badge status-badge--style--{{ $product->total_stock > 0 ? 'success' : 'danger' }} product__stock status-badge--has-text">
@@ -127,22 +131,28 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="product__meta">
-                                                <table>
-                                                    <tr>
-                                                        <th>SKU</th>
-                                                        <td>{{ $product->sku ?? 'N/A' }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Brand</th>
-                                                        <td>{{ $product->brand ? $product->brand->name : 'N/A' }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Manufacturer</th>
-                                                        <td>{{ $product->manufacturer ?? 'N/A' }}</td>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                                                <div class="product__meta">
+                                                    <table>
+                                                        <tr>
+                                                            <th>SKU</th>
+                                                            <td>{{ $product->sku ?? 'N/A' }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Brand</th>
+                                                            <td>{{ $product->brand ? $product->brand->name : 'N/A' }}</td>
+                                                        </tr>
+                                                        @if($product->manufacturer)
+                                                        <tr>
+                                                            <th>Manufacturer</th>
+                                                            <td>{{ $product->manufacturer }}</td>
+                                                        </tr>
+                                                        @endif
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <td>{{ $product->category ? $product->category->name : 'N/A' }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
                                         </div>
                                         <form class="product__options ms2_form" id="product-variant-form" onsubmit="return false;">
                                             @csrf
@@ -418,7 +428,7 @@ C-0.1,9.8-0.1,10.4,0.3,10.7z" />
                     });
 
                     if (matchedVariant) {
-                        $('.product__price--current, .product__price--new').text('$' + parseFloat(matchedVariant.price).toFixed(2));
+                        $('.product__price--current, .product__price--new').text('TK ' + parseFloat(matchedVariant.price).toFixed(2));
                         $('.product__meta table tr:first-child td').text(matchedVariant.sku);
                         
                         // Update stock badge

@@ -4,11 +4,16 @@
             <div class="page-header__breadcrumb">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{{ url('/') }}" class="text-muted">Home</a>
-                            <i class="fas fa-chevron-right mx-2 text-muted" style="font-size: 10px;"></i>
-                        </li>
-                        <li class="breadcrumb-item active font-weight-bold" aria-current="page">Shopping Cart</li>
+                        @foreach($breadcrumb_list as $breadcrumb)
+                            <li class="breadcrumb-item {{ $loop->last ? 'active font-weight-bold' : '' }}" {{ $loop->last ? 'aria-current="page"' : '' }}>
+                                @if(!$loop->last)
+                                    <a href="{{ $breadcrumb['url'] }}" class="text-muted">{{ $breadcrumb['name'] }}</a>
+                                    <i class="fas fa-chevron-right mx-2 text-muted" style="font-size: 10px;"></i>
+                                @else
+                                    {{ $breadcrumb['name'] }}
+                                @endif
+                            </li>
+                        @endforeach
                     </ol>
                 </nav>
             </div>
@@ -57,7 +62,7 @@
                                 </div>
                                 
                                 <div class="cart-item-price d-none d-md-block" style="width: 15%; text-align: center;">
-                                    ${{ number_format($item->price, 2) }}
+                                    TK {{ number_format($item->price, 2) }}
                                 </div>
                                 
                                 <div style="width: 20%; text-align: center;" class="d-flex justify-content-center">
@@ -69,7 +74,7 @@
                                 </div>
                                 
                                 <div class="cart-item-total d-none d-md-block" style="width: 15%;">
-                                    ${{ number_format($item->price * $item->quantity, 2) }}
+                                    TK {{ number_format($item->price * $item->quantity, 2) }}
                                 </div>
                                 
                                 <button type="button" class="btn-remove-item remove-cart ml-auto" data-id="{{ $item->id }}" title="Remove item">
@@ -91,7 +96,7 @@
                             
                             <div class="summary-row">
                                 <span>Subtotal</span>
-                                <span class="font-weight-bold" style="color: #1a1a1a;">${{ number_format($cart->getSubTotal(), 2) }}</span>
+                                <span class="font-weight-bold" style="color: #1a1a1a;">TK {{ number_format($cart->getSubTotal(), 2) }}</span>
                             </div>
                             
                             <div class="summary-row">
@@ -106,7 +111,7 @@
                             
                             <div class="summary-total">
                                 <span>Total</span>
-                                <span style="color: #e53935;">${{ number_format($cart->getTotal(), 2) }}</span>
+                                <span style="color: #e53935;">TK {{ number_format($cart->getTotal(), 2) }}</span>
                             </div>
                             
                             <a href="{{ route('checkout') }}" class="btn-premium mt-4">Proceed to Checkout <i class="fas fa-arrow-right ml-2"></i></a>
