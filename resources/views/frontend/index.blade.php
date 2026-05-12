@@ -190,16 +190,17 @@
                 <div class="container">
                     <div class="block-categories__list">
                         @foreach($categories as $category)
-                        <div class="block-categories__item category-card category-card--layout--classic">
+                        <div class="block-categories__item category-card category-card--layout--overlay">
                             <div class="category-card__body">
+                                <div class="category-card__overlay-image">
+                                    <img src="{{ $category->image ? asset($category->image) : asset('images/no-image.jpg') }}"
+                                        alt="{{ $category->name }}">
+                                </div>
+                                <div class="category-card__overlay-image category-card__overlay-image--blur">
+                                    <img src="{{ $category->image ? asset($category->image) : asset('images/no-image.jpg') }}"
+                                        alt="{{ $category->name }}">
+                                </div>
                                 <div class="category-card__content">
-                                    <div class="category-card__image image image--type--category">
-                                        <a href="{{ route('shop', ['category' => $category->slug]) }}" class="image__body">
-                                            <img class="image__tag"
-                                                src="{{ $category->image ? asset($category->image) : asset('images/no-image.jpg') }}"
-                                                alt="{{ $category->name }}">
-                                        </a>
-                                    </div>
                                     <div class="category-card__info">
                                         <div class="category-card__name">
                                             <a href="{{ route('shop', ['category' => $category->slug]) }}">{{ $category->name }}</a>
@@ -209,11 +210,9 @@
                                                 <li><a href="{{ route('shop', ['category' => $child->slug]) }}">{{ Str::limit($child->name, 15) }}</a></li>
                                             @endforeach
                                         </ul>
-                                        <div class="category-card__actions">
-                                            <a href="{{ route('shop', ['category' => $category->slug]) }}" class="category-card__link">Shop All</a>
-                                        </div>
                                     </div>
                                 </div>
+                                <a href="{{ route('shop', ['category' => $category->slug]) }}" class="category-card__link"></a>
                             </div>
                         </div>
                         @endforeach
@@ -252,8 +251,12 @@
                 <div class="block-products-carousel__carousel">
                     <div class="block-products-carousel__carousel-loader"></div>
                     <div class="owl-carousel">
-                        @foreach ($hot_deals as $item)
-                            @include('frontend.partials.product-item', ['product' => $item])
+                        @foreach ($hot_deals as $product)
+                            <div class="block-products-carousel__column">
+                                <div class="block-products-carousel__cell">
+                                    @include('frontend.partials.product-card', ['product' => $product])
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -309,7 +312,11 @@
                         <div class="block-sale__carousel">
                             <div class="owl-carousel">
                                 @foreach ($best_sellers as $product)
-                                    @include('frontend.partials.product-item', ['product' => $product])
+                                    <div class="block-products-carousel__column">
+                                        <div class="block-products-carousel__cell">
+                                            @include('frontend.partials.product-card', ['product' => $product])
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
@@ -412,7 +419,7 @@
                     <div class="block-products-carousel__carousel-loader"></div>
                     <div class="owl-carousel">
                         @foreach ($new_arrivals as $product)
-                            @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                            @include('frontend.partials.product-card-horizontal', ['product' => $product])
                         @endforeach
                     </div>
                 </div>
@@ -452,7 +459,11 @@
                     <div class="block-products-carousel__carousel-loader"></div>
                     <div class="owl-carousel">
                         @foreach ($best_sellers as $product)
-                            @include('frontend.partials.product-item', ['product' => $product])
+                            <div class="block-products-carousel__column">
+                                <div class="block-products-carousel__cell">
+                                    @include('frontend.partials.product-card', ['product' => $product])
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -467,7 +478,7 @@
                         <div class="block-products-columns__title">Top Rated</div>
                         <div class="block-products-columns__list">
                             @foreach($top_rated as $product)
-                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                                @include('frontend.partials.product-card-horizontal', ['product' => $product])
                             @endforeach
                         </div>
                     </div>
@@ -475,7 +486,7 @@
                         <div class="block-products-columns__title">Special Offers</div>
                         <div class="block-products-columns__list">
                             @foreach($special_offers as $product)
-                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                                @include('frontend.partials.product-card-horizontal', ['product' => $product])
                             @endforeach
                         </div>
                     </div>
@@ -483,7 +494,7 @@
                         <div class="block-products-columns__title">Bestsellers</div>
                         <div class="block-products-columns__list">
                             @foreach($column_bestsellers as $product)
-                                @include('frontend.partials.product-item-horizontal', ['product' => $product])
+                                @include('frontend.partials.product-card-horizontal', ['product' => $product])
                             @endforeach
                         </div>
                     </div>

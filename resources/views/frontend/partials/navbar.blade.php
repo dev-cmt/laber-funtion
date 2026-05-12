@@ -109,9 +109,9 @@
                 <div class="header__topbar-start">
                     <div class="topbar topbar--spaceship-start">
                         <div class="topbar__item-text d-none d-xxl-flex">Call Us: +1 (800) 060-07-30</div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="#">About Us</a></div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="#">Contacts</a></div>
-                        <div class="topbar__item-text"><a class="topbar__link" href="#">Track Order</a>
+                        <div class="topbar__item-text"><a class="topbar__link" href="{{ route('about.us') }}">About Us</a></div>
+                        <div class="topbar__item-text"><a class="topbar__link" href="{{ route('contacts') }}">Contacts</a></div>
+                        <div class="topbar__item-text"><a class="topbar__link" href="{{ route('track.order') }}">Track Order</a>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                 <div class="header__topbar-end">
                     <div class="topbar topbar--spaceship-end">
                         <div class="topbar__item-button">
-                            <a href="#" class="topbar__button">
+                            <a href="{{ route('faq') }}" class="topbar__button">
                                 <span class="topbar__button-label">FAQ</span>
                             </a>
                         </div>
@@ -167,46 +167,13 @@
                                 <div class="departments__body">
                                     <ul class="departments__list">
                                         <li class="departments__list-padding" role="presentation"></li>
+                                        @foreach($categories as $category)
                                         <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Headlights & Lighting
+                                            <a href="{{ route('shop', ['category' => $category->slug]) }}" class="departments__item-link">
+                                                {{ $category->name }}
                                             </a>
                                         </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Fuel System & Filters
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Body Parts & Mirrors
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Interior Accessories
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Tires & Wheels
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Engine & Drivetrain
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Oils & Lubricants
-                                            </a>
-                                        </li>
-                                        <li class="departments__item">
-                                            <a href="#" class="departments__item-link">
-                                                Tools & Garage
-                                            </a>
-                                        </li>
+                                        @endforeach
                                         <li class="departments__list-padding" role="presentation"></li>
                                     </ul>
                                     <div class="departments__menu-container"></div>
@@ -218,17 +185,17 @@
                         <div class="main-menu">
                             <ul class="main-menu__list">
                                 <li class="main-menu__item main-menu__item--submenu--menu ">
-                                    <a href="#" class="main-menu__link">
+                                    <a href="{{ route('home') }}" class="main-menu__link">
                                         Home
                                     </a>
                                 </li>
                                 <li class="main-menu__item main-menu__item--submenu--menu ">
-                                    <a href="#" class="main-menu__link">
+                                    <a href="{{ route('blog') }}" class="main-menu__link">
                                         Blog
                                     </a>
                                 </li>
                                 <li class="main-menu__item main-menu__item--submenu--menu ">
-                                    <a href="#" class="main-menu__link">
+                                    <a href="{{ route('catalog') }}" class="main-menu__link">
                                         Catalog
                                     </a>
                                 </li>
@@ -242,10 +209,11 @@
                                     </a>
                                     <div class="main-menu__submenu">
                                         <ul class="menu">
-                                            <li class="menu__item"><a href="#"
-                                                    class="menu__link">Components</a></li>
-                                            <li class="menu__item"><a href="#"
-                                                    class="menu__link">Typography</a></li>
+                                            @foreach($pages as $p)
+                                            <li class="menu__item">
+                                                <a href="{{ url($p->slug) }}" class="menu__link">{{ $p->title }}</a>
+                                            </li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </li>
@@ -308,7 +276,44 @@
                                     </svg>
                                 </span>
                             </button>
-                            <div class="search__box"></div>
+                            <div class="search__box" id="search-suggestions-container" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #fff; z-index: 999; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 0 0 5px 5px; max-height: 400px; overflow-y: auto;"></div>
+                            <style>
+                                .search-suggestion-item {
+                                    display: flex;
+                                    align-items: center;
+                                    padding: 10px;
+                                    border-bottom: 1px solid #eee;
+                                    text-decoration: none;
+                                    color: #333;
+                                    transition: background 0.2s;
+                                }
+                                .search-suggestion-item:hover {
+                                    background: #f9f9f9;
+                                    text-decoration: none;
+                                    color: #333;
+                                }
+                                .search-suggestion-item img {
+                                    width: 50px;
+                                    height: 50px;
+                                    object-fit: cover;
+                                    margin-right: 15px;
+                                    border-radius: 4px;
+                                }
+                                .search-suggestion-info {
+                                    flex: 1;
+                                }
+                                .search-suggestion-name {
+                                    display: block;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    margin-bottom: 2px;
+                                }
+                                .search-suggestion-price {
+                                    font-size: 13px;
+                                    color: #ff0000;
+                                    font-weight: 600;
+                                }
+                            </style>
                             <div class="search__decor">
                                 <div class="search__decor-start"></div>
                                 <div class="search__decor-end"></div>

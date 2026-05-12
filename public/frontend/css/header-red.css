@@ -2126,7 +2126,7 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  color: #fff;
+  color: #222;
 }
 
 .search__input::-webkit-input-placeholder {

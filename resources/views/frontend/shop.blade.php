@@ -34,11 +34,8 @@
                                         <div class="sidebar__body">
                                             <div class="sidebar__header">
                                                 <div class="sidebar__title">Filters</div>
-                                                <button class="sidebar__close" type="button"><svg width="12"
-                                                        height="12">
-                                                        <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4
-	C11.2,9.8,11.2,10.4,10.8,10.8z" />
+                                                <button class="sidebar__close" type="button"><svg width="12" height="12">
+                                                        <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6 c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4 C11.2,9.8,11.2,10.4,10.8,10.8z" />
                                                     </svg>
                                                 </button>
                                             </div>
@@ -55,34 +52,51 @@
                                                                     <button type="button" class="filter__title"
                                                                         data-collapse-trigger>
                                                                         Categories
-                                                                        <span class="filter__arrow"><svg width="12px"
-                                                                                height="7px">
-                                                                                <path
-                                                                                    d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
+                                                                        <span class="filter__arrow"><svg width="12px" height="7px">
+                                                                                <path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
                                                                             </svg></span>
                                                                     </button>
                                                                     <div class="filter__body" data-collapse-content>
                                                                         <div class="filter__container">
-                                                                            <div class="filter-categories">
-                                                                                <ul class="filter-categories__list">
-                                                                                    <li class="filter-categories__item {{ !request('category') ? 'filter-categories__item--current' : '' }}">
-                                                                                        <a href="{{ route('shop', array_merge(request()->except('category', 'page'))) }}">All Categories</a>
-                                                                                    </li>
+                                                                            <div class="filter-list">
+                                                                                <div class="filter-list__list">
                                                                                     @foreach($categories as $category)
-                                                                                        <li class="filter-categories__item {{ request('category') == $category->slug ? 'filter-categories__item--current' : '' }}">
-                                                                                            <a href="{{ route('shop', array_merge(request()->except('page'), ['category' => $category->slug])) }}">{{ $category->name }}</a>
-                                                                                            @if($category->children->count() > 0)
-                                                                                                <ul class="filter-categories__child">
-                                                                                                    @foreach($category->children as $child)
-                                                                                                        <li class="filter-categories__item {{ request('category') == $child->slug ? 'filter-categories__item--current' : '' }}">
-                                                                                                            <a href="{{ route('shop', array_merge(request()->except('page'), ['category' => $child->slug])) }}">{{ $child->name }}</a>
-                                                                                                        </li>
-                                                                                                    @endforeach
-                                                                                                </ul>
-                                                                                            @endif
-                                                                                        </li>
+                                                                                        <label class="filter-list__item">
+                                                                                            <span class="input-check filter-list__input">
+                                                                                                <span class="input-check__body">
+                                                                                                    <input class="input-check__input category-filter" type="checkbox" value="{{ $category->slug }}" {{ request('category') == $category->slug ? 'checked' : '' }}>
+                                                                                                    <span class="input-check__box"></span>
+                                                                                                    <span class="input-check__icon">
+                                                                                                        <svg width="9" height="7">
+                                                                                                            <path d="M9,1.3L8.6,0.9c-0.2-0.2-0.5-0.2-0.7,0L3.1,5.7L1.1,3.7c-0.2-0.2-0.5-0.2-0.7,0L0,4.1c-0.2,0.2-0.2,0.5,0,0.7 l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z" />
+                                                                                                        </svg>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                            <span class="filter-list__title" style="font-weight: 600;">{{ $category->name }}</span>
+                                                                                        </label>
+                                                                                        @if($category->children->count() > 0)
+                                                                                            <div style="margin-left: 25px;">
+                                                                                                @foreach($category->children as $child)
+                                                                                                    <label class="filter-list__item">
+                                                                                                        <span class="input-check filter-list__input">
+                                                                                                            <span class="input-check__body">
+                                                                                                                <input class="input-check__input category-filter" type="checkbox" value="{{ $child->slug }}" {{ request('category') == $child->slug ? 'checked' : '' }}>
+                                                                                                                <span class="input-check__box"></span>
+                                                                                                                <span class="input-check__icon">
+                                                                                                                    <svg width="9" height="7">
+                                                                                                                        <path d="M9,1.3L8.6,0.9c-0.2-0.2-0.5-0.2-0.7,0L3.1,5.7L1.1,3.7c-0.2-0.2-0.5-0.2-0.7,0L0,4.1c-0.2,0.2-0.2,0.5,0,0.7 l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z" />
+                                                                                                                    </svg>
+                                                                                                                </span>
+                                                                                                            </span>
+                                                                                                        </span>
+                                                                                                        <span class="filter-list__title">{{ $child->name }}</span>
+                                                                                                    </label>
+                                                                                                @endforeach
+                                                                                            </div>
+                                                                                        @endif
                                                                                     @endforeach
-                                                                                </ul>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -90,14 +104,13 @@
                                                             </div>
                                                             <div class="widget-filters__item">
                                                                 <div class="filter filter--opened" data-collapse-item>
-                                                                    <button type="button" class="filter__title"
-                                                                        data-collapse-trigger>
+                                                                    <button type="button" class="filter__title" data-collapse-trigger>
                                                                         Price
-                                                                        <span class="filter__arrow"><svg width="12px"
-                                                                                height="7px">
-                                                                                <path
-                                                                                    d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
-                                                                            </svg></span>
+                                                                        <span class="filter__arrow">
+                                                                            <svg width="12px" height="7px">
+                                                                                <path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
+                                                                            </svg>
+                                                                        </span>
                                                                     </button>
                                                                     <div class="filter__body" data-collapse-content>
                                                                         <div class="filter__container">
@@ -123,14 +136,13 @@
                                                             </div>
                                                             <div class="widget-filters__item">
                                                                 <div class="filter filter--opened" data-collapse-item>
-                                                                    <button type="button" class="filter__title"
-                                                                        data-collapse-trigger>
+                                                                    <button type="button" class="filter__title" data-collapse-trigger>
                                                                         Brand
-                                                                        <span class="filter__arrow"><svg width="12px"
-                                                                                height="7px">
-                                                                                <path
-                                                                                    d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
-                                                                            </svg></span>
+                                                                        <span class="filter__arrow">
+                                                                            <svg width="12px" height="7px">
+                                                                                <path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
+                                                                            </svg>
+                                                                        </span>
                                                                     </button>
                                                                     <div class="filter__body" data-collapse-content>
                                                                         <div class="filter__container">
@@ -143,65 +155,13 @@
                                                                                                     <input class="input-check__input brand-filter" type="checkbox" value="{{ $brand->slug }}" {{ request('brand') == $brand->slug ? 'checked' : '' }} onchange="window.location.href = '{{ route('shop', array_merge(request()->except('brand', 'page'), ['brand' => request('brand') == $brand->slug ? '' : $brand->slug])) }}'">
                                                                                                     <span class="input-check__box"></span>
                                                                                                     <span class="input-check__icon"><svg width="9" height="7">
-                                                                                                            <path d="M9,1.3L8.6,0.9c-0.2-0.2-0.5-0.2-0.7,0L3.1,5.7L1.1,3.7c-0.2-0.2-0.5-0.2-0.7,0L0,4.1c-0.2,0.2-0.2,0.5,0,0.7
-l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z" />
+                                                                                                            <path d="M9,1.3L8.6,0.9c-0.2-0.2-0.5-0.2-0.7,0L3.1,5.7L1.1,3.7c-0.2-0.2-0.5-0.2-0.7,0L0,4.1c-0.2,0.2-0.2,0.5,0,0.7 l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z" />
                                                                                                         </svg></span>
                                                                                                 </span>
                                                                                             </span>
                                                                                             <span class="filter-list__title">{{ $brand->name }}</span>
                                                                                         </label>
                                                                                     @endforeach
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="widget-filters__item">
-                                                                <div class="filter filter--opened" data-collapse-item>
-                                                                    <button type="button" class="filter__title"
-                                                                        data-collapse-trigger>
-                                                                        Made in
-                                                                        <span class="filter__arrow"><svg width="12px"
-                                                                                height="7px">
-                                                                                <path
-                                                                                    d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z" />
-                                                                            </svg></span>
-                                                                    </button>
-                                                                    <div class="filter__body" data-collapse-content>
-                                                                        <div class="filter__container">
-                                                                            <div class="filter-list">
-                                                                                <div class="filter-list__list"><label
-                                                                                        class="filter-list__item ">
-                                                                                        <span
-                                                                                            class="input-check filter-list__input">
-                                                                                            <span
-                                                                                                class="input-check__body">
-                                                                                                <input
-                                                                                                    class="ajax-disabled input-check__input"
-                                                                                                    name="made_in"
-                                                                                                    value="China"
-                                                                                                    type="checkbox">
-                                                                                                <span
-                                                                                                    class="input-check__box"></span>
-                                                                                                <span
-                                                                                                    class="input-check__icon"><svg
-                                                                                                        width="9px"
-                                                                                                        height="7px">
-                                                                                                        <path
-                                                                                                            d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z" />
-                                                                                                    </svg>
-                                                                                                </span>
-                                                                                            </span>
-                                                                                        </span>
-                                                                                        <span
-                                                                                            class="filter-list__title">
-                                                                                            China
-                                                                                        </span>
-                                                                                        <span
-                                                                                            class="filter-list__counter"></span>
-                                                                                    </label><input id="filter_made_ins"
-                                                                                        type="hidden" name="made_ins">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -337,7 +297,7 @@ l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z"
                                                 <div class="products-list__content ajax-container">
                                                     @foreach($products as $product)
                                                         <div class="products-list__item ajax-item">
-                                                            @include('frontend.partials.product-card', ['product' => $product])
+                                                            @include('frontend.partials.product-item', ['product' => $product])
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -392,6 +352,18 @@ l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z"
                 window.location.href = url.toString();
             });
 
+            // Category Filter
+            $('.category-filter').on('change', function() {
+                let url = new URL(window.location.href);
+                if (this.checked) {
+                    url.searchParams.set('category', this.value);
+                } else {
+                    url.searchParams.delete('category');
+                }
+                url.searchParams.delete('page');
+                window.location.href = url.toString();
+            });
+
             // Brand Filter
             $('.brand-filter').on('change', function() {
                 let url = new URL(window.location.href);
@@ -404,13 +376,6 @@ l3.1,3.1c0.1,0.1,0.2,0.2,0.4,0.2s0.3-0.1,0.4-0.2l5.1-5.1C9.2,1.8,9.2,1.5,9,1.3z"
                 window.location.href = url.toString();
             });
             
-            // View Switcher (Grid/List)
-            $('.layout-switcher__button').on('click', function() {
-                const layout = $(this).data('layout');
-                $('.layout-switcher__button').removeClass('layout-switcher__button--active');
-                $(this).addClass('layout-switcher__button--active');
-                $('.products-list').attr('data-layout', layout === 'grid' ? 'grid-3-sidebar' : 'list');
-            });
         });
     </script>
     @endpush

@@ -41,7 +41,7 @@ class BlogPost extends Model
 
     public function media(): MorphMany
     {
-        return $this->morphMany(Media::class, 'parent');
+        return $this->morphMany(Media::class, 'model');
     }
 
     public function author()
@@ -57,6 +57,11 @@ class BlogPost extends Model
     public function comments()
     {
         return $this->hasMany(BlogComment::class)->whereNull('parent_id')->with('replies');
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
     }
 
     protected static function boot()

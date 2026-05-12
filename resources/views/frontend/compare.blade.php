@@ -1,21 +1,21 @@
 <x-frontend-layout title="Compare" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
-    <div class="page-header">
-        <div class="page-header__container container">
-            <div class="page-header__breadcrumb">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{{ url('/') }}">Home</a>
-                            <svg class="breadcrumb-arrow" width="6px" height="9px">
-                                <use xlink:href="{{ asset('frontend/images/sprite.svg#arrow-rounded-right-6x9') }}"></use>
-                            </svg>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Compare</li>
+    <div class="block-header block-header--has-breadcrumb block-header--has-title">
+        <div class="container">
+            <div class="block-header__body">
+                <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
+                    <ol class="breadcrumb__list">
+                        @foreach($breadcrumb_list as $breadcrumb)
+                            <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
+                                @if(!$loop->last)
+                                    <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>
+                                @else
+                                    <span class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</span>
+                                @endif
+                            </li>
+                        @endforeach
                     </ol>
                 </nav>
-            </div>
-            <div class="page-header__title">
-                <h1>Compare</h1>
+                <h1 class="block-header__title">Compare</h1>
             </div>
         </div>
     </div>

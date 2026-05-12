@@ -30,6 +30,9 @@ use App\Http\Controllers\HomeSlideController;
 use App\Http\Controllers\PromotionBannerController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PageSectionController;
+use App\Http\Controllers\SearchController;
+
+Route::get('/search-suggestions', [SearchController::class, 'suggest'])->name('search.suggest');
 
 
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
@@ -61,7 +64,15 @@ Route::controller($controller)->group(function () {
     Route::delete('/compare/remove/{id}', 'removeCompare')->name('compare.remove');
     Route::get('/blog', 'blog')->name('blog');
     Route::get('/blog/{slug}', 'blogShow')->name('blog.show');
+    Route::post('/subscribe', 'subscribe')->name('subscribe');
     Route::post('/review-store/{product}', 'storeReview')->name('review.store');
+    
+    Route::get('/catalog', 'catalog')->name('catalog');
+    Route::get('/catalog/{slug}', 'catalogShow')->name('catalog.show');
+    Route::get('/about-us', 'aboutUs')->name('about.us');
+    Route::get('/contacts', 'contacts')->name('contacts');
+    Route::get('/track-order', 'trackOrder')->name('track.order');
+    Route::get('/faq', 'faq')->name('faq');
 });
 
 // Frontend Cart

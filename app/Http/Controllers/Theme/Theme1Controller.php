@@ -20,14 +20,7 @@ class Theme1Controller extends Controller
 
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $seotags = $this->applySeo($page);
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -42,15 +35,8 @@ class Theme1Controller extends Controller
     public function shop()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','shop')->first();
+        $seotags = $this->applySeo($page, 'Shop - ' . config('app.name'));
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -72,15 +58,7 @@ class Theme1Controller extends Controller
         ->where('slug', $slug)->firstOrFail();
 
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $seotags = $this->applySeo($product);
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -101,15 +79,8 @@ class Theme1Controller extends Controller
     public function checkout()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','checkout')->first();
+        $seotags = $this->applySeo($page, 'Checkout - ' . config('app.name'));
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -120,15 +91,8 @@ class Theme1Controller extends Controller
     public function cart()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','cart')->first();
+        $seotags = $this->applySeo($page, 'Cart - ' . config('app.name'));
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -139,15 +103,8 @@ class Theme1Controller extends Controller
     public function wishlist()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','wishlist')->first();
+        $seotags = $this->applySeo($page, 'Wishlist - ' . config('app.name'));
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],
@@ -158,15 +115,8 @@ class Theme1Controller extends Controller
     public function compare()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','compare')->first();
+        $seotags = $this->applySeo($page, 'Compare - ' . config('app.name'));
 
         $breadcrumbs = $this->generateBreadcrumbJsonLd([
             ['name' => 'Home', 'url' => url('/')],

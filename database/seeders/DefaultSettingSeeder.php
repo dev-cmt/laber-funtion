@@ -19,7 +19,7 @@ class DefaultSettingSeeder extends Seeder
     public function run(): void
     {
         Page::create([
-            'title'     => 'home',
+            'title'     => 'Home Page',
             'slug'      => 'home',
             'content'   => 'This is the home page content.',
         ]);

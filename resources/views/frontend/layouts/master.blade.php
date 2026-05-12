@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{asset('frontend')}}/css/style-red.css">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/header-red.css" media="(min-width: 1200px)">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/mobile-red.css" media="(max-width: 1199px)">
+    <link rel="stylesheet" href="{{asset('frontend')}}/css/premium-custom.css">
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{asset('frontend')}}/vendor/fontawesome/css/all.min.css">
 
@@ -167,6 +168,48 @@
                     id: id,
                     qty: qty
                 }).done(updateMiniCart);
+            });
+
+            // AJAX SEARCH SUGGESTIONS
+            $('#search_desktop').on('keyup', function() {
+                let query = $(this).val();
+                let container = $('#search-suggestions-container');
+
+                if (query.length > 2) {
+                    $.ajax({
+                        url: "{{ route('search.suggest') }}",
+                        method: "GET",
+                        data: { search: query },
+                        success: function(data) {
+                            container.empty();
+                            if (data.length > 0) {
+                                data.forEach(product => {
+                                    container.append(`
+                                        <a href="${product.url}" class="search-suggestion-item">
+                                            <img src="${product.image}" alt="${product.name}">
+                                            <div class="search-suggestion-info">
+                                                <span class="search-suggestion-name">${product.name}</span>
+                                                <span class="search-suggestion-price">TK ${product.price}</span>
+                                            </div>
+                                        </a>
+                                    `);
+                                });
+                                container.fadeIn();
+                            } else {
+                                container.hide();
+                            }
+                        }
+                    });
+                } else {
+                    container.hide();
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search').length) {
+                    $('#search-suggestions-container').hide();
+                }
             });
 
         });

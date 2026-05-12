@@ -23,5 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $settings = Setting::first() ?? null;
         View::share('settings', $settings);
+
+        $categories = \App\Models\Category::where('status', true)->whereNull('parent_id')->with('children')->get();
+        View::share('categories', $categories);
+
+        $pages = \App\Models\Page::where('status', true)->get();
+        View::share('pages', $pages);
     }
 }

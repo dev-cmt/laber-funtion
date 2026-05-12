@@ -13,8 +13,10 @@ use App\Models\PromotionBanner;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\BlogPost;
+use App\Models\Tag;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductReview;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,14 +46,7 @@ class HomeController extends Controller
 
         // SEO
         $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $seotags = $this->applySeo($page);
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -108,7 +103,10 @@ class HomeController extends Controller
         }
 
         if ($request->has('search') && !empty($request->search)) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('sku', 'like', '%' . $request->search . '%');
+            });
         }
 
         if ($request->has('min_price')) {
@@ -143,15 +141,8 @@ class HomeController extends Controller
         $brands = Brand::where('status', true)->get();
 
         // SEO
-        $page = Page::with('seo')->where('slug', 'home')->first(); // Using home SEO as default for now or create a shop page entry
-        $this->setSeo([
-            'title'       => 'Shop - ' . (config('app.name')),
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug', 'shop')->first(); 
+        $seotags = $this->applySeo($page, 'Shop - ' . config('app.name'));
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -172,15 +163,7 @@ class HomeController extends Controller
         ->where('slug', $slug)->firstOrFail();
 
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $seotags = $this->applySeo($product);
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -204,15 +187,9 @@ class HomeController extends Controller
     public function checkout()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','checkout')->first();
+        $seotags = $this->applySeo($page, 'Checkout - ' . config('app.name'));
+
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -225,15 +202,8 @@ class HomeController extends Controller
     public function cart()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','cart')->first();
+        $seotags = $this->applySeo($page, 'Cart - ' . config('app.name'));
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -246,15 +216,9 @@ class HomeController extends Controller
     public function wishlist()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','wishlist')->first();
+        $seotags = $this->applySeo($page, 'Wishlist - ' . config('app.name'));
+
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -267,15 +231,9 @@ class HomeController extends Controller
     public function compare()
     {
         // SEO
-        $page = Page::with('seo')->where('slug','home')->firstOrFail();
-        $this->setSeo([
-            'title'       => $page->seo->meta_title ?? $page->title,
-            'description' => $page->seo->meta_description ?? '',
-            'keywords'    => $this->formatKeywords($page->seo->meta_keywords ?? ''),
-            'image'       => $page->seo->og_image ?? '',
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $page = Page::with('seo')->where('slug','compare')->first();
+        $seotags = $this->applySeo($page, 'Compare - ' . config('app.name'));
+
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -285,8 +243,55 @@ class HomeController extends Controller
         return view('frontend.compare', compact('seotags','breadcrumbs', 'breadcrumb_list'));
     }
 
-    public function blog(){
-        return view('frontend.blog');
+    public function blog(Request $request)
+    {
+        $query = BlogPost::with(['category', 'author', 'media'])->published()->latest();
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('category')) {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        if ($request->has('tag')) {
+            $query->whereHas('tags', function($q) use ($request) {
+                $q->where('slug', $request->tag);
+            });
+        }
+
+        $blog = $query->paginate(10);
+
+        // SEO
+        $page = Page::with('seo')->where('slug', 'blog')->first(); 
+        $seotags = $this->applySeo($page, 'Blog - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Blog', 'url' => route('blog')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        // Sidebar data
+        $blog_categories = Category::whereHas('blogPosts')->get();
+        $latest_posts = BlogPost::published()->latest()->take(5)->get();
+        $blog_tags = Tag::whereHas('blogPosts')->get();
+
+        return view('frontend.blog', compact('blog', 'seotags', 'breadcrumbs', 'breadcrumb_list', 'blog_categories', 'latest_posts', 'blog_tags'));
+    }
+
+    public function subscribe(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        // You can add logic to save the email here
+        
+        return back()->with('success', 'Thank you for subscribing!');
     }
 
     public function blogShow($slug)
@@ -294,14 +299,8 @@ class HomeController extends Controller
         $post = BlogPost::with('author', 'category', 'tags')->where('slug', $slug)->firstOrFail();
         
         // SEO
-        $this->setSeo([
-            'title'       => $post->seo->meta_title ?? $post->title,
-            'description' => $post->seo->meta_description ?? Str::limit(strip_tags($post->content), 160),
-            'keywords'    => $this->formatKeywords($post->seo->meta_keywords ?? ''),
-            'image'       => $post->seo->og_image ?? $post->image_path,
-            'canonical'   => url()->current(),
-        ]);
-        $seotags = $this->generateTags();
+        $seotags = $this->applySeo($post);
+        $jsonld = $this->generateArticleJsonLd($post);
 
         $breadcrumb_list = [
             ['name' => 'Home', 'url' => url('/')],
@@ -310,9 +309,56 @@ class HomeController extends Controller
         ];
         $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
 
-        return view('frontend.blog-details', compact('seotags', 'breadcrumbs', 'breadcrumb_list', 'post'));
+        return view('frontend.blog-details', compact('seotags', 'breadcrumbs', 'breadcrumb_list', 'post', 'jsonld'));
     }
 
+
+    public function catalog()
+    {
+        $categories = Category::with('media')
+            ->where('status', true)
+            ->whereNull('parent_id')
+            ->withCount('product')
+            ->get();
+
+        // SEO
+        $page = Page::with('seo')->where('slug', 'catalog')->first();
+        $seotags = $this->applySeo($page, 'Catalog - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Catalog', 'url' => route('catalog')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        return view('frontend.catalog', compact('categories', 'seotags', 'breadcrumbs', 'breadcrumb_list'));
+    }
+
+    public function catalogShow($slug)
+    {
+        $category = Category::with('children.media')->withCount('product')->where('slug', $slug)->firstOrFail();
+
+        if ($category->children->count() > 0) {
+            $categories = $category->children;
+            foreach ($categories as $child) {
+                $child->loadCount('product');
+            }
+
+            // SEO
+            $seotags = $this->applySeo($category, $category->name . ' - Catalog - ' . config('app.name'));
+
+            $breadcrumb_list = [
+                ['name' => 'Home', 'url' => url('/')],
+                ['name' => 'Catalog', 'url' => route('catalog')],
+                ['name' => $category->name, 'url' => route('catalog.show', $category->slug)],
+            ];
+            $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+            return view('frontend.catalog', compact('categories', 'seotags', 'breadcrumbs', 'breadcrumb_list', 'category'));
+        }
+
+        return redirect()->route('shop', ['category' => $category->slug]);
+    }
 
     public function storeReview(Request $request, Product $product)
     {
@@ -405,7 +451,7 @@ class HomeController extends Controller
         $order = Order::where('invoice_no', $invoice)->with('items.product')->firstOrFail();
         
         $theme = config('theme.frontend.views_path');
-        return view($theme . '.order_confirm', compact('order'));
+        return view($theme . '.order-confirm', compact('order'));
     }
 
     public function addWishlist(Request $request)
@@ -458,4 +504,60 @@ class HomeController extends Controller
         return back()->with('success', 'Item removed from compare list.');
     }
 
+
+    public function aboutUs()
+    {
+        $page = Page::with('seo')->where('slug', 'about-us')->first();
+        $seotags = $this->applySeo($page, 'About Us - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'About Us', 'url' => route('about')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        return view('frontend.about-us', compact('seotags', 'breadcrumbs', 'breadcrumb_list'));
+    }
+
+    public function contacts()
+    {
+        $page = Page::with('seo')->where('slug', 'contacts')->first();
+        $seotags = $this->applySeo($page, 'Contact Us - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Contact Us', 'url' => route('contacts')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        return view('frontend.contacts', compact('seotags', 'breadcrumbs', 'breadcrumb_list'));
+    }
+
+    public function trackOrder()
+    {
+        $page = Page::with('seo')->where('slug', 'track-order')->first();
+        $seotags = $this->applySeo($page, 'Track Order - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Track Order', 'url' => route('track.order')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        return view('frontend.track-order', compact('seotags', 'breadcrumbs', 'breadcrumb_list'));
+    }
+
+    public function faq()
+    {
+        $page = Page::with('seo')->where('slug', 'faq')->first();
+        $seotags = $this->applySeo($page, 'FAQ - ' . config('app.name'));
+
+        $breadcrumb_list = [
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'FAQ', 'url' => route('faq')],
+        ];
+        $breadcrumbs = $this->generateBreadcrumbJsonLd($breadcrumb_list);
+
+        return view('frontend.faq', compact('seotags', 'breadcrumbs', 'breadcrumb_list'));
+    }
 }

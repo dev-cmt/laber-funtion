@@ -2,6 +2,8 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Support\Str;
+
 trait SeoTrait
 {
     protected array $seo = [];
@@ -13,11 +15,28 @@ trait SeoTrait
             'description' => '',
             'keywords'    => '',
             'image'       => '',
-            'canonical'   => null,
+            'canonical'   => url()->current(),
             'robots'      => 'index,follow',
         ], $data);
 
         return $this;
+    }
+
+    /**
+     * Apply SEO from a model (Page, Product, BlogPost, etc.)
+     */
+    public function applySeo($model, $defaultTitle = null): string
+    {
+        $data = [
+            'title'       => $model->seo->meta_title ?? $model->title ?? $model->name ?? $defaultTitle ?? config('app.name'),
+            'description' => $model->seo->meta_description ?? '',
+            'keywords'    => $this->formatKeywords($model->seo->meta_keywords ?? ''),
+            'image'       => $model->seo->og_image ?? $model->image_path ?? $model->main_image ?? '',
+            'canonical'   => $model->seo->canonical_url ?? url()->current(),
+            'robots'      => $model->seo->robots ?? 'index,follow',
+        ];
+
+        return $this->setSeo($data)->generateTags();
     }
     /**-----------------------------------------------------------------------
      * Generate Tags Meta, Canonical, OG, Twitter
@@ -147,13 +166,13 @@ trait SeoTrait
             '@context' => 'https://schema.org',
             '@type' => 'Article',
             'headline' => $article->title,
-            'description' => $article->excerpt,
+            'description' => $article->excerpt ?? Str::limit(strip_tags($article->content), 160),
             'author' => [
                 '@type' => 'Person',
-                'name' => $article->author->name,
+                'name' => $article->author->name ?? config('app.name'),
             ],
-            'datePublished' => $article->published_at->toIso8601String(),
-            'dateModified' => $article->updated_at->toIso8601String(),
+            'datePublished' => optional($article->published_at ?? $article->published_date ?? $article->created_at)->toIso8601String(),
+            'dateModified' => optional($article->updated_at ?? $article->created_at)->toIso8601String(),
             'publisher' => [
                 '@type' => 'Organization',
                 'name' => config('app.name'),
