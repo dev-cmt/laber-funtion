@@ -182,32 +182,12 @@
                 </li>
                 @endcan
 
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bxs-notepad side-menu__icon"></i>
-                        <span class="side-menu__label">Invoices</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-trending-down side-menu__icon"></i>
-                        <span class="side-menu__label">Sales Return</span>
-                    </a>
-                </li>
-                @endcan
-
                 @can('view sale requisition')
                 <li class="slide">
                     <a href="{{ route('sale-requisitions.index') }}"
                         class="side-menu__item {{ Request::is('sale-requisitions*') ? 'active' : '' }}">
                         <i class="bx bx-paste side-menu__icon"></i>
-                        <span class="side-menu__label">Quotation</span>
+                        <span class="side-menu__label">Sale Quotation</span>
                     </a>
                 </li>
                 @endcan
@@ -222,93 +202,6 @@
                 </li>
                 @endcan
 
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-laptop side-menu__icon"></i>
-                        <span class="side-menu__label">POS</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <li class="slide__category"><span class="category-name">Purchases</span></li>
-                @endcan
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-shopping-bag side-menu__icon"></i>
-                        <span class="side-menu__label">Purchases</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bxs-shopping-bags side-menu__icon"></i>
-                        <span class="side-menu__label">Purchases Order</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bxs-share side-menu__icon"></i>
-                        <span class="side-menu__label">Purchase Return</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <li class="slide__category"><span class="category-name">Finance & Accounts</span></li>
-                @endcan
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bxs-credit-card side-menu__icon"></i>
-                        <span class="side-menu__label">Expenses</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-money-withdraw side-menu__icon"></i>
-                        <span class="side-menu__label">Income</span>
-                    </a>
-                </li>
-                @endcan
-
-                <li class="slide__category"><span class="category-name">Peoples</span></li>
-                @can('view customers')
-                <li class="slide">
-                    <a href="{{ route('customers.index') }}"
-                        class="side-menu__item {{ Request::is('customers*') ? 'active' : '' }}">
-                        <i class="bx bxs-user-account side-menu__icon"></i>
-                        <span class="side-menu__label">Customers</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-user-check side-menu__icon"></i>
-                        <span class="side-menu__label">Suppliers</span>
-                    </a>
-                </li>
-                @endcan
-
                 @can('view stores')
                 <li class="slide">
                     <a href="{{ route('stores.index') }}"
@@ -319,7 +212,6 @@
                 </li>
                 @endcan
 
-                <li class="slide__category"><span class="category-name">HRM</span></li>
                 @can('view employees')
                 <li class="slide">
                     <a href="{{ route('employees.index') }}"
@@ -330,91 +222,7 @@
                 </li>
                 @endcan
 
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-compass side-menu__icon"></i>
-                        <span class="side-menu__label">Departments</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-git-merge side-menu__icon"></i>
-                        <span class="side-menu__label">Designation</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-shuffle side-menu__icon"></i>
-                        <span class="side-menu__label">Shifts</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-time-five side-menu__icon"></i>
-                        <span class="side-menu__label">Attendence</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-calendar side-menu__icon"></i>
-                        <span class="side-menu__label">Leaves</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-calendar-heart side-menu__icon"></i>
-                        <span class="side-menu__label">Holidays</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide has-sub">
-                    <a href="javascript:void(0);" class="side-menu__item ">
-                        <i class="bx bx-dollar-circle side-menu__icon"></i>
-                        <span class="side-menu__label">Payroll</span>
-                        <i class="fe fe-chevron-right side-menu__angle"></i>
-                    </a>
-                    <ul class="slide-menu child1">
-                        <li class="slide">
-                            <a href="#" class="side-menu__item ">
-                                Employee Salary
-                            </a>
-                        </li>
-                        <li class="slide">
-                            <a href="#" class="side-menu__item ">
-                                Payslip
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endcan
-
                 <li class="slide__category"><span class="category-name">Service</span></li>
-
                 {{-- @can('view service tickets') --}}
                 <li class="slide">
                     <a href="{{ route('service-tickets.index') }}"
@@ -432,60 +240,6 @@
                     </a>
                 </li>
                 {{-- @endcan --}}
-
-
-                @can('view settings')
-                <li class="slide__category"><span class="category-name">Reports</span></li>
-                @endcan
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-bar-chart-alt-2 side-menu__icon"></i>
-                        <span class="side-menu__label">Sales Report</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-task side-menu__icon"></i>
-                        <span class="side-menu__label">Purchase Report</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-line-chart side-menu__icon"></i>
-                        <span class="side-menu__label">Inventory Report</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-pie-chart-alt side-menu__icon"></i>
-                        <span class="side-menu__label">Supplier Report</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bxs-doughnut-chart side-menu__icon"></i>
-                        <span class="side-menu__label">Profit & Loss</span>
-                    </a>
-                </li>
-                @endcan
 
                 @can('view seo')
                 <li class="slide__category"><span class="category-name">Content (CMS)</span></li>
@@ -531,31 +285,8 @@
                 </li>
                 @endcan
 
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide has-sub">
-                    <a href="javascript:void(0);" class="side-menu__item ">
-                        <i class="bx bx-world side-menu__icon"></i>
-                        <span class="side-menu__label">Location</span>
-                        <i class="fe fe-chevron-right side-menu__angle"></i>
-                    </a>
-                    <ul class="slide-menu child1">
-                        <li class="slide">
-                            <a href="#" class="side-menu__item ">
-                                Countries
-                            </a>
-                        </li>
-                        <li class="slide">
-                            <a href="#" class="side-menu__item ">
-                                Cities
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endcan
 
                 <li class="slide__category"><span class="category-name">User Management</span></li>
-
                 @can('view users')
                 <li class="slide">
                     <a href="{{ route('users.index') }}" class="side-menu__item {{ Request::is('users*') ? 'active' : '' }}">
@@ -574,18 +305,7 @@
                 </li>
                 @endcan
 
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-user-x side-menu__icon"></i>
-                        <span class="side-menu__label">Delete Account Request</span>
-                    </a>
-                </li>
-                @endcan
-
                 <li class="slide__category"><span class="category-name">Settings</span></li>
-
                 @can('view settings')
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
@@ -600,38 +320,8 @@
                 <!-- Dashboard - Always visible -->
                 <li class="slide">
                     <a href="#" class="side-menu__item">
-                        <i class="bx bx-globe side-menu__icon"></i>
-                        <span class="side-menu__label">Website Settings</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-tv side-menu__icon"></i>
-                        <span class="side-menu__label">System Settingss</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
                         <i class="bx bx-dollar-circle side-menu__icon"></i>
                         <span class="side-menu__label">Financial Settings</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <!-- Dashboard - Always visible -->
-                <li class="slide">
-                    <a href="#" class="side-menu__item">
-                        <i class="bx bx-category-alt side-menu__icon"></i>
-                        <span class="side-menu__label">Other Settings</span>
                     </a>
                 </li>
                 @endcan
@@ -646,8 +336,6 @@
                     </a>
                 </li>
                 @endcan
-
-
 
             </ul>
             <div class="slide-right" id="slide-right">

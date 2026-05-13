@@ -32,9 +32,6 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PageSectionController;
 use App\Http\Controllers\SearchController;
 
-Route::get('/search-suggestions', [SearchController::class, 'suggest'])->name('search.suggest');
-
-
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/cc', function () {
@@ -46,34 +43,37 @@ Route::get('/cc', function () {
     return 'Cleared!';
 });
 
-$controller = config("theme.frontend.controller");
-Route::controller($controller)->group(function () {
-    Route::get('/', 'index')->name('home');
-    Route::get('/shop', 'shop')->name('shop');
-    Route::get('/product/{slug}', 'productShow')->name('product.show');
-    Route::get('/checkout', 'checkout')->name('checkout');
-    Route::post('/place-order', 'placeOrder')->name('place.order');
-    Route::get('/order/confirm/{invoice}', 'orderConfirm')->name('order.confirm');
-    Route::get('/cart', 'cart')->name('cart');
-    Route::get('/wishlist', 'wishlist')->name('wishlist');
-    Route::post('/wishlist/add', 'addWishlist')->name('wishlist.add');
-    Route::delete('/wishlist/remove/{id}', 'removeWishlist')->name('wishlist.remove');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/shop', [HomeController::class, 'shop'])->name('shop');
+Route::get('/product/{slug}', [HomeController::class, 'productShow'])->name('product.show');
+Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+Route::post('/place-order', [HomeController::class, 'placeOrder'])->name('place.order');
+Route::get('/order/confirm/{invoice}', [HomeController::class, 'orderConfirm'])->name('order.confirm');
+Route::get('/cart', [HomeController::class, 'cart'])->name('cart');
 
-    Route::get('/compare', 'compare')->name('compare');
-    Route::post('/compare/add', 'addCompare')->name('compare.add');
-    Route::delete('/compare/remove/{id}', 'removeCompare')->name('compare.remove');
-    Route::get('/blog', 'blog')->name('blog');
-    Route::get('/blog/{slug}', 'blogShow')->name('blog.show');
-    Route::post('/subscribe', 'subscribe')->name('subscribe');
-    Route::post('/review-store/{product}', 'storeReview')->name('review.store');
-    
-    Route::get('/catalog', 'catalog')->name('catalog');
-    Route::get('/catalog/{slug}', 'catalogShow')->name('catalog.show');
-    Route::get('/about-us', 'aboutUs')->name('about.us');
-    Route::get('/contacts', 'contacts')->name('contacts');
-    Route::get('/track-order', 'trackOrder')->name('track.order');
-    Route::get('/faq', 'faq')->name('faq');
-});
+Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
+Route::post('/wishlist/add', [HomeController::class, 'addWishlist'])->name('wishlist.add');
+Route::delete('/wishlist/remove/{id}', [HomeController::class, 'removeWishlist'])->name('wishlist.remove');
+
+Route::get('/compare', [HomeController::class, 'compare'])->name('compare');
+Route::post('/compare/add', [HomeController::class, 'addCompare'])->name('compare.add');
+Route::delete('/compare/remove/{id}', [HomeController::class, 'removeCompare'])->name('compare.remove');
+
+Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
+Route::get('/blog/{slug}', [HomeController::class, 'blogShow'])->name('blog.show');
+
+Route::post('/subscribe', [HomeController::class, 'subscribe'])->name('subscribe');
+Route::post('/review-store/{product}', [HomeController::class, 'storeReview'])->name('review.store');
+
+Route::get('/catalog', [HomeController::class, 'catalog'])->name('catalog');
+Route::get('/catalog/{slug}', [HomeController::class, 'catalogShow'])->name('catalog.show');
+
+Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about.us');
+Route::get('/contacts', [HomeController::class, 'contacts'])->name('contacts');
+Route::get('/track-order', [HomeController::class, 'trackOrder'])->name('track.order');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+
+Route::get('/search-suggestions', [HomeController::class, 'searchSuggest'])->name('search.suggest');
 
 // Frontend Cart
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -295,7 +295,7 @@ Route::middleware('auth')->group(function () {
 
     // Home Slides
     Route::resource('home-slides', HomeSlideController::class)->except(['create', 'edit']);
-    
+
     // Promotion Banners
     Route::resource('promotion-banners', PromotionBannerController::class)->except(['create', 'edit']);
 
