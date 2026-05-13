@@ -110,12 +110,7 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                <div class="d-none">
-                                    {{-- Hidden inputs for purchase price and attributes. 
-                                        In a real app, purchase price would be looked up server-side on store. --}}
-                                    <input type="hidden" name="items[0][purchase_price]" value="0">
-                                    <input type="hidden" name="items[0][attributes]" value="[]">
-                                </div>
+
                                 
                             </div>
                         </div>
@@ -281,7 +276,6 @@
             calculateOrderSummary();
         }
 
-        // Function to calculate and update the order summary
         function calculateOrderSummary() {
             let subTotal = 0;
             $('#order-items-body tr').each(function() {
@@ -299,19 +293,17 @@
             const due = (total - paid);
 
             $('#sub_total').val(subTotal.toFixed(2));
-            $('#total').val(Math.max(0, total).toFixed(2)); // Ensure total is not negative
+            $('#total').val(Math.max(0, total).toFixed(2));
             $('#due').val(due.toFixed(2));
             
             // Update payment status based on due amount
-            if (total <= 0 || due <= 0) {
+            if (total > 0 && due <= 0) {
                 $('select[name="payment_status"]').val('2'); // Paid
             } else if (paid > 0 && due > 0) {
                 $('select[name="payment_status"]').val('1'); // Partial
             } else {
                 $('select[name="payment_status"]').val('0'); // Pending
             }
-
-
         }
 
         // --- Event Listeners ---

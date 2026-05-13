@@ -29,23 +29,37 @@ class AdminController extends Controller
             'units',
             'tags',
             'attributes',
+            'warranties',
             'orders',
             'sale requisition',
+            'sale approve',
             'customers',
             'stores',
             'employees',
-            'developer api',
-            'seo',
             'users',
             'roles',
-            'service tickets',
+            'properties',
+            'managed jobs',
+            'team logs',
+            'daily finances',
+            'todo appointments',
+            'expired products',
+            'low stocks',
+            'label print',
+            'stock manage',
+            'stock adjustment',
+            'stock transfer',
+            'home slides',
+            'promotion banners',
+            'pages',
+            'seo',
+            'blogs',
+            'developer api',
+            'settings',
         ];
 
         $singlePermissions = [
             'view dashboard',
-            'view sale approve',
-            'action sale approve',
-            'view settings'
         ];
 
         $allPermissions = [];

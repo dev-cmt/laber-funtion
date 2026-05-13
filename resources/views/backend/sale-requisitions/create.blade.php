@@ -51,93 +51,264 @@
                             </div>
                         @endif
 
-                        <section class="bg-primary py-4">
+                        <section class="bg-primary-gradient py-5 rounded-3 mb-4 shadow-sm">
                             <div class="container">
                                 <div class="row justify-content-center">
-                                    <div class="col-xxl-9 col-xl-10 col-lg-12">
+                                    <div class="col-xxl-10 col-xl-11">
+                                        <div class="text-center mb-4">
+                                            <h4 class="text-fixed-white fw-bold">Quick Product Search</h4>
+                                            <p class="text-fixed-white opacity-75">Search by Name or SKU to add products instantly</p>
+                                        </div>
                                         
-                                        <div class="input-group input-group-lg shadow-sm rounded">
-                                            
-                                            <label id="image-upload-label" for="file-upload-input" 
-                                                class="btn btn-light" type="button" 
-                                                data-bs-toggle="tooltip" title="Upload Image to Search">
+                                        <div class="position-relative search-container">
+                                            <div class="input-group input-group-lg shadow-lg overflow-hidden rounded-pill">
+                                                <span class="input-group-text bg-white border-0 ps-4">
+                                                    <i class="bi bi-search text-primary fs-5"></i>
+                                                </span>
+                                                <input type="text" id="productSearchInput" 
+                                                    class="form-control border-0 py-3 ps-2 fs-5" 
+                                                    placeholder="Start typing product name or SKU..." 
+                                                    autocomplete="off">
                                                 
-                                                <input type="file" id="file-upload-input" accept="image/*">
-                                                
-                                                <img id="upload-image-preview" 
-                                                    class="image-preview-btn"
-                                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-image' viewBox='0 0 16 16'%3E%3Cpath d='M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0'%3E%3C/path%3E%3Cpath d='M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-2.66a.5.5 0 0 0-.61-.077L1.5 12V3a1 1 0 0 1 1-1z'%3E%3C/path%3E%3C/svg%3E" 
-                                                    alt="Image Upload Icon">
-                                                
-                                            </label>
+                                                <label id="image-search-label" for="file-upload-input" 
+                                                    class="btn btn-white border-0 d-flex align-items-center px-4" 
+                                                    data-bs-toggle="tooltip" title="Search by Image">
+                                                    <input type="file" id="file-upload-input" accept="image/*" class="d-none">
+                                                    <i class="bi bi-camera text-muted fs-4"></i>
+                                                </label>
 
-                                            <button class="btn btn-light" type="button" data-bs-toggle="tooltip" title="Voice Search">
-                                                <i class="bi bi-mic-fill"></i>
-                                            </button>
-                                            
-                                            <input type="text" id="phoneInput" class="form-control" placeholder="Enter product name..."  aria-label="Search term" value="">
-                                            
-                                            <button class="btn btn-dark" type="button">
-                                                <i class="bi bi-search me-2"></i> Search
-                                            </button>
+                                                <button class="btn btn-dark px-5 fw-bold" type="button" id="searchButton">
+                                                    SEARCH
+                                                </button>
+                                            </div>
 
-                                            <button class="btn btn-dark dropdown-toggle dropdown-toggle-split" 
-                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false" 
-                                                    data-bs-auto-close="outside" title="Search Options">
-                                                <span class="visually-hidden">Search Options</span>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="#">Filter by Product</a></li>
-                                                <li><a class="dropdown-item" href="#">Filter by Order Number</a></li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item" href="#">Advanced Search</a></li>
-                                            </ul>
-
+                                            <!-- Search Results Dropdown -->
+                                            <div id="searchResults" class="search-results-dropdown shadow-lg d-none">
+                                                <div class="list-group list-group-flush" id="resultsList">
+                                                    <!-- Results will be injected here -->
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
+                        <style>
+                            .bg-primary-gradient {
+                                background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+                            }
+                            .search-container .form-control:focus {
+                                box-shadow: none;
+                            }
+                            .search-results-dropdown {
+                                position: absolute;
+                                top: 100%;
+                                left: 0;
+                                right: 0;
+                                z-index: 1050;
+                                background: white;
+                                border-radius: 15px;
+                                margin-top: 10px;
+                                max-height: 400px;
+                                overflow-y: auto;
+                                border: 1px solid rgba(0,0,0,0.1);
+                            }
+                            .search-result-item {
+                                padding: 12px 20px;
+                                transition: all 0.2s;
+                                cursor: pointer;
+                                border-bottom: 1px solid #f8f9fa;
+                            }
+                            .search-result-item:hover {
+                                background-color: #f0f4ff;
+                            }
+                            .search-result-item:last-child {
+                                border-bottom: 0;
+                            }
+                            .result-thumb {
+                                width: 45px;
+                                height: 45px;
+                                object-fit: cover;
+                                border-radius: 8px;
+                                margin-right: 15px;
+                            }
+                            .result-price {
+                                font-weight: 700;
+                                color: #224abe;
+                            }
+                            .btn-white {
+                                background: white;
+                                color: #6c757d;
+                            }
+                            .btn-white:hover {
+                                color: #4e73df;
+                            }
+
+                            /* Table & Card Enhancements */
+                            #order-items-table {
+                                border-collapse: separate;
+                                border-spacing: 0 8px;
+                            }
+                            #order-items-table thead th {
+                                border: none;
+                                background-color: #f8f9fa;
+                                color: #495057;
+                                font-weight: 600;
+                                padding: 15px;
+                                text-transform: uppercase;
+                                font-size: 0.75rem;
+                                letter-spacing: 1px;
+                            }
+                            #order-items-body tr {
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+                                border-radius: 10px;
+                                transition: all 0.2s;
+                            }
+                            #order-items-body tr:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                                background-color: #fff;
+                            }
+                            #order-items-body td {
+                                vertical-align: middle;
+                                padding: 15px;
+                                border: none;
+                                background-color: #fff;
+                            }
+                            #order-items-body td:first-child { border-radius: 10px 0 0 10px; }
+                            #order-items-body td:last-child { border-radius: 0 10px 10px 0; }
+                            
+                            .summary-card {
+                                border: none;
+                                border-radius: 15px;
+                                overflow: hidden;
+                            }
+                            .summary-card .card-header {
+                                background-color: #224abe;
+                                color: white;
+                                border: none;
+                                padding: 15px 20px;
+                            }
+                            .summary-card .form-label {
+                                font-weight: 600;
+                                color: #495057;
+                                font-size: 0.85rem;
+                            }
+                            .summary-card .form-control[readonly] {
+                                background-color: #f8f9fa;
+                                border-color: #e9ecef;
+                                font-weight: 700;
+                                color: #224abe;
+                            }
+                        </style>
+
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
-                                const fileInput = document.getElementById('file-upload-input');
-                                const imagePreview = document.getElementById('upload-image-preview');
+                                const searchInput = document.getElementById('productSearchInput');
+                                const resultsList = document.getElementById('resultsList');
+                                const searchResults = document.getElementById('searchResults');
+                                let debounceTimer;
 
-                                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                return new bootstrap.Tooltip(tooltipTriggerEl)
-                                })
+                                searchInput.addEventListener('input', function() {
+                                    clearTimeout(debounceTimer);
+                                    const query = this.value.trim();
 
-                                fileInput.addEventListener('change', (event) => {
-                                    const file = event.target.files[0];
-                                    
-                                    if (file) {
-                                        if (file.type.startsWith('image/')) {
-                                            const reader = new FileReader();
-                                            
-                                            reader.onload = function(e) {
-                                                imagePreview.src = e.target.result;
-                                                
-                                                const tooltip = bootstrap.Tooltip.getInstance(document.getElementById('image-upload-label'));
-                                                if (tooltip) {
-                                                    tooltip.dispose();
+                                    if (query.length < 2) {
+                                        searchResults.classList.add('d-none');
+                                        return;
+                                    }
+
+                                    debounceTimer = setTimeout(() => {
+                                        fetch(`{{ route('products.search') }}?query=${encodeURIComponent(query)}`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                resultsList.innerHTML = '';
+                                                if (data.length > 0) {
+                                                    data.forEach(product => {
+                                                        const item = document.createElement('div');
+                                                        item.className = 'search-result-item d-flex align-items-center';
+                                                        const imagePath = product.image ? `/uploads/products/${product.image}` : '/assets/images/no-image.png';
+                                                        
+                                                        item.innerHTML = `
+                                                            <img src="${imagePath}" class="result-thumb" onerror="this.src='/assets/images/no-image.png'">
+                                                            <div class="flex-grow-1">
+                                                                <div class="fw-bold text-dark">${product.name}</div>
+                                                                <small class="text-muted">SKU: ${product.sku}</small>
+                                                            </div>
+                                                            <div class="text-end ps-3">
+                                                                <div class="result-price">৳${parseFloat(product.sale_price).toLocaleString()}</div>
+                                                                <button type="button" class="btn btn-sm btn-primary-light mt-1 add-to-table" 
+                                                                    data-id="${product.id}" 
+                                                                    data-name="${product.name}" 
+                                                                    data-sku="${product.sku}" 
+                                                                    data-price="${product.sale_price}">
+                                                                    Add
+                                                                </button>
+                                                            </div>
+                                                        `;
+                                                        
+                                                        item.onclick = (e) => {
+                                                            if(!e.target.classList.contains('add-to-table')) {
+                                                                addProductToTable(product);
+                                                                searchResults.classList.add('d-none');
+                                                                searchInput.value = '';
+                                                            }
+                                                        };
+                                                        
+                                                        resultsList.appendChild(item);
+                                                    });
+                                                    
+                                                    // Handle 'Add' button specifically
+                                                    resultsList.querySelectorAll('.add-to-table').forEach(btn => {
+                                                        btn.onclick = (e) => {
+                                                            e.stopPropagation();
+                                                            const product = {
+                                                                id: btn.dataset.id,
+                                                                name: btn.dataset.name,
+                                                                sku: btn.dataset.sku,
+                                                                sale_price: btn.dataset.price
+                                                            };
+                                                            addProductToTable(product);
+                                                            searchResults.classList.add('d-none');
+                                                            searchInput.value = '';
+                                                        };
+                                                    });
+
+                                                    searchResults.classList.remove('d-none');
+                                                } else {
+                                                    resultsList.innerHTML = '<div class="p-4 text-center text-muted">No products found</div>';
+                                                    searchResults.classList.remove('d-none');
                                                 }
-                                                new bootstrap.Tooltip(document.getElementById('image-upload-label'), {
-                                                    title: 'Image Ready for Search',
-                                                    placement: 'bottom'
-                                                });
-                                            };
-                                            
-                                            reader.readAsDataURL(file);
+                                            });
+                                    }, 300);
+                                });
 
-                                            console.log(`Image selected for search: ${file.name}`);
-                                        } else {
-                                            alert("Please select a valid image file.");
-                                            fileInput.value = '';
-                                        }
+                                // Close dropdown when clicking outside
+                                document.addEventListener('click', function(e) {
+                                    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+                                        searchResults.classList.add('d-none');
                                     }
                                 });
+
+                                function addProductToTable(product) {
+                                    // Implementation of adding row to the table
+                                    // This will call the existing createItemRow or similar
+                                    const row = createItemRow({
+                                        product_id: product.id,
+                                        product: { name: product.name },
+                                        sku: product.sku,
+                                        sale_price: product.sale_price,
+                                        quantity: 1
+                                    });
+                                    
+                                    // Remove empty message if exists
+                                    const emptyMsg = document.querySelector('#order-items-body tr .text-muted');
+                                    if (emptyMsg) emptyMsg.closest('tr').remove();
+                                    
+                                    $('#order-items-body').append(row);
+                                    calculateOrderSummary();
+                                }
                             });
                         </script>
 
@@ -170,17 +341,13 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <div class="d-none">
-                            {{-- Hidden inputs for purchase price and attributes. --}}
-                            <input type="hidden" name="items[0][purchase_price]" value="0">
-                            <input type="hidden" name="items[0][attributes]" value="[]">
-                        </div>
+
 
                     </div>
 
                     <div class="col-xl-4">
-                        <div class="card custom-card">
-                            <div class="card-header"><div class="card-title">Summary & Status</div></div>
+                        <div class="card custom-card summary-card shadow-sm">
+                            <div class="card-header"><div class="card-title text-fixed-white">Summary & Status</div></div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 mb-2">
@@ -374,7 +541,6 @@
             calculateOrderSummary();
         }
 
-        // Function to calculate and update the order summary
         function calculateOrderSummary() {
             let subTotal = 0;
             $('#order-items-body tr').each(function() {
@@ -392,19 +558,17 @@
             const due = (total - paid);
 
             $('#sub_total').val(subTotal.toFixed(2));
-            $('#total').val(Math.max(0, total).toFixed(2)); // Ensure total is not negative
+            $('#total').val(Math.max(0, total).toFixed(2));
             $('#due').val(due.toFixed(2));
             
             // Update payment status based on due amount
-            if (total <= 0 || due <= 0) {
+            if (total > 0 && due <= 0) {
                 $('select[name="payment_status"]').val('2'); // Paid
             } else if (paid > 0 && due > 0) {
                 $('select[name="payment_status"]').val('1'); // Partial
             } else {
                 $('select[name="payment_status"]').val('0'); // Pending
             }
-
-
         }
 
         // --- Event Listeners ---

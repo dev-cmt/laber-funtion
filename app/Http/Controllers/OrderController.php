@@ -122,10 +122,10 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified order.
      */
-    public function edit($order)
+    public function edit(Order $order)
     {
         // Eager load items for the edit view
-        $order = Order::with('items.product')->find($order);
+        $order->load('items.product');
 
         // Fetch necessary data for dropdowns
         $customers = User::get(['id', 'name', 'phone']);

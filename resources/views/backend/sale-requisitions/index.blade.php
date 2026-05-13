@@ -47,7 +47,13 @@
                                 @forelse($saleRequisitions as $key => $items)
                                     <tr>
                                         <td>{{ $saleRequisitions->firstItem() + $key }}</td>
-                                        <td><a href="{{ route('sale-requisitions.edit', $items->id) }}" class="fw-bold text-primary">{{ $items->invoice_no }}</a></td>
+                                        <td>
+                                            @if($items->status == 1)
+                                                <span class="fw-bold text-muted">{{ $items->invoice_no }}</span>
+                                            @else
+                                                <a href="{{ route('sale-requisitions.edit', $items->id) }}" class="fw-bold text-primary" title="Edit Requisition">{{ $items->invoice_no }}</a>
+                                            @endif
+                                        </td>
                                         <td>
                                             <strong>{{ $items->customer_name }}</strong><br>
                                             <small class="text-muted">{{ $items->customer_phone }}</small>
@@ -82,9 +88,11 @@
                                         </td>
                                         <td>
                                             <div class="btn-list">
-                                                <a href="{{ route('sale-requisitions.edit', $items) }}" class="btn btn-sm btn-warning-light btn-icon" title="Edit">
-                                                    <i class="ri-pencil-line"></i>
-                                                </a>
+                                                @if($items->status != 1)
+                                                    <a href="{{ route('sale-requisitions.edit', $items) }}" class="btn btn-sm btn-warning-light btn-icon" title="Edit">
+                                                        <i class="ri-pencil-line"></i>
+                                                    </a>
+                                                @endif
                                                 <form action="{{ route('sale-requisitions.destroy', $items->id) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')

@@ -135,11 +135,7 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                <div class="d-none">
-                                    {{-- Hidden inputs for purchase price and attributes. --}}
-                                    <input type="hidden" name="items[new_item_placeholder][purchase_price]" value="0">
-                                    <input type="hidden" name="items[new_item_placeholder][attributes]" value="[]">
-                                </div>
+
                                 
                             </div>
                         </div>
@@ -295,7 +291,6 @@
             calculateOrderSummary();
         }
 
-        // Function to calculate and update the order summary
         function calculateOrderSummary() {
             let subTotal = 0;
             $('#order-items-body tr').each(function() {
@@ -316,15 +311,13 @@
             $('#total').val(Math.max(0, total).toFixed(2));
             $('#due').val(due.toFixed(2));
             
-             // Update payment status based on due amount
-            if (total <= 0) {
-                $('select[name="payment_status"]').val('Paid');
-            } else if (due <= 0) {
-                $('select[name="payment_status"]').val('Paid');
-            } else if (due > 0 && paid > 0) {
-                 $('select[name="payment_status"]').val('Partial');
+            // Update payment status based on due amount
+            if (total > 0 && due <= 0) {
+                $('select[name="payment_status"]').val('2'); // Paid
+            } else if (paid > 0 && due > 0) {
+                $('select[name="payment_status"]').val('1'); // Partial
             } else {
-                 $('select[name="payment_status"]').val('Pending');
+                $('select[name="payment_status"]').val('0'); // Pending
             }
         }
 

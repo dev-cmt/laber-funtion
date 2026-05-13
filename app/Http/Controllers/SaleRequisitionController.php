@@ -123,10 +123,10 @@ class SaleRequisitionController extends Controller
     /**
      * Show the form for editing the specified order.
      */
-    public function edit($order)
+    public function edit(Order $order)
     {
         // Eager load items for the edit view
-        $order = Order::with('items.product')->find($order);
+        $order->load('items.product');
 
         // Fetch necessary data for dropdowns
         $customers = User::get(['id', 'name', 'phone']);
@@ -275,5 +275,16 @@ class SaleRequisitionController extends Controller
         $order->status = 3; // Cancelled
         $order->save();
         return redirect()->back()->with('success', 'Sale Requisition cancelled successfully.');
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $query = $request->get('query');
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('sku', 'LIKE', "%{$query}%")
+            ->limit(10)
+            ->get(['id', 'name', 'sku', 'sale_price', 'image']);
+
+        return response()->json($products);
     }
 }

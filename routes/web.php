@@ -24,13 +24,19 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleRequisitionController;
-use App\Http\Controllers\ServiceTicketController;
+
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\HomeSlideController;
 use App\Http\Controllers\PromotionBannerController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PageSectionController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Backend\PropertyManagement\PropertyController;
+use App\Http\Controllers\Backend\PropertyManagement\ManagedJobController;
+use App\Http\Controllers\Backend\PropertyManagement\TeamLogController;
+use App\Http\Controllers\Backend\PropertyManagement\DailyFinanceController;
+use App\Http\Controllers\Backend\PropertyManagement\TodoListController;
+use App\Http\Controllers\Backend\PropertyManagement\DashboardController;
 
 Route::get('/sync-permissions', [AdminController::class, 'resyncPermissions'])->name('sync.permissions');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
@@ -199,17 +205,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/edit/{orders}', [OrderController::class, 'edit'])->name('orders.edit');
-    Route::put('/orders/update/{orders}', [OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/orders/{orders}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/orders/edit/{order}', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/update/{order}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}/delete', [OrderController::class, 'destroy'])->name('orders.destroy');
 
     // Sale Requisition
     Route::get('/sale-requisitions', [SaleRequisitionController::class, 'index'])->name('sale-requisitions.index');
     Route::get('/sale-requisitions/create', [SaleRequisitionController::class, 'create'])->name('sale-requisitions.create');
     Route::post('/sale-requisitions', [SaleRequisitionController::class, 'store'])->name('sale-requisitions.store');
-    Route::get('/sale-requisitions/edit/{orders}', [SaleRequisitionController::class, 'edit'])->name('sale-requisitions.edit');
-    Route::put('/sale-requisitions/update/{orders}', [SaleRequisitionController::class, 'update'])->name('sale-requisitions.update');
-    Route::delete('/sale-requisitions/{orders}/delete', [SaleRequisitionController::class, 'destroy'])->name('sale-requisitions.destroy');
+    Route::get('/sale-requisitions/edit/{order}', [SaleRequisitionController::class, 'edit'])->name('sale-requisitions.edit');
+    Route::put('/sale-requisitions/update/{order}', [SaleRequisitionController::class, 'update'])->name('sale-requisitions.update');
+    Route::delete('/sale-requisitions/{order}/delete', [SaleRequisitionController::class, 'destroy'])->name('sale-requisitions.destroy');
+    Route::get('/products/search', [SaleRequisitionController::class, 'searchProducts'])->name('products.search');
 
     Route::get('/sale-approve', [SaleRequisitionController::class, 'indexApprove'])->name('sale-approve.index');
     Route::get('/sale-approve/{id}', [SaleRequisitionController::class, 'saleApproved'])->name('sale-approve.approved');
@@ -232,31 +239,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Service tickets
-Route::prefix('service-tickets')->group(function () {
-    Route::get('/', [ServiceTicketController::class, 'index'])->name('service-tickets.index');
-    Route::get('/create', [ServiceTicketController::class, 'create'])->name('service-tickets.create');
-    Route::post('/', [ServiceTicketController::class, 'store'])->name('service-tickets.store');
-    Route::get('/{serviceTicket}', [ServiceTicketController::class, 'show'])->name('service-tickets.show');
-    Route::get('/{serviceTicket}/edit', [ServiceTicketController::class, 'edit'])->name('service-tickets.edit');
-    Route::put('/{serviceTicket}', [ServiceTicketController::class, 'update'])->name('service-tickets.update');
-    Route::delete('/{serviceTicket}', [ServiceTicketController::class, 'destroy'])->name('service-tickets.destroy');
 
-    // Inspection Assignment
-    Route::get('/{serviceTicket}/assign-inspection', [ServiceTicketController::class, 'assignInspectionForm'])->name('service-tickets.assign-inspection');
-    Route::post('/{serviceTicket}/assign-inspection', [ServiceTicketController::class, 'assignInspection'])->name('service-tickets.assign-inspection.store');
-
-    // Inspection Report
-    Route::get('/{serviceTicket}/inspection-report', [ServiceTicketController::class, 'inspectionReportForm'])->name('service-tickets.inspection-report');
-    Route::post('/{serviceTicket}/inspection-report', [ServiceTicketController::class, 'saveInspectionReport'])->name('service-tickets.inspection-report.store');
-
-    // Admin Approval
-    Route::get('/{serviceTicket}/approval', [ServiceTicketController::class, 'approvalForm'])->name('service-tickets.approval');
-    Route::post('/{serviceTicket}/approval', [ServiceTicketController::class, 'processApproval'])->name('service-tickets.approval.process');
-
-    // Status Update
-    Route::post('/{serviceTicket}/update-status', [ServiceTicketController::class, 'updateStatus'])->name('service-tickets.update-status');
-});
 
 Route::middleware('auth')->group(function () {
     // Developer API
@@ -320,6 +303,47 @@ Route::middleware('auth')->group(function () {
         Route::post('/sections/{section}/toggle', [PageSectionController::class, 'toggleActive'])->name('admin.sections.toggle');
         Route::post('/sections/{section}/duplicate', [PageSectionController::class, 'duplicate'])->name('admin.sections.duplicate');
     });
+});
+
+
+
+/**__________________________________________________________________________
+ * Property Management Module
+ * __________________________________________________________________________
+ */
+Route::middleware('auth')->prefix('property-management')->group(function () {
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('property-management.dashboard');
+
+    // Update Routes
+    Route::put('properties/{property}', [DashboardController::class, 'updateProperty'])->name('dashboard-properties.update');
+    Route::put('jobs/{job}', [DashboardController::class, 'updateJob'])->name('dashboard-jobs.update');
+    Route::put('logs/{log}', [DashboardController::class, 'updateLog'])->name('dashboard-logs.update');
+    Route::put('finances/{finance}', [DashboardController::class, 'updateFinance'])->name('dashboard-finances.update');
+    Route::put('todos/{todo}', [DashboardController::class, 'updateTodo'])->name('dashboard-todos.update');
+
+    // Data Fetch Routes for Modals
+    Route::get('properties/{property}/data', [DashboardController::class, 'getPropertyData']);
+    Route::get('jobs/{job}/data', [DashboardController::class, 'getJobData']);
+    Route::get('logs/{log}/data', [DashboardController::class, 'getLogData']);
+    Route::get('finances/{finance}/data', [DashboardController::class, 'getFinanceData']);
+    Route::get('todos/{todo}/data', [DashboardController::class, 'getTodoData']);
+
+    // Properties
+    Route::resource('properties-management', PropertyController::class);
+
+    // Managed Jobs
+    Route::resource('managed-jobs', ManagedJobController::class)->except(['show']);
+    Route::get('/managed-jobs/{managedJob}', [ManagedJobController::class, 'show'])->name('managed-jobs.show');
+
+    // Team Logs
+    Route::resource('team-logs', TeamLogController::class)->except(['show']);
+
+    // Daily Finances
+    Route::resource('daily-finances', DailyFinanceController::class)->except(['show']);
+
+    // Todo List
+    Route::resource('todo-list', TodoListController::class)->except(['show']);
 });
 
 
