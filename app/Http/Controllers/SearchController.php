@@ -15,22 +15,17 @@ class SearchController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::where('name', 'like', '%' . $search . '%')
-            ->orWhere('sku', 'like', '%' . $search . '%')
+        $products = Product::where(function($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('sku', 'like', '%' . $search . '%');
+            })
             ->active()
             ->take(5)
-            ->get()
-            ->map(function ($product) {
-                return [
-                    'name' => $product->name,
-                    'slug' => $product->slug,
-                    'price' => number_format($product->sale_price, 2),
-                    'regular_price' => number_format($product->regular_price, 2),
-                    'image' => $product->main_image ? asset($product->main_image) : asset('images/no-image.jpg'),
-                    'url' => route('product.show', $product->slug),
-                ];
-            });
+            ->get();
 
-        return response()->json($products);
+        return view('frontend.partials.search-suggestions', [
+            'products' => $products,
+            'query'    => $search,
+        ])->render();
     }
 }

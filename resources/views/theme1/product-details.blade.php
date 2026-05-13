@@ -217,8 +217,8 @@
                                     </div>
                                     <span class="divider d-xs-show"></span>
                                     <div class="product-link-wrapper d-flex">
-                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"><span></span></a>
-                                        <a href="#" class="btn-product-icon btn-compare btn-icon-left w-icon-compare"><span></span></a>
+                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart msWishlistTogglePage" data-id="{{ $product->id }}"><span></span></a>
+                                        <a href="#" class="btn-product-icon btn-compare btn-icon-left w-icon-compare msCompareTogglePage" data-id="{{ $product->id }}"><span></span></a>
                                     </div>
                                 </div>
 
@@ -637,49 +637,5 @@
     <!-- End of Page Content -->
 
     @push('js')
-    <script>
-        $(document).on('click', '.btn-cart', function(e) {
-            e.preventDefault();
-
-            let button = $(this);
-
-            let id = button.data('id');
-            let name = button.data('name');
-            let price = button.data('price');
-            let image = button.data('image');
-            let url = button.data('url');
-            let qty = $('.quantityl').val();
-
-            $.ajax({
-                url: "{{ route('cart.add') }}",
-                type: "POST",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    name: name,
-                    price: price,
-                    image: image,
-                    url: url
-                    qty: qty
-                },
-                success: function(response) {
-
-                    if(response.status) {
-
-                        // update cart count
-                        $('.cart-count').text(response.cart_count);
-
-                        alert(response.message);
-
-                    }
-
-                },
-                error: function() {
-                    alert('Error adding product');
-                }
-            });
-
-        });
-    </script>
     @endpush
 </x-frontend-layout>

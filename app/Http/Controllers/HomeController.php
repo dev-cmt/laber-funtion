@@ -456,6 +456,10 @@ class HomeController extends Controller
 
     public function addWishlist(Request $request)
     {
+        if (!$request->has('id')) {
+            return Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->getTotalQuantity();
+        }
+
         $product = Product::findOrFail($request->id);
         Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->add([
             'id' => $product->id,
@@ -468,7 +472,7 @@ class HomeController extends Controller
                 'stock' => $product->current_stock > 0 ? 'In Stock' : 'Out of Stock',
             ]
         ]);
-        return response()->json(['message' => 'Added to wishlist successfully']);
+        return response()->json(['success' => true, 'message' => 'Added to wishlist successfully', 'count' => Cart::session((Auth::id() ?? session()->getId()) . '_wishlist')->getTotalQuantity()]);
     }
 
     public function removeWishlist($id)
@@ -479,6 +483,10 @@ class HomeController extends Controller
 
     public function addCompare(Request $request)
     {
+        if (!$request->has('id')) {
+            return Cart::session((Auth::id() ?? session()->getId()) . '_compare')->getTotalQuantity();
+        }
+
         $product = Product::with('category', 'brand')->findOrFail($request->id);
         Cart::session((Auth::id() ?? session()->getId()) . '_compare')->add([
             'id' => $product->id,
@@ -495,7 +503,7 @@ class HomeController extends Controller
                 'description' => $product->short_description ?? 'No description',
             ]
         ]);
-        return response()->json(['message' => 'Added to compare list successfully']);
+        return response()->json(['success' => true, 'message' => 'Added to compare list successfully', 'count' => Cart::session((Auth::id() ?? session()->getId()) . '_compare')->getTotalQuantity()]);
     }
 
     public function removeCompare($id)

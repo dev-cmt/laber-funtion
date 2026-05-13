@@ -17,6 +17,7 @@
                             @endforeach
                         </ol>
                     </nav>
+                    <h1 class="block-header__title">About Us</h1>
                 </div>
             </div>
         </div>

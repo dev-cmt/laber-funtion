@@ -5,12 +5,15 @@
                 <div class="block-header__body">
                     <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
                         <ol class="breadcrumb__list">
-                            <li class="breadcrumb__item breadcrumb__item--parent breadcrumb__item--first">
-                                <a href="{{ url('/') }}" class="breadcrumb__item-link">Home</a>
-                            </li>
-                            <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
-                                <span class="breadcrumb__item-link">Order Confirmation</span>
-                            </li>
+                            @foreach($breadcrumb_list as $breadcrumb)
+                                <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
+                                    @if(!$loop->last)
+                                        <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>
+                                    @else
+                                        <span class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
                         </ol>
                     </nav>
                 </div>

@@ -1,29 +1,26 @@
 <x-frontend-layout title="Checkout" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
-    <div class="page-header" style="background: #f8f9fa; padding: 40px 0; border-bottom: 1px solid #eee;">
-        <div class="page-header__container container">
-            <div class="page-header__breadcrumb">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{{ url('/') }}" class="text-muted">Home</a>
-                            <i class="fas fa-chevron-right mx-2 text-muted" style="font-size: 10px;"></i>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('cart') }}" class="text-muted">Cart</a>
-                            <i class="fas fa-chevron-right mx-2 text-muted" style="font-size: 10px;"></i>
-                        </li>
-                        <li class="breadcrumb-item active font-weight-bold" aria-current="page">Checkout</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="page-header__title mt-3">
-                <h1 style="font-weight: 800; color: #1a1a1a;">Checkout</h1>
+    <div class="site__body">
+        <div class="block-header block-header--has-breadcrumb">
+            <div class="container">
+                <div class="block-header__body">
+                    <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
+                        <ol class="breadcrumb__list">
+                            @foreach($breadcrumb_list as $breadcrumb)
+                                <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
+                                    @if(!$loop->last)
+                                        <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>
+                                    @else
+                                        <span class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ol>
+                    </nav>
+                    <h1 class="block-header__title">Checkout</h1>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="premium-checkout-container">
-        <div class="container">
+        <div class="container mb-4">
             @php
                 $cart = \Cart::session(Auth::id() ?? session()->getId());
                 $items = $cart->getContent();

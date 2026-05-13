@@ -4,7 +4,7 @@
             <div class="block-header__body">
                 <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb__list">
-                        @foreach($breadcrumbs as $breadcrumb)
+                        @foreach($breadcrumb_list as $breadcrumb)
                             <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
                                 @if(!$loop->last)
                                     <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>

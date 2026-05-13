@@ -23,9 +23,11 @@
     <link rel="stylesheet" href="{{asset('frontend')}}/css/style-red.css">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/header-red.css" media="(min-width: 1200px)">
     <link rel="stylesheet" href="{{asset('frontend')}}/css/mobile-red.css" media="(max-width: 1199px)">
-    <link rel="stylesheet" href="{{asset('frontend')}}/css/premium-custom.css">
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{asset('frontend')}}/vendor/fontawesome/css/all.min.css">
+    
+    <!-- Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     @stack('css')
 </head>
@@ -61,19 +63,42 @@
     <script src="{{asset('frontend')}}/vendor/select2/js/select2.min.js"></script>
     <script src="{{asset('frontend')}}/js/number.js"></script>
     <script src="{{asset('frontend')}}/js/main.js"></script>
-    <script src="{{asset('frontend')}}/vendor/minishop/mswishlist.js"></script>
-    <script src="{{asset('frontend')}}/vendor/minishop/mscompare.js"></script>
-    <script src="{{asset('frontend')}}/vendor/minishop/mscatalogfilter.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <script>
         $(document).ready(function () {
+
+            // GLOBAL AJAX SETUP
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // Global AJAX Error Handler
+            $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+                let message = 'Something went wrong. Please try again.';
+                if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                    message = jqXHR.responseJSON.message;
+                }
+                toastr.error(message);
+            });
+
+            // Toastr options
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
 
             // GLOBAL AJAX HELPER
             function cartAjax(url, data = {}, method = 'POST') {
                 return $.ajax({ url, method, data });
             }
 
-            // UPDATE MINI CART (inline, no separate function)
+            // UPDATE MINI CART
             function updateMiniCart(res) {
                 $('.ms2_total_count').text(res.count);
                 $('#mini-cart-products').html('');
@@ -84,45 +109,50 @@
                     return;
                 }
 
-                res.items.forEach(item => {
-                    $('#mini-cart-products').append(`
-                        <div class="product product-cart">
-                            <div class="product-detail">
-                                <a href="${item.attributes.url}" class="product-name">
-                                    ${item.name}
-                                </a>
-                                <div class="price-box">
-                                    <span class="product-quantity">${item.quantity}</span>
-                                    <span class="product-price">$${item.price}</span>
+                if (res.items) {
+                    res.items.forEach(item => {
+                        let image = item.attributes && item.attributes.image ? item.attributes.image : '{{ asset("images/no-image.jpg") }}';
+                        let url = item.attributes && item.attributes.url ? item.attributes.url : '#';
+                        
+                        $('#mini-cart-products').append(`
+                            <div class="product product-cart">
+                                <div class="product-detail">
+                                    <a href="${url}" class="product-name">
+                                        ${item.name}
+                                    </a>
+                                    <div class="price-box">
+                                        <span class="product-quantity">${item.quantity}</span>
+                                        <span class="product-price">TK ${item.price}</span>
+                                    </div>
                                 </div>
+
+                                <figure class="product-media">
+                                    <a href="${url}">
+                                        <img src="${image}" alt="product" width="94" height="84">
+                                    </a>
+                                </figure>
+
+                                <button class="btn btn-link btn-close remove-cart" data-id="${item.id}" aria-label="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
+                        `);
+                    });
+                }
 
-                            <figure class="product-media">
-                                <a href="${item.attributes.url}">
-                                    <img src="${item.attributes.image}" alt="product" width="94" height="84">
-                                </a>
-                            </figure>
-
-                            <button class="btn btn-link btn-close remove-cart" data-id="${item.id}" aria-label="button">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `);
-                });
-
-                $('#mini-cart-subtotal').text('$' + res.subtotal);
+                $('#mini-cart-subtotal').text('TK ' + res.subtotal);
                 
-                // Show a simple success feedback
-                if (res.message) {
-                    // Replace with Toastr if available in your project later
-                    alert(res.message);
+                if (res.message && res.success !== false) {
+                    toastr.success(res.message);
+                } else if (res.message && res.success === false) {
+                    toastr.error(res.message);
                 }
             }
 
             // LOAD CART ON PAGE LOAD
             $.get("{{ route('cart.mini') }}", updateMiniCart);
 
-            // ADD TO CART
+            // ADD TO CART (Direct Button)
             $(document).on('click', '.btn-cart', function () {
                 let btn = $(this);
                 let qty = $('.quantity').val() || 1;
@@ -138,11 +168,30 @@
                 }).done(updateMiniCart);
             });
 
+            // ADD TO CART (Form Submission)
+            $(document).on('submit', '.ms2_form', function (e) {
+                e.preventDefault();
+                let form = $(this);
+                let formData = form.serialize();
+                
+                // If quantity exists in form as 'count', we might want to map it to 'qty'
+                // though the controller handles both or defaults.
+                
+                cartAjax(form.attr('action'), formData).done(updateMiniCart);
+            });
+
             // REMOVE ITEM
             $(document).on('click', '.remove-cart', function () {
                 let id = $(this).data('id');
-                cartAjax(`/cart/remove/${id}`, { _token: "{{ csrf_token() }}" }, 'DELETE')
-                    .done(updateMiniCart);
+                let url = "{{ route('cart.remove', ':id') }}".replace(':id', id);
+                cartAjax(url, { _token: "{{ csrf_token() }}", _method: 'DELETE' }, 'POST')
+                    .done(function(res) {
+                        updateMiniCart(res);
+                        // If we are on the cart page, we need to reload to show changes in the main table
+                        if ($('.cart-card').length || window.location.pathname.includes('/cart')) {
+                            location.reload();
+                        }
+                    });
             });
 
             // INCREASE QTY
@@ -171,44 +220,47 @@
             });
 
             // AJAX SEARCH SUGGESTIONS
-            $('#search_desktop').on('keyup', function() {
-                let query = $(this).val();
-                let container = $('#search-suggestions-container');
+            let searchTimer = null;
 
-                if (query.length > 2) {
+            function handleSearch(input, container) {
+                let query = input.val().trim();
+                clearTimeout(searchTimer);
+
+                if (query.length < 3) {
+                    container.hide().empty();
+                    return;
+                }
+
+                // Show loading spinner immediately
+                container.html('<div class="suggestion-loading"><div class="spinner"></div> Searching...</div>').show();
+
+                searchTimer = setTimeout(function() {
                     $.ajax({
                         url: "{{ route('search.suggest') }}",
                         method: "GET",
                         data: { search: query },
-                        success: function(data) {
-                            container.empty();
-                            if (data.length > 0) {
-                                data.forEach(product => {
-                                    container.append(`
-                                        <a href="${product.url}" class="search-suggestion-item">
-                                            <img src="${product.image}" alt="${product.name}">
-                                            <div class="search-suggestion-info">
-                                                <span class="search-suggestion-name">${product.name}</span>
-                                                <span class="search-suggestion-price">TK ${product.price}</span>
-                                            </div>
-                                        </a>
-                                    `);
-                                });
-                                container.fadeIn();
-                            } else {
-                                container.hide();
-                            }
+                        success: function(html) {
+                            container.html(html).show();
+                        },
+                        error: function() {
+                            container.hide().empty();
                         }
                     });
-                } else {
-                    container.hide();
-                }
+                }, 320);
+            }
+
+            $('#search_desktop').on('input', function() {
+                handleSearch($(this), $('#search-suggestions-container'));
+            });
+
+            $('#search').on('input', function() {
+                handleSearch($(this), $('#search-suggestions-mobile'));
             });
 
             // Hide suggestions when clicking outside
             $(document).on('click', function(e) {
-                if (!$(e.target).closest('.search').length) {
-                    $('#search-suggestions-container').hide();
+                if (!$(e.target).closest('.search, .mobile-search__body').length) {
+                    $('#search-suggestions-container, #search-suggestions-mobile').hide();
                 }
             });
 

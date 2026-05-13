@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Blog" :breadcrumbs="$breadcrumbs" :seotags="$seotags">
     <!-- site__body -->
     <div class="site__body">
         <div class="block-header block-header--has-breadcrumb block-header--has-title">

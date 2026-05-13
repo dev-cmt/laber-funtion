@@ -9,9 +9,9 @@
                             @foreach($breadcrumb_list as $index => $item)
                             <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
                                 @if(!$loop->last)
-                                <a href="{{ $item['url'] }}" class="breadcrumb__item-link">{{ $item['name'] }}</a>
+                                    <a href="{{ $item['url'] }}" class="breadcrumb__item-link">{{ $item['name'] }}</a>
                                 @else
-                                <span class="breadcrumb__item-link">{{ $item['name'] }}</span>
+                                    <span class="breadcrumb__item-link">{{ $item['name'] }}</span>
                                 @endif
                             </li>
                             @endforeach

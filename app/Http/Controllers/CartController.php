@@ -12,7 +12,8 @@ class CartController extends Controller
 {
     private function cart()
     {
-        return Cart::session(Auth::user()->id ?? session()->getId());
+        $id = Auth::id() ?? session()->getId() ?? 'guest';
+        return Cart::session($id);
     }
 
     public function addCart(Request $request)
@@ -143,20 +144,46 @@ class CartController extends Controller
     /* ADD TO CART */
     public function add(Request $request)
     {
-        $this->cart()->add([
-            'id' => $request->id,
-            'name' => $request->name,
-            'quantity' => $request->qty ?? 1,
-            'price' => $request->price,
-            'attributes' => [
-                'image' => $request->image,
-                'url' => $request->url,
-            ]
-        ]);
+        try {
+            $productId = $request->id;
+            $qty = $request->qty ?? $request->count ?? 1;
 
-        $response = $this->mini()->getData(true);
-        $response['message'] = 'Product added to cart successfully!';
-        return response()->json($response);
+            if (!$productId) {
+                return response()->json(['success' => false, 'message' => 'Product ID is required'], 400);
+            }
+
+            $product = Product::find($productId);
+            if (!$product) {
+                return response()->json(['success' => false, 'message' => 'Product not found'], 404);
+            }
+
+            $name  = $request->name ?? $product->name;
+            $price = $request->price ?? $product->sale_price;
+            $image = $request->image ?? ($product->main_image ? asset($product->main_image) : asset('images/no-image.jpg'));
+            $url   = $request->url ?? route('product.show', $product->slug);
+
+            $this->cart()->add([
+                'id' => $productId,
+                'name' => $name,
+                'quantity' => $qty,
+                'price' => $price,
+                'attributes' => [
+                    'image' => $image,
+                    'url' => $url,
+                ]
+            ]);
+
+            $response = $this->mini()->getData(true);
+            $response['success'] = true;
+            $response['message'] = 'Product added to cart successfully!';
+            return response()->json($response);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error adding product to cart: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /* UPDATE QTY */
@@ -187,10 +214,22 @@ class CartController extends Controller
     /* MINI CART JSON */
     public function mini()
     {
-        return response()->json([
-            'count'    => $this->cart()->getTotalQuantity(),
-            'subtotal' => number_format($this->cart()->getSubTotal(), 2),
-            'items'    => $this->cart()->getContent()->values(),
-        ]);
+        try {
+            $cart = $this->cart();
+            return response()->json([
+                'success'  => true,
+                'count'    => (int)$cart->getTotalQuantity(),
+                'subtotal' => number_format((float)$cart->getSubTotal(), 2),
+                'items'    => $cart->getContent()->values(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cart loading issue',
+                'count' => 0,
+                'subtotal' => '0.00',
+                'items' => []
+            ], 200);
+        }
     }
 }
