@@ -449,9 +449,7 @@ class HomeController extends Controller
     public function orderConfirm($invoice)
     {
         $order = Order::where('invoice_no', $invoice)->with('items.product')->firstOrFail();
-
-        $theme = config('theme.frontend.views_path');
-        return view($theme . '.order-confirm', compact('order'));
+        return view('frontend.order-confirm', compact('order'));
     }
 
     public function addWishlist(Request $request)

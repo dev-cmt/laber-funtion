@@ -1,27 +1,5 @@
 <x-frontend-layout title="Order Confirmation">
     <div class="site__body">
-        <div class="block-header block-header--has-breadcrumb">
-            <div class="container">
-                <div class="block-header__body">
-                    <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
-                        <ol class="breadcrumb__list">
-                            @foreach($breadcrumb_list as $breadcrumb)
-                                <li class="breadcrumb__item @if($loop->first) breadcrumb__item--parent breadcrumb__item--first @endif @if($loop->last) breadcrumb__item--current @endif">
-                                    @if(!$loop->last)
-                                        <a href="{{ $breadcrumb['url'] }}" class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</a>
-                                    @else
-                                        <span class="breadcrumb__item-link">{{ $breadcrumb['name'] }}</span>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        
-        <div class="block-space block-space--layout--spaceship-ledge-height"></div>
-        
         <div class="block order-success">
             <div class="container">
                 <div class="order-success__body">
@@ -35,7 +13,7 @@
                             <a href="{{ url('/') }}" class="btn-premium">Go To Homepage <i class="fas fa-home ml-2"></i></a>
                         </div>
                     </div>
-                    
+
                     <div class="card order-success__meta card-premium">
                         <ul class="order-success__meta-list">
                             <li class="order-success__meta-item">
@@ -56,7 +34,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                     <div class="card card-premium">
                         <div class="card-body card-body--padding--2">
                             <h3 class="card-title">Order Details</h3>
